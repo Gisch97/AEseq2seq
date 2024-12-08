@@ -163,9 +163,9 @@ def test(test_file, model_weights=None, output_file=None, config={}, nworkers=2,
     )
 
     if model_weights is not None:
-        net = sincfold(weights=model_weights, **config)
+        net = seq2seq(weights=model_weights, **config)
     else:
-        net = sincfold(pretrained=True, **config)
+        net = seq2seq(pretrained=True, **config)
     
     if verbose:
         print(f"Start test of {test_file}")        
@@ -217,9 +217,9 @@ def pred(pred_input, sequence_id='pred_id', model_weights=None, out_path=None, l
     
     if model_weights is not None:
         weights = model_weights
-        net = sincfold(weights=weights, **config)
+        net = seq2seq(weights=weights, **config)
     else:
-        net = sincfold(pretrained=True, **config)
+        net = seq2seq(pretrained=True, **config)
 
     if verbose:        
         print(f"Start prediction of {pred_file}")
