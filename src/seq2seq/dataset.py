@@ -100,24 +100,26 @@ class SeqDataset(Dataset):
                 
         return item
 
-def pad_batch(batch):
+def pad_batch(batch, fixed_length=0):
     """batch is a dictionary with different variables lists"""
-    
     L = [b["length"] for b in batch]
-    embedding_pad = tr.zeros((len(batch), batch[0]["embedding"].shape[0], max(L)))
+    if fixed_length == 0:
+        fixed_length = max(L)
+    
+    embedding_pad = tr.zeros((len(batch), batch[0]["embedding"].shape[0], fixed_length))
     if batch[0]["contact"] is None:
         contact_pad = None
     else:
-        contact_pad = -tr.ones((len(batch), max(L), max(L)), dtype=tr.long)
+        contact_pad = -tr.ones((len(batch), fixed_length, fixed_length), dtype=tr.long)
     
     if batch[0]["canonical_mask"] is None:
         canonical_mask_pad = None
     else:
-        canonical_mask_pad = tr.zeros((len(batch), max(L), max(L)))
+        canonical_mask_pad = tr.zeros((len(batch), fixed_length, fixed_length))
     
     interaction_prior_pad = None
     if batch[0]["interaction_prior"] is not None:
-        interaction_prior_pad = tr.zeros((len(batch), max(L), max(L)))
+        interaction_prior_pad = tr.zeros((len(batch), fixed_length, fixed_length))
 
     for k in range(len(batch)):
         embedding_pad[k, :, : L[k]] = batch[k]["embedding"]

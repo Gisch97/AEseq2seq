@@ -7,6 +7,7 @@ from datetime import datetime
 import pandas as pd
 import shutil
 import pickle
+from functools import partial
 
 from torch.utils.data import DataLoader
 from .dataset import SeqDataset, pad_batch
@@ -25,8 +26,13 @@ def main():
     else:
         cache_path = None
 
-    config= {"device": args.d, "batch_size": args.batch, 
-             "valid_split": 0.1, "max_len": args.max_length, "verbose": not args.quiet, "cache_path": cache_path}
+    config= {"device": args.d,
+             "batch_size": args.batch,
+             "valid_split": 0.1,
+             "max_len": 128,
+             "verbose": not args.quiet,
+             "cache_path": cache_path
+             }
     
     if "max_epochs" in args:
         config["max_epochs"] = args.max_epochs
@@ -83,21 +89,24 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
         val_data = data.sample(frac = valid_split)
         val_data.to_csv(valid_file, index=False)
         data.drop(val_data.index).to_csv(train_file, index=False)
-        
+    
+    
+    # pad_batch_with_fixed_length = partial(pad_batch, fixed_length=args.max_len)
+    pad_batch_with_fixed_length = partial(pad_batch, fixed_length=128)
     batch_size = config["batch_size"] if "batch_size" in config else 4
     train_loader = DataLoader(
         SeqDataset(train_file, training=True, **config),
         batch_size=batch_size, 
         shuffle=True,
         num_workers=nworkers,
-        collate_fn=pad_batch
+        collate_fn=pad_batch_with_fixed_length
     )
     valid_loader = DataLoader(
         SeqDataset(valid_file, **config),
         batch_size=batch_size,
         shuffle=False,
         num_workers=nworkers,
-        collate_fn=pad_batch,
+        collate_fn=pad_batch_with_fixed_length,
     )
 
     net = seq2seq(train_len=len(train_loader), **config)
@@ -114,14 +123,14 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
 
         val_metrics = net.test(valid_loader)
 
-        if val_metrics["f1"] > best_f1:
-            best_f1 = val_metrics["f1"]
-            tr.save(net.state_dict(), os.path.join(out_path, "weights.pmt"))
-            patience_counter = 0
-        else:
-            patience_counter += 1
-            if patience_counter > patience:
-                break
+        # if val_metrics["f1"] > best_f1:
+        #     best_f1 = val_metrics["f1"]
+        tr.save(net.state_dict(), os.path.join(out_path, "weights.pmt"))
+        #     patience_counter = 0
+        # else:
+        #     patience_counter += 1
+        #     if patience_counter > patience:
+        #         break
         
         if not os.path.exists(logfile):
             with open(logfile, "w") as f: 
@@ -159,7 +168,7 @@ def test(test_file, model_weights=None, output_file=None, config={}, nworkers=2,
         batch_size=config["batch_size"] if "batch_size" in config else 4,
         shuffle=False,
         num_workers=nworkers,
-        collate_fn=pad_batch,
+        collate_fn=pad_batch_with_fixed_length,
     )
 
     if model_weights is not None:
@@ -212,7 +221,7 @@ def pred(pred_input, sequence_id='pred_id', model_weights=None, out_path=None, l
         batch_size=config["batch_size"] if "batch_size" in config else 4,
         shuffle=False,
         num_workers=nworkers,
-        collate_fn=pad_batch,
+        collate_fn=pad_batch_with_fixed_length,
     )
     
     if model_weights is not None:

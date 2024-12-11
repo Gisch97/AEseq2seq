@@ -83,7 +83,7 @@ class Seq2Seq(nn.Module):
         num_layers=2,
         dilation_resnet1d=3,
         resnet_bottleneck_factor=0.5,
-        latent_dim=2,
+        latent_dim=16,
         rank=64,
         **kwargs
     ): 
@@ -110,23 +110,22 @@ class Seq2Seq(nn.Module):
             )
         self.encode = nn.Sequential(*self.encode)
         
-        # self.to_latent = nn.Sequential(
-        #     nn.AdaptiveMaxPool1d(64),  
-        #     nn.Flatten(),              
-        #     nn.Linear(rank * 64, latent_dim)
-        # )
+        self.to_latent = nn.Sequential(nn.Flatten(1),
+                                        nn.Linear(128 * 64, latent_dim),
+                                        nn.ReLU())
         
-        # self.from_latent = nn.Sequential()
         
         # Decoder 
-        self.decode =  [nn.ConvTranspose1d(
-                in_channels=rank,
-                out_channels=filters,
-                kernel_size=kernel,
-                padding=pad,
-                stride=1,
-                )
-            ]
+        self.from_latent = nn.Sequential(nn.Linear(latent_dim, 128 * 64),
+                                          nn.ReLU())
+
+        self.decode = [nn.ConvTranspose1d(
+            in_channels=rank,
+            out_channels=filters,
+            kernel_size=kernel,
+            padding=pad,
+            stride=1
+            )]
         for k in range(num_layers):
             self.decode.append(
                 ResidualLayer1D(
@@ -141,21 +140,16 @@ class Seq2Seq(nn.Module):
 
 
     def forward(self, batch):
-        
-        
         x = batch["embedding"].to(self.device)
         batch_size = x.shape[0]
         L = x.shape[2]
         
         z = self.encode(x) 
-        z = z.flatten(1)
         z = self.to_latent(z)
-        z = tr.relu(z)
-
         x_rec = self.from_latent(z)
+
         x_rec = x_rec.view(x_rec.shape[0], -1, L)
         x_rec = self.decode(x_rec)
-        
         return x_rec, z
 
     def loss_func(self, x_rec, x):
@@ -174,13 +168,12 @@ class Seq2Seq(nn.Module):
         if self.verbose: loader = tqdm(loader)
 
         for batch in loader: 
-            
-            x = batch["contact"].to(self.device)
-            batch.pop("contact")
+            x = batch["embedding"].to(self.device)
+            # batch.pop("embedding")
             self.optimizer.zero_grad()  # Cleaning cache optimizer
             x_rec = self(batch)
             
-            loss = self.loss_func(x_rec, x) 
+            loss = self.loss_func(x_rec[0], x) 
 
             metrics["loss"] += loss.item()
 
@@ -204,8 +197,8 @@ class Seq2Seq(nn.Module):
 
         with tr.no_grad():
             for batch in loader:  
-                x = batch["contact"].to(self.device)
-                batch.pop("contact")
+                x = batch["embedding"].to(self.device)
+                batch.pop("embedding")
                 lengths = batch["length"]
                 
                 x_rec = self(batch)
@@ -226,10 +219,11 @@ class Seq2Seq(nn.Module):
         with tr.no_grad():
             for batch in loader: 
                 
-                lengths = batch["length"]
                 seqid = batch["id"]
+                embedding = batch["embedding"]
                 sequences = batch["sequence"]
                 x_rec = self(batch)
+                lengths = batch["length"]
                 
                 # x_rec_post = postprocessing(x_rec.cpu(), batch["canonical_mask"])
 
@@ -245,7 +239,7 @@ class Seq2Seq(nn.Module):
                                 x_rec[k, : lengths[k]].squeeze()
                         )
                     )
-        predictions = pd.DataFrame(predictions, columns=["id", "sequence","reconstructed"])
+        predictions = pd.DataFrame(predictions, columns=["id", "embedding", "sequence","reconstructed"])
 
         return predictions, logits_list
 
