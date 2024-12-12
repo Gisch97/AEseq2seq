@@ -91,7 +91,7 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
         data.drop(val_data.index).to_csv(train_file, index=False)
     
     
-    # pad_batch_with_fixed_length = partial(pad_batch, fixed_length=args.max_len)
+    # pad_batch_with_fixed_length = partial(pad_batch, fixed_length=args.max_len) 
     pad_batch_with_fixed_length = partial(pad_batch, fixed_length=128)
     batch_size = config["batch_size"] if "batch_size" in config else 4
     train_loader = DataLoader(
@@ -163,6 +163,9 @@ def test(test_file, model_weights=None, output_file=None, config={}, nworkers=2,
     if verbose not in config:
         config["verbose"] = verbose
 
+    
+    # pad_batch_with_fixed_length = partial(pad_batch, fixed_length=args.max_len) 
+    pad_batch_with_fixed_length = partial(pad_batch, fixed_length=128)
     test_loader = DataLoader(
         SeqDataset(test_file, **config),
         batch_size=config["batch_size"] if "batch_size" in config else 4,
@@ -216,6 +219,9 @@ def pred(pred_input, sequence_id='pred_id', model_weights=None, out_path=None, l
             
         else:
             raise ValueError(f"Invalid input nt {set(pred_input)}, either the file is missing or the secuence have invalid nucleotides (should be any of {nt_set})")
+        
+    # pad_batch_with_fixed_length = partial(pad_batch, fixed_length=args.max_len) 
+    pad_batch_with_fixed_length = partial(pad_batch, fixed_length=128)
     pred_loader = DataLoader(
         SeqDataset(pred_file, for_prediction=True, **config),
         batch_size=config["batch_size"] if "batch_size" in config else 4,

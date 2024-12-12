@@ -171,9 +171,9 @@ class Seq2Seq(nn.Module):
             x = batch["embedding"].to(self.device)
             # batch.pop("embedding")
             self.optimizer.zero_grad()  # Cleaning cache optimizer
-            x_rec = self(batch)
+            x_rec, z = self(batch)
             
-            loss = self.loss_func(x_rec[0], x) 
+            loss = self.loss_func(x_rec, x) 
 
             metrics["loss"] += loss.item()
 
@@ -198,10 +198,10 @@ class Seq2Seq(nn.Module):
         with tr.no_grad():
             for batch in loader:  
                 x = batch["embedding"].to(self.device)
-                batch.pop("embedding")
+                # batch.pop("embedding")
                 lengths = batch["length"]
                 
-                x_rec = self(batch)
+                x_rec, z = self(batch)
                 loss = self.loss_func(x_rec, x)
                 metrics["loss"] += loss.item()
 
@@ -222,24 +222,22 @@ class Seq2Seq(nn.Module):
                 seqid = batch["id"]
                 embedding = batch["embedding"]
                 sequences = batch["sequence"]
-                x_rec = self(batch)
                 lengths = batch["length"]
+                x_rec, z = self(batch)
                 
-                # x_rec_post = postprocessing(x_rec.cpu(), batch["canonical_mask"])
-
                 for k in range(x_rec.shape[0]):
-                    if logits:
-                        logits_list.append(
-                            (seqid[k],
-                             x_rec[k, : lengths[k]].squeeze().cpu()
-                            ))
-                    predictions.append(
-                        (seqid[k],
+                    seq_len = lengths[k]
+                
+                    predictions.append((
+                        seqid[k],
                         sequences[k],
-                                x_rec[k, : lengths[k]].squeeze()
-                        )
-                    )
-        predictions = pd.DataFrame(predictions, columns=["id", "embedding", "sequence","reconstructed"])
+                        seq_len,
+                        embedding[k, :, :seq_len].cpu().numpy(),
+                        x_rec[k, :, :seq_len].cpu().numpy(),
+                        z[k].cpu().numpy()
+                    ))
+                    
+        predictions = pd.DataFrame(predictions, columns=["id", "sequence", "length", "embedding", "reconstructed", "latent"])
 
         return predictions, logits_list
 
