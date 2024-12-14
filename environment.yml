@@ -17,3 +17,7 @@ dependencies:
   - mlflow
   - lightning
   - pygments
+  - jupyter
+pip:
+    - hatchling
+    - seq2seq

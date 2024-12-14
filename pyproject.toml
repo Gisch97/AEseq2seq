@@ -5,14 +5,15 @@ build-backend = "hatchling.build"
 [project]
 name = "seq2seq"
 version = "0.1.0"
-description = "Paquete para modelos seq2seq"
+description = "Autoencoder sequence-to-sequence: an end-to-end method for RNA sequence prediction based on deep learning"
 authors = [
     {name = "Guillermo Kulemeyer", email = "gkulemeyer@sinc.unl.edu.ar"}
 ]
-license = {text = "MIT"}
+
+
+requires-python = ">=3.9"
 dependencies = [
     "torch==2.1.0",
-    "torch-cuda==12.1",
     "pandas==2.0.2",
     "numpy==1.24.2",
     "scikit-learn==1.2.1",
@@ -20,12 +21,11 @@ dependencies = [
     "mlflow",
     "lightning"
 ]
-python-requires = ">=3.9"
-readme = "README.md"
 
+readme = "README.md"
 [project.urls]
 homepage = "https://github.com/Gisch97"
 repository = "https://github.com/Gisch97/AEseq2seq"
 
 [project.scripts]
-S2S = "seq2seq:main"
+seq2seq = "seq2seq:main"
