@@ -111,7 +111,8 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
 
     net = seq2seq(train_len=len(train_loader), **config)
     
-    best_f1, patience_counter = -1, 0
+    best_loss, patience_counter = np.inf, 0 
+    
     patience = config["patience"] if "patience" in config else 30
     if verbose:
         print("Start training...")
@@ -125,12 +126,14 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
 
         # if val_metrics["f1"] > best_f1:
         #     best_f1 = val_metrics["f1"]
-        tr.save(net.state_dict(), os.path.join(out_path, "weights.pmt"))
-        #     patience_counter = 0
-        # else:
-        #     patience_counter += 1
-        #     if patience_counter > patience:
-        #         break
+        if val_metrics["loss"] < best_loss:
+            best_loss = val_metrics["loss"]
+            tr.save(net.state_dict(), os.path.join(out_path, "weights.pmt"))
+            patience_counter = 0
+        else:
+            patience_counter += 1
+            if patience_counter > patience:
+                break
         
         if not os.path.exists(logfile):
             with open(logfile, "w") as f: 
