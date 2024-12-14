@@ -7,7 +7,8 @@ def parser():
         description="Autoencoder sequence-to-sequence: an end-to-end method for RNA sequence prediction based on deep learning",
         epilog="webserver link | None",
     )
-    parser.add_argument("-c", "--config", type=str, help="Config file (optional, overrides any other options)")
+    parser.add_argument("--global_config", type=str, help="Path to the global configuration file")
+
     parser.add_argument("-d", type=str, default="cpu", help="Device ('cpu' or 'cuda')")
     parser.add_argument("-batch", type=int, default=4, help="Batch size for handling sequences")
     parser.add_argument("-j", type=int, default=2, help="Number of parallel workers")
@@ -17,11 +18,12 @@ def parser():
 
     subparsers = parser.add_subparsers(
         title="Actions", dest="command", description="Running commands", required=False
-    )
+    ) 
 
     parser_train = subparsers.add_parser("train", help="Train a new model")
+    
     parser_train.add_argument(
-        "train_file",
+        "--train_file",
         type=str,
         help="Training dataset (csv file with 'id', 'sequence')",
     )
@@ -48,6 +50,9 @@ def parser():
         "--no-cache",
         action="store_true", help="Cache of data for training (default: cache is used)",
     )
+    
+    parser_train.add_argument("--train_config", type=str, help="Path to the train config file")
+
 
     # test parser
     parser_test = subparsers.add_parser("test", help="Test a model")

@@ -26,7 +26,7 @@ def main():
     else:
         cache_path = None
 
-    config= {"device": args.d,
+    global_config= {"device": args.d,
              "batch_size": args.batch,
              "valid_split": 0.1,
              "max_len": 128,
@@ -35,28 +35,37 @@ def main():
              }
     
     if "max_epochs" in args:
-        config["max_epochs"] = args.max_epochs
+        global_config["max_epochs"] = args.max_epochs
 
-    if args.config is not None:
-        config.update(json.load(open(args.config)))
+    if args.global_config is not None:
+        global_config.update(json.load(open(args.global_config)))
 
-    if config["cache_path"] is not None:
-        shutil.rmtree(config["cache_path"], ignore_errors=True)
-        os.makedirs(config["cache_path"])
+    if global_config["cache_path"] is not None:
+        shutil.rmtree(global_config["cache_path"], ignore_errors=True)
+        os.makedirs(global_config["cache_path"])
 
     # Reproducibility
     tr.manual_seed(42)
     random.seed(42)
     np.random.seed(42)
-
-    if args.command == "train": 
-        train(args.train_file, config, args.out_path,  args.valid_file, args.j)
+    
+    if args.command == "train":
+        if  args.train_config is not None:
+            with open(args.train_config) as f:
+                train_conf = json.load(f)
+                for key, value in train_conf.items():
+                    if hasattr(args, key):
+                        current_val = getattr(args, key)
+                        # Actualiza si current_val es None o está vacío
+                        if current_val is None or current_val == '':
+                            setattr(args, key, value)                            
+    train(args.train_file, global_config, args.out_path,  args.valid_file, args.j)
 
     if args.command == "test":
-        test(args.test_file, args.model_weights, args.out_path, config, args.j)
+        test(args.test_file, args.model_weights, args.out_path, global_config, args.j)
 
     if args.command == "pred":
-        pred(args.pred_file, model_weights=args.model_weights, out_path=args.out_path, logits=args.logits, config=config, nworkers=args.j, draw=args.draw, draw_resolution=args.draw_resolution)    
+        pred(args.pred_file, model_weights=args.model_weights, out_path=args.out_path, logits=args.logits, config=global_config, nworkers=args.j, draw=args.draw, draw_resolution=args.draw_resolution)    
         
 def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, verbose=True):
     

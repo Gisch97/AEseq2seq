@@ -1,0 +1,8 @@
+{
+    "device": "cpu",
+    "batch_size": 4,
+    "quiet": false,
+    "max_len": 128,
+    "max_epochs": 3,
+    "nworkers": 4
+}
