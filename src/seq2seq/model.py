@@ -172,11 +172,8 @@ class Seq2Seq(nn.Module):
             # batch.pop("embedding")
             self.optimizer.zero_grad()  # Cleaning cache optimizer
             x_rec, z = self(batch)
-            
             loss = self.loss_func(x_rec, x) 
-
             metrics["loss"] += loss.item()
-
             loss.backward()
             self.optimizer.step()
 

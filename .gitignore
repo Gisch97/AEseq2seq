@@ -1,4 +1,7 @@
 *.pk
 *.pyc
 *.csv
+
+
 mlruns/*
+src/seq2seq/__pycache__/*
