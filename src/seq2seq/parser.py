@@ -15,6 +15,7 @@ def parser():
     parser.add_argument("--quiet", action="store_true", help="Quiet mode (default: False)") 
     parser.add_argument("--max-length", type=int, default=512, help="Maximum sequence length to process (default: 512") 
     parser.add_argument('--version', '-v', action='version', version='%(prog)s ' + __version__)
+    parser.add_argument("--exp", type=str, default="seq2seq", help="Experiment name (default: seq2seq)")
 
     subparsers = parser.add_subparsers(
         title="Actions", dest="command", description="Running commands", required=False
@@ -57,7 +58,7 @@ def parser():
     # test parser
     parser_test = subparsers.add_parser("test", help="Test a model")
     parser_test.add_argument(
-        "test_file",
+        "--test_file",
         type=str,
         help="Testing dataset (csv file with 'id', 'sequence')",
     )
@@ -69,17 +70,18 @@ def parser():
         type=str, dest="out_path", 
         help="Output test metrics (default: only printed on the console)",
     )
+    parser_test.add_argument("--test_config", type=str, help="Path to the test config file")
 
     # pred parser
     parser_pred = subparsers.add_parser(
-        "pred", help="Predict structures for a list of sequences"
+        "--pred", help="Predict structures for a list of sequences"
     )
     parser_pred.add_argument(
         "--name", type=str, default="console_input", dest="sequence_name", help="Sequence name (default: console_input)"
     )
 
     parser_pred.add_argument(
-        "pred_file",
+        "--pred_file",
         type=str,
         help="Dataset to predict. It can be a csv file with 'id' and 'sequence' columns or a fasta file",
     )
@@ -92,6 +94,7 @@ def parser():
     parser_pred.add_argument(
         "-w", type=str, dest="model_weights", help="Trained model weights"
     )
+    parser_pred.add_argument("--pred_config", type=str, help="Path to the pred config file")
 
     return parser.parse_args()
     

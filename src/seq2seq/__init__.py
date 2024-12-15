@@ -8,6 +8,8 @@ import pandas as pd
 import shutil
 import pickle
 from functools import partial
+import mlflow
+import mlflow.pytorch
 
 from torch.utils.data import DataLoader
 from .dataset import SeqDataset, pad_batch
@@ -15,11 +17,11 @@ from .model import seq2seq
 from .embeddings import NT_DICT
 from .utils import write_ct, validate_file, ct2dot
 from .parser import parser
-from .utils import dot2png, ct2svg
+from .utils import dot2png, ct2svg, read_train_file, read_test_file, read_pred_file
 
 def main():
-    
     args = parser()
+    
     
     if not args.no_cache and args.command == "train":
         cache_path = "cache/"
@@ -49,22 +51,23 @@ def main():
     random.seed(42)
     np.random.seed(42)
     
+    mlflow.set_tracking_uri("http://localhost:5000")
+    mlflow.set_experiment(global_config["exp"])
     if args.command == "train":
-        if  args.train_config is not None:
-            with open(args.train_config) as f:
-                train_conf = json.load(f)
-                for key, value in train_conf.items():
-                    if hasattr(args, key):
-                        current_val = getattr(args, key)
-                        # Actualiza si current_val es None o está vacío
-                        if current_val is None or current_val == '':
-                            setattr(args, key, value)                            
-    train(args.train_file, global_config, args.out_path,  args.valid_file, args.j)
+        with mlflow.start_run():
+            mlflow.log_params(global_config)                      
+            read_train_file(args)  
+            mlflow.log_param("train_file",args.train_file)
+            mlflow.log_param("valid_file",args.valid_file)
+            mlflow.log_param("out_path",args.out_path) 
+            train(args.train_file, global_config, args.out_path,  args.valid_file, args.j)
 
     if args.command == "test":
+        read_test_file(args)
         test(args.test_file, args.model_weights, args.out_path, global_config, args.j)
 
     if args.command == "pred":
+        read_pred_file(args)
         pred(args.pred_file, model_weights=args.model_weights, out_path=args.out_path, logits=args.logits, config=global_config, nworkers=args.j, draw=args.draw, draw_resolution=args.draw_resolution)    
         
 def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, verbose=True):
@@ -127,11 +130,18 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
         print("Start training...")
     max_epochs = config["max_epochs"] if "max_epochs" in config else 1000
     logfile = os.path.join(out_path, "train_log.csv") 
-        
+    
+
+    
     for epoch in range(max_epochs):
         train_metrics = net.fit(train_loader)
-
+        for k, v in train_metrics.items():
+            mlflow.log_metric(f"train_{k}", v, step=epoch)
+            
         val_metrics = net.test(valid_loader)
+        for k, v in val_metrics.items():
+            mlflow.log_metric(f"valid_{k}", v, step=epoch)
+
 
         # if val_metrics["f1"] > best_f1:
         #     best_f1 = val_metrics["f1"]
@@ -143,7 +153,7 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
             patience_counter += 1
             if patience_counter > patience:
                 break
-        
+    
         if not os.path.exists(logfile):
             with open(logfile, "w") as f: 
                 msg = ','.join(['epoch']+[f"train_{k}" for k in sorted(train_metrics.keys())]+[f"valid_{k}" for k in sorted(val_metrics.keys())]) + "\n"
@@ -152,12 +162,12 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
                 if verbose:
                     print(msg)
 
-        with open(logfile, "a") as f: 
-            msg = ','.join([str(epoch)]+[f'{train_metrics[k]:.4f}' for k in sorted(train_metrics.keys())]+[f'{val_metrics[k]:.4f}' for k in sorted(val_metrics.keys())]) + "\n"
-            f.write(msg)
-            f.flush()    
-            if verbose:
-                print(msg)
+            with open(logfile, "a") as f: 
+                msg = ','.join([str(epoch)]+[f'{train_metrics[k]:.4f}' for k in sorted(train_metrics.keys())]+[f'{val_metrics[k]:.4f}' for k in sorted(val_metrics.keys())]) + "\n"
+                f.write(msg)
+                f.flush()    
+                if verbose:
+                    print(msg)
             
     # remove temporal files           
     shutil.rmtree(config["cache_path"], ignore_errors=True)
@@ -168,6 +178,10 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
     tmp_file = os.path.join(out_path, "valid.csv")
     if os.path.exists(tmp_file):
         os.remove(tmp_file)
+        
+    mlflow.pytorch.log_model(net, "model")
+     
+ 
     
 def test(test_file, model_weights=None, output_file=None, config={}, nworkers=2, verbose=True):
     test_file = test_file

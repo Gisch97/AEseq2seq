@@ -1,8 +1,10 @@
 {
+    "exp": "seq2seq - plain",
     "device": "cpu",
     "batch_size": 4,
     "quiet": false,
     "max_len": 128,
     "max_epochs": 3,
-    "nworkers": 4
+    "nworkers": 4,
+    "cache_path": "cache/"
 }

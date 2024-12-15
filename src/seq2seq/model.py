@@ -2,7 +2,7 @@ import pandas as pd
 import math
 from dataclasses import dataclass
 from torch import nn
-from torch.nn.functional import mse_loss
+from torch.nn.functional import mse_loss, cross_entropy
 import torch as tr
 from tqdm import tqdm
  
@@ -158,12 +158,19 @@ class Seq2Seq(nn.Module):
         x_rec = x_rec.view(x_rec.shape[0], -1)
 
         loss = mse_loss(x_rec, x)
+        return loss
     
+    def ce_loss_func(self, x_rec, x):
+        """yhat and y are [N, L]"""
+        x = x.view(x.shape[0], -1)
+        x_rec = x_rec.view(x_rec.shape[0], -1)
+
+        loss = cross_entropy(x_rec, x)
         return loss
 
     def fit(self, loader):
         self.train()
-        metrics = {"loss": 0}
+        metrics = {"loss": 0, "ce_loss": 0}
 
         if self.verbose: loader = tqdm(loader)
 
@@ -173,7 +180,9 @@ class Seq2Seq(nn.Module):
             self.optimizer.zero_grad()  # Cleaning cache optimizer
             x_rec, z = self(batch)
             loss = self.loss_func(x_rec, x) 
+            ce_loss = self.ce_loss_func(x_rec, x)
             metrics["loss"] += loss.item()
+            metrics["ce_loss"] += ce_loss.item()
             loss.backward()
             self.optimizer.step()
 
@@ -187,7 +196,7 @@ class Seq2Seq(nn.Module):
 
     def test(self, loader):
         self.eval()
-        metrics = {"loss": 0}
+        metrics = {"loss": 0, "ce_loss": 0}
 
         if self.verbose:
             loader = tqdm(loader)
@@ -200,7 +209,9 @@ class Seq2Seq(nn.Module):
                 
                 x_rec, z = self(batch)
                 loss = self.loss_func(x_rec, x)
+                ce_loss = self.ce_loss_func(x_rec, x)
                 metrics["loss"] += loss.item()
+                metrics["ce_loss"] += ce_loss.item()
 
         for k in metrics: metrics[k] /= len(loader)
 
