@@ -45,7 +45,7 @@ def parser():
     parser_train.add_argument(
         "-n", "--max-epochs",
         type=int,
-        # default=1000,
+        default=1000,
         help="Maximum number of training epochs",
     )
     parser.add_argument(
@@ -97,5 +97,12 @@ def parser():
     )
     parser_pred.add_argument("--pred_config", type=str, help="Path to the pred config file")
 
-    return parser.parse_args()
+    return parser
+
+
+def get_parser_defaults():
+    """
+    Devuelve los valores por defecto definidos en el parser.
+    """
+    return vars(parser().parse_args([]))
     

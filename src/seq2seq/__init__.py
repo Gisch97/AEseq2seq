@@ -1,6 +1,5 @@
-import json
+import json 
 import os
-from pdb import run
 import random
 import numpy as np
 import torch as tr
@@ -17,12 +16,14 @@ from .dataset import SeqDataset, pad_batch
 from .model import seq2seq 
 from .embeddings import NT_DICT
 from .utils import write_ct, validate_file, ct2dot
-from .parser import parser
-from .utils import dot2png, ct2svg, read_train_file, read_test_file, read_pred_file, merge_configs
+from .parser import parser, get_parser_defaults
+from .utils import dot2png, ct2svg, read_train_file, read_test_file, read_pred_file 
 
 def main():
-    args = parser()
     
+    parser_defaults = get_parser_defaults()
+    args = parser().parse_args()
+
     
     if not args.no_cache and args.command == "train":
         cache_path = "cache/"
@@ -36,9 +37,6 @@ def main():
              "verbose": not args.quiet,
              "cache_path": cache_path
              }
-    
-    if "max_epochs" in args:
-        global_config["max_epochs"] = args.max_epochs
 
     if args.global_config is not None:
         global_config.update(json.load(open(args.global_config)))
@@ -46,12 +44,20 @@ def main():
         try:
             global_config.update(json.load(open("config/global.json")))
         except FileNotFoundError:
-            pass
-    global_config = merge_configs(global_config, args)
+            pass 
+    
+    if "max_epochs" in args:
+        global_config["max_epochs"] = args.max_epochs
+    
+    final_config = parser_defaults.copy()
+    final_config.update(global_config)
+    for key, value in vars(args).items():
+        if value is not None:  
+            final_config[key] = value
 
-    if global_config["cache_path"] is not None:
-        shutil.rmtree(global_config["cache_path"], ignore_errors=True)
-        os.makedirs(global_config["cache_path"])
+    if final_config["cache_path"] is not None:
+        shutil.rmtree(final_config["cache_path"], ignore_errors=True)
+        os.makedirs(final_config["cache_path"])
 
     mlflow.set_tracking_uri("sqlite:///mlruns.db")
     # Reproducibility
@@ -62,28 +68,28 @@ def main():
     
 
     try:
-        mlflow.create_experiment(global_config["exp"])
+        mlflow.create_experiment(final_config["exp"])
     except mlflow.exceptions.MlflowException:
         pass
-    mlflow.set_experiment(global_config["exp"])
-    with mlflow.start_run(run_name=global_config["run"]):
+    mlflow.set_experiment(final_config["exp"])
+    with mlflow.start_run(run_name=final_config["run"]):
         if args.command == "train":
             read_train_file(args)  
             
-            mlflow.log_params(global_config)                      
+            mlflow.log_params(final_config)                      
             mlflow.log_param("train_file",args.train_file)
             mlflow.log_param("valid_file",args.valid_file)
             mlflow.log_param("out_path",args.out_path) 
             
-        train(args.train_file, global_config, args.out_path,  args.valid_file, args.j)
+        train(args.train_file, final_config, args.out_path,  args.valid_file, args.j)
 
         if args.command == "test":
             read_test_file(args)
-            test(args.test_file, args.model_weights, args.out_path, global_config, args.j)
+            test(args.test_file, args.model_weights, args.out_path, final_config, args.j)
 
         if args.command == "pred":
             read_pred_file(args)
-            pred(args.pred_file, model_weights=args.model_weights, out_path=args.out_path, logits=args.logits, config=global_config, nworkers=args.j, draw=args.draw, draw_resolution=args.draw_resolution)    
+            pred(args.pred_file, model_weights=args.model_weights, out_path=args.out_path, logits=args.logits, config=final_config, nworkers=args.j, draw=args.draw, draw_resolution=args.draw_resolution)    
     
 def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, verbose=True):
     if out_path is None:

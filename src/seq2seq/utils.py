@@ -458,12 +458,17 @@ def merge_configs(global_config, parsed_args):
     3. Valores por defecto.
     """
     final_config = {}
+    for key, value in parser_defaults.items():
+        final_config[key] = value  # Inicializa con los valores por defecto del parser
+    
     for key, value in global_config.items():
-        final_config[key] = value  # Inicializa con el valor del archivo
+        if value is not None:
+            final_config[key] = value  # Actualiza con valores del archivo de configuración
     
     for arg_key, arg_value in vars(parsed_args).items():
         if arg_value is not None:  # Si el argumento fue proporcionado en la CI
             final_config[arg_key] = arg_value
+    
     
     return final_config
  
