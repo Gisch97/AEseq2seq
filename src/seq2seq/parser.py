@@ -14,7 +14,7 @@ def parser():
     parser.add_argument("--quiet", action="store_true", help="Quiet mode (default: False)") 
     parser.add_argument("--max-length", type=int, default=512, help="Maximum sequence length to process (default: 512") 
     parser.add_argument('--version', '-v', action='version', version='%(prog)s ' + __version__)
-    parser.add_argument("--exp", type=str, default="seq2seq", help="Experiment name (default: seq2seq)")
+    parser.add_argument("--exp", type=str, default=None, help="Experiment name")
     parser.add_argument("--run", type=str, default=None, help="Run name (default: none)")
     
 
@@ -45,7 +45,7 @@ def parser():
     parser_train.add_argument(
         "-n", "--max-epochs",
         type=int,
-        default=1000,
+        # default=1000,
         help="Maximum number of training epochs",
     )
     parser.add_argument(

@@ -448,7 +448,24 @@ def read_pred_file(args):
                                 setattr(args, key, value)
             except FileNotFoundError:
                 raise ValueError("No pred_file specified")        
-            
+
+def merge_configs(global_config, parsed_args):
+    """
+    Fusiona el archivo de configuración con los argumentos parseados.
+    La prioridad es:
+    1. Argumentos parseados (CI / línea de comandos).
+    2. Archivo de configuración.
+    3. Valores por defecto.
+    """
+    final_config = {}
+    for key, value in global_config.items():
+        final_config[key] = value  # Inicializa con el valor del archivo
+    
+    for arg_key, arg_value in vars(parsed_args).items():
+        if arg_value is not None:  # Si el argumento fue proporcionado en la CI
+            final_config[arg_key] = arg_value
+    
+    return final_config
  
             
 

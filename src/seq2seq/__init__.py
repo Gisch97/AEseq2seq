@@ -14,11 +14,11 @@ import mlflow.pytorch
 
 from torch.utils.data import DataLoader
 from .dataset import SeqDataset, pad_batch
-from .model import seq2seq
+from .model import seq2seq 
 from .embeddings import NT_DICT
 from .utils import write_ct, validate_file, ct2dot
 from .parser import parser
-from .utils import dot2png, ct2svg, read_train_file, read_test_file, read_pred_file
+from .utils import dot2png, ct2svg, read_train_file, read_test_file, read_pred_file, merge_configs
 
 def main():
     args = parser()
@@ -47,21 +47,20 @@ def main():
             global_config.update(json.load(open("config/global.json")))
         except FileNotFoundError:
             pass
+    global_config = merge_configs(global_config, args)
 
     if global_config["cache_path"] is not None:
         shutil.rmtree(global_config["cache_path"], ignore_errors=True)
         os.makedirs(global_config["cache_path"])
 
+    mlflow.set_tracking_uri("sqlite:///mlruns.db")
     # Reproducibility
     tr.manual_seed(42)
     random.seed(42)
     np.random.seed(42)
     
-    mlflow.set_tracking_uri("sqlite:///mlruns.db")
-    if args.exp != "seq2seq":
-        global_config["exp"] = args.exp
-    if args.run is not None:
-        global_config["run"] = args.run
+    
+
     try:
         mlflow.create_experiment(global_config["exp"])
     except mlflow.exceptions.MlflowException:

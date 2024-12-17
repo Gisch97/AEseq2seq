@@ -7,6 +7,7 @@ import torch as tr
 from tqdm import tqdm
 import mlflow
 import mlflow.pytorch
+from .metrics import compute_metrics
 from .utils import mat2bp, postprocessing
 from ._version import __version__
 
@@ -44,18 +45,7 @@ class Seq2Seq(nn.Module):
         """Base instantiation of model"""
         super().__init__()
 
-        self.hyperparameters = {
-            "hyp_embedding_dim": embedding_dim,
-            "hyp_device": device,
-            "hyp_negative_weight": negative_weight,
-            "hyp_lr": lr,
-            "hyp_scheduler": scheduler,
-            "hyp_verbose": verbose,
-            "hyp_interaction_prior": interaction_prior,
-            "hyp_output_th": output_th,
-        }
-        
-        
+
         self.device = device
         self.class_weight = tr.tensor([negative_weight, 1.0]).float().to(device)
         self.verbose = verbose
@@ -66,6 +56,17 @@ class Seq2Seq(nn.Module):
         if interaction_prior != "none":
             mid_ch = 2
 
+        
+        self.hyperparameters = {
+            "hyp_embedding_dim": embedding_dim,
+            "hyp_device": device,
+            "hyp_negative_weight": negative_weight,
+            "hyp_lr": lr,
+            "hyp_scheduler": scheduler,
+            "hyp_verbose": verbose,
+            "hyp_interaction_prior": interaction_prior,
+            "hyp_output_th": output_th,
+            }        
         # Define architecture
         self.build_graph(embedding_dim, **kwargs) 
         self.optimizer = tr.optim.Adam(self.parameters(), lr=lr)
@@ -176,22 +177,30 @@ class Seq2Seq(nn.Module):
         """yhat and y are [N, L]"""
         x = x.view(x.shape[0], -1)
         x_rec = x_rec.view(x_rec.shape[0], -1)
-
         loss = mse_loss(x_rec, x)
         return loss
+
     
     def ce_loss_func(self, x_rec, x):
         """yhat and y are [N, L]"""
         x = x.view(x.shape[0], -1)
         x_rec = x_rec.view(x_rec.shape[0], -1)
-
         loss = cross_entropy(x_rec, x)
         return loss
 
+
     def fit(self, loader):
         self.train()
-        metrics = {"loss": 0, "ce_loss": 0}
 
+        metrics = {
+            "loss": 0,
+            "ce_loss": 0,
+            "F1": 0,
+            "Accuracy": 0,
+            "Accuracy_seq": 0,
+            "Precision": 0,
+            "Recall": 0
+            }
         if self.verbose: loader = tqdm(loader)
 
         for batch in loader: 
@@ -203,6 +212,13 @@ class Seq2Seq(nn.Module):
             ce_loss = self.ce_loss_func(x_rec, x)
             metrics["loss"] += loss.item()
             metrics["ce_loss"] += ce_loss.item()
+            
+            
+            batch_metrics = compute_metrics(x_rec, x, output_th=self.output_th)
+            for k, v in batch_metrics.items():
+                metrics[k] += v
+            
+            
             loss.backward()
             self.optimizer.step()
 
@@ -216,7 +232,16 @@ class Seq2Seq(nn.Module):
 
     def test(self, loader):
         self.eval()
-        metrics = {"loss": 0, "ce_loss": 0}
+        
+        metrics = {
+            "loss": 0,
+            "ce_loss": 0,
+            "F1": 0,
+            "Accuracy": 0,
+            "Accuracy_seq": 0,
+            "Precision": 0,
+            "Recall": 0
+            }
 
         if self.verbose:
             loader = tqdm(loader)
@@ -232,6 +257,11 @@ class Seq2Seq(nn.Module):
                 ce_loss = self.ce_loss_func(x_rec, x)
                 metrics["loss"] += loss.item()
                 metrics["ce_loss"] += ce_loss.item()
+                
+                
+                batch_metrics = compute_metrics(x_rec, x, output_th=self.output_th)
+                for k, v in batch_metrics.items():
+                    metrics[k] += v
 
         for k in metrics: metrics[k] /= len(loader)
 
@@ -274,8 +304,6 @@ class Seq2Seq(nn.Module):
         mlflow.log_params(self.hyperparameters)
         mlflow.log_params(self.architecture)
         
- 
-        mlflow.pytorch.log_model(self, "model")
 
 class ResidualLayer1D(nn.Module):
     def __init__(

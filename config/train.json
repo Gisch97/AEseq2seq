@@ -1,6 +1,5 @@
 {
-    "train_file": "data/ArchiveII_sample.csv",
+    "train_file": "data/ArchiveII.csv",
     "valid_file": null,
-    "out_path": "results/plain_1e",
-    "max_epochs": 2
+    "out_path": "results/plain_5e"
 }

@@ -1,11 +1,12 @@
 {
     "exp": "seq2seq_plain",
+    "run": "5e",
     "device": "cpu",
     "batch_size": 4,
     "quiet": false,
-    "max_len": 128,
-    "max_epochs": 1,
+    "max_len": 128, 
     "nworkers": 4,
-    "cache_path": "cache/"
+    "cache_path": "cache/",
+    "max_epochs": 5
 }
 
