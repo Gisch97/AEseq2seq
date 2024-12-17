@@ -383,7 +383,8 @@ def validate_canonical(sequence, base_pairs):
     return True, ""
 
 def read_train_file(args):
-    if  args.train_config is not None:
+    if args.train_file is None:
+        if args.train_config is not None:
             with open(args.train_config) as f:
                 train_conf = json.load(f)
                 for key, value in train_conf.items():
@@ -391,12 +392,22 @@ def read_train_file(args):
                         current_val = getattr(args, key)
                         if current_val is None or current_val == '':
                             setattr(args, key, value) 
-            if train_conf["train_file"] is None and args.train_file is None:
-                raise ValueError("No train_file specified") 
-            
+        if args.train_config is None:
+            try:
+                with open('config/train.json') as f:
+                    train_conf = json.load(f)
+                    for key, value in train_conf.items():
+                        if hasattr(args, key):
+                            current_val = getattr(args, key)
+                            if current_val is None or current_val == '':
+                                setattr(args, key, value)
+            except FileNotFoundError:
+                raise ValueError("No train_file specified")
+
             
 def read_test_file(args):
-    if args.test_config is not None:
+    if args.test_file is None:
+        if args.test_config is not None:
             with open(args.test_config) as f:
                 test_conf = json.load(f)
                 for key, value in test_conf.items():
@@ -404,11 +415,21 @@ def read_test_file(args):
                         current_val = getattr(args, key)
                         if current_val is None or current_val == '':
                             setattr(args, key, value) 
-            if test_conf["test_file"] is None and args.test_file is None:
+        if args.test_config is None:
+            try:
+                with open('config/test.json') as f:
+                    test_conf = json.load(f)
+                    for key, value in test_conf.items():
+                        if hasattr(args, key):
+                            current_val = getattr(args, key)
+                            if current_val is None or current_val == '':
+                                setattr(args, key, value)
+            except FileNotFoundError:
                 raise ValueError("No test_file specified")
             
 def read_pred_file(args):
-    if args.pred_config is not None:
+    if args.pred_file is None:
+        if args.pred_config is not None:
             with open(args.pred_config) as f:
                 pred_conf = json.load(f)
                 for key, value in pred_conf.items():
@@ -416,8 +437,19 @@ def read_pred_file(args):
                         current_val = getattr(args, key)
                         if current_val is None or current_val == '':
                             setattr(args, key, value) 
-            if pred_conf["pred_file"] is None and args.pred_file is None:
-                raise ValueError("No pred_file specified")            
+        if args.pred_config is None:
+            try:
+                with open('config/pred.json') as f:
+                    pred_conf = json.load(f)
+                    for key, value in pred_conf.items():
+                        if hasattr(args, key):
+                            current_val = getattr(args, key)
+                            if current_val is None or current_val == '':
+                                setattr(args, key, value)
+            except FileNotFoundError:
+                raise ValueError("No pred_file specified")        
+            
+ 
             
 
     

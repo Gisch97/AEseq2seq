@@ -5,7 +5,8 @@ from torch import nn
 from torch.nn.functional import mse_loss, cross_entropy
 import torch as tr
 from tqdm import tqdm
- 
+import mlflow
+import mlflow.pytorch
 from .utils import mat2bp, postprocessing
 from ._version import __version__
 
@@ -24,7 +25,7 @@ def seq2seq(weights=None, **kwargs):
         model.load_state_dict(tr.load(weights, map_location=tr.device(model.device)))
     else:
         print("No weights provided, using random initialization")
-        
+    model.log_model()
     return model
     
     
@@ -35,8 +36,6 @@ class Seq2Seq(nn.Module):
         device="cpu",
         negative_weight=0.1,
         lr=1e-4,
-        loss_l1=0,
-        loss_beta=0,
         scheduler="none",
         verbose=True,
         interaction_prior=False,
@@ -45,12 +44,23 @@ class Seq2Seq(nn.Module):
         """Base instantiation of model"""
         super().__init__()
 
+        self.hyperparameters = {
+            "hyp_embedding_dim": embedding_dim,
+            "hyp_device": device,
+            "hyp_negative_weight": negative_weight,
+            "hyp_lr": lr,
+            "hyp_scheduler": scheduler,
+            "hyp_verbose": verbose,
+            "hyp_interaction_prior": interaction_prior,
+            "hyp_output_th": output_th,
+        }
+        
+        
         self.device = device
         self.class_weight = tr.tensor([negative_weight, 1.0]).float().to(device)
         self.verbose = verbose
         self.config = kwargs
         self.output_th = output_th
-
         mid_ch = 1
         self.interaction_prior = interaction_prior
         if interaction_prior != "none":
@@ -87,6 +97,16 @@ class Seq2Seq(nn.Module):
         rank=64,
         **kwargs
     ): 
+        self.architecture = {
+            "arc_embedding_dim": embedding_dim,
+            "arc_filters": filters,
+            "arc_kernel": kernel,
+            "arc_num_layers": num_layers,
+            "arc_dilation_resnet1d": dilation_resnet1d,
+            "arc_resnet_bottleneck_factor": resnet_bottleneck_factor,
+            "arc_latent_dim": latent_dim,
+            "arc_rank": rank,
+        }
         pad = (kernel - 1) // 2
         # Encoder
         self.encode = [nn.Conv1d(embedding_dim, filters, kernel, padding="same")]
@@ -248,6 +268,14 @@ class Seq2Seq(nn.Module):
         predictions = pd.DataFrame(predictions, columns=["id", "sequence", "length", "embedding", "reconstructed", "latent"])
 
         return predictions, logits_list
+
+    def log_model(self):
+        """Logs the model architecture and hyperparameters to MLflow.""" 
+        mlflow.log_params(self.hyperparameters)
+        mlflow.log_params(self.architecture)
+        
+ 
+        mlflow.pytorch.log_model(self, "model")
 
 class ResidualLayer1D(nn.Module):
     def __init__(

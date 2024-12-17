@@ -1,5 +1,6 @@
 import json
 import os
+from pdb import run
 import random
 import numpy as np
 import torch as tr
@@ -41,6 +42,11 @@ def main():
 
     if args.global_config is not None:
         global_config.update(json.load(open(args.global_config)))
+    else:
+        try:
+            global_config.update(json.load(open("config/global.json")))
+        except FileNotFoundError:
+            pass
 
     if global_config["cache_path"] is not None:
         shutil.rmtree(global_config["cache_path"], ignore_errors=True)
@@ -51,28 +57,36 @@ def main():
     random.seed(42)
     np.random.seed(42)
     
-    mlflow.set_tracking_uri("http://localhost:5000")
+    mlflow.set_tracking_uri("sqlite:///mlruns.db")
+    if args.exp != "seq2seq":
+        global_config["exp"] = args.exp
+    if args.run is not None:
+        global_config["run"] = args.run
+    try:
+        mlflow.create_experiment(global_config["exp"])
+    except mlflow.exceptions.MlflowException:
+        pass
     mlflow.set_experiment(global_config["exp"])
-    if args.command == "train":
-        with mlflow.start_run():
-            mlflow.log_params(global_config)                      
+    with mlflow.start_run(run_name=global_config["run"]):
+        if args.command == "train":
             read_train_file(args)  
+            
+            mlflow.log_params(global_config)                      
             mlflow.log_param("train_file",args.train_file)
             mlflow.log_param("valid_file",args.valid_file)
             mlflow.log_param("out_path",args.out_path) 
-            train(args.train_file, global_config, args.out_path,  args.valid_file, args.j)
+            
+        train(args.train_file, global_config, args.out_path,  args.valid_file, args.j)
 
-    if args.command == "test":
-        read_test_file(args)
-        test(args.test_file, args.model_weights, args.out_path, global_config, args.j)
+        if args.command == "test":
+            read_test_file(args)
+            test(args.test_file, args.model_weights, args.out_path, global_config, args.j)
 
-    if args.command == "pred":
-        read_pred_file(args)
-        pred(args.pred_file, model_weights=args.model_weights, out_path=args.out_path, logits=args.logits, config=global_config, nworkers=args.j, draw=args.draw, draw_resolution=args.draw_resolution)    
-        
+        if args.command == "pred":
+            read_pred_file(args)
+            pred(args.pred_file, model_weights=args.model_weights, out_path=args.out_path, logits=args.logits, config=global_config, nworkers=args.j, draw=args.draw, draw_resolution=args.draw_resolution)    
+    
 def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, verbose=True):
-    
-    
     if out_path is None:
         out_path = f"results_{str(datetime.today()).replace(' ', '-')}/"
     else:
@@ -123,8 +137,8 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
 
     net = seq2seq(train_len=len(train_loader), **config)
     
+    # mlflow.log_artifact(summary(net, train_loader, valid_loader)) 
     best_loss, patience_counter = np.inf, 0 
-    
     patience = config["patience"] if "patience" in config else 30
     if verbose:
         print("Start training...")
@@ -137,10 +151,11 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
         train_metrics = net.fit(train_loader)
         for k, v in train_metrics.items():
             mlflow.log_metric(f"train_{k}", v, step=epoch)
-            
+            mlflow.log_metric(key=f"train_loss_{k}", value=v, step=epoch)
         val_metrics = net.test(valid_loader)
         for k, v in val_metrics.items():
-            mlflow.log_metric(f"valid_{k}", v, step=epoch)
+            # mlflow.log_metric(f"valid_{k}", v, step=epoch)
+            mlflow.log_metric(key=f"valid_loss_{k}", value=v, step=epoch)
 
 
         # if val_metrics["f1"] > best_f1:

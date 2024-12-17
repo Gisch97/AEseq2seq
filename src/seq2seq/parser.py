@@ -8,7 +8,6 @@ def parser():
         epilog="webserver link | None",
     )
     parser.add_argument("--global_config", type=str, help="Path to the global configuration file")
-
     parser.add_argument("-d", type=str, default="cpu", help="Device ('cpu' or 'cuda')")
     parser.add_argument("-batch", type=int, default=4, help="Batch size for handling sequences")
     parser.add_argument("-j", type=int, default=2, help="Number of parallel workers")
@@ -16,6 +15,8 @@ def parser():
     parser.add_argument("--max-length", type=int, default=512, help="Maximum sequence length to process (default: 512") 
     parser.add_argument('--version', '-v', action='version', version='%(prog)s ' + __version__)
     parser.add_argument("--exp", type=str, default="seq2seq", help="Experiment name (default: seq2seq)")
+    parser.add_argument("--run", type=str, default=None, help="Run name (default: none)")
+    
 
     subparsers = parser.add_subparsers(
         title="Actions", dest="command", description="Running commands", required=False
