@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Array de valores para latent_dim
-latent_dims=(96 128)
+latent_dims=(13 14 15 17 18 19)
 
 # Directorios y archivos de configuración
 model_file="src/seq2seq/model.py"

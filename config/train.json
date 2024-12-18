@@ -1,5 +1,5 @@
 {
     "train_file": "data/ArchiveII_max_length_128.csv",
     "valid_file": null,
-    "out_path": "results/plain/latent-128"
+    "out_path": "results/plain/latent-19"
 }

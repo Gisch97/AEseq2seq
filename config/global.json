@@ -1,6 +1,6 @@
 {
     "exp": "seq2seq_plain",
-    "run": "latent128",
+    "run": "latent19",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,

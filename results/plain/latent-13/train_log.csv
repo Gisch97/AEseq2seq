@@ -1,0 +1,2 @@
+epoch,train_Accuracy,train_Accuracy_seq,train_F1,train_Precision,train_Recall,train_ce_loss,train_loss,valid_Accuracy,valid_Accuracy_seq,valid_F1,valid_Precision,valid_Recall,valid_ce_loss,valid_loss
+0,0.7976,0.0000,0.7353,0.7594,0.7976,639.3928,0.1546,0.8209,0.0000,0.7669,0.8041,0.8209,624.3041,0.1347
