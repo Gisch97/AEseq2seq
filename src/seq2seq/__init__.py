@@ -46,8 +46,8 @@ def main():
         except FileNotFoundError:
             pass 
     
-    if "max_epochs" in args:
-        global_config["max_epochs"] = args.max_epochs
+    # if "max_epochs" in args:
+    #     global_config["max_epochs"] = args.max_epochs
     
     final_config = parser_defaults.copy()
     final_config.update(global_config)
