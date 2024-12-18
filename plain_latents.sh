@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Array de valores para latent_dim
-latent_dims=(13 14 15 17 18 19)
+latent_dims=(12 16 20 32 64)
 
 # Directorios y archivos de configuración
 model_file="src/seq2seq/model.py"
@@ -16,8 +16,8 @@ for dim in "${latent_dims[@]}"; do
   sed -i "s/latent_dim=[0-9]*/latent_dim=$dim/" "$model_file"
 
   # Modificar el archivo global.json
-  sed -i "s/\"run\": \"latent[0-9]*\"/\"run\": \"latent$dim\"/" "$global_config"
-
+  sed -i "s/\"run\": \"latent[0-9]*-valid02\"/\"run\": \"latent$dim-valid02\"/" "$global_config"
+  
   # Modificar el archivo train.json
   sed -i "s/latent-[0-9]*/latent-$dim/" "$train_config"
 
