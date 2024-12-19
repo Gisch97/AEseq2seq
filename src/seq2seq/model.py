@@ -94,7 +94,7 @@ class Seq2Seq(nn.Module):
         num_layers=2,
         dilation_resnet1d=3,
         resnet_bottleneck_factor=0.5,
-        latent_dim=20,
+        latent_dim=64,
         rank=64,
         **kwargs
     ): 

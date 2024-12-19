@@ -1,6 +1,6 @@
 {
     "exp": "seq2seq_plain",
-    "run": "latent20-valid02",
+    "run": "latent64-valid02",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,
