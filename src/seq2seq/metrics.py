@@ -29,15 +29,13 @@ def compute_metrics(x_rec, x_true, output_th=0.5):
     seq_match = (x_true == (x_rec > output_th).float()).all(dim=1).all(dim=1)
     seq_accuracy = seq_match.float().mean().item()
 
-    # 4. Precision y Recall
-    precision = precision_score(x_true_flat, x_rec_flat, average="weighted", zero_division=0)
-    recall = recall_score(x_true_flat, x_rec_flat, average="weighted", zero_division=0)
+    # # 4. Precision y Recall
+    # precision = precision_score(x_true_flat, x_rec_flat, average="weighted", zero_division=0)
+    # recall = recall_score(x_true_flat, x_rec_flat, average="weighted", zero_division=0)
 
     # Devolver todas las métricas
     return {
         "F1": f1,
         "Accuracy": accuracy_tresh,
-        "Accuracy_seq": seq_accuracy,
-        "Precision": precision,
-        "Recall": recall
+        "Accuracy_seq": seq_accuracy
     }

@@ -60,6 +60,7 @@ def main():
         os.makedirs(final_config["cache_path"])
 
     mlflow.set_tracking_uri("sqlite:///mlruns.db")
+     
     # Reproducibility
     tr.manual_seed(42)
     random.seed(42)
@@ -140,9 +141,7 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
         collate_fn=pad_batch_with_fixed_length,
     )
 
-    net = seq2seq(train_len=len(train_loader), **config)
-    
-    # mlflow.log_artifact(summary(net, train_loader, valid_loader)) 
+    net = seq2seq(train_len=len(train_loader), **config)  
     best_loss, patience_counter = np.inf, 0 
     patience = config["patience"] if "patience" in config else 30
     if verbose:
@@ -154,17 +153,12 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
     
     for epoch in range(max_epochs):
         train_metrics = net.fit(train_loader)
-        for k, v in train_metrics.items():
-            mlflow.log_metric(f"train_{k}", v, step=epoch)
-            mlflow.log_metric(key=f"train_loss_{k}", value=v, step=epoch)
+        for k, v in train_metrics.items(): 
+            mlflow.log_metric(key=f"train_{k}", value=v, step=epoch)
         val_metrics = net.test(valid_loader)
-        for k, v in val_metrics.items():
-            # mlflow.log_metric(f"valid_{k}", v, step=epoch)
-            mlflow.log_metric(key=f"valid_loss_{k}", value=v, step=epoch)
+        for k, v in val_metrics.items():  
+            mlflow.log_metric(key=f"valid_{k}", value=v, step=epoch)
 
-
-        # if val_metrics["f1"] > best_f1:
-        #     best_f1 = val_metrics["f1"]
         if val_metrics["loss"] < best_loss:
             best_loss = val_metrics["loss"]
             tr.save(net.state_dict(), os.path.join(out_path, "weights.pmt"))
@@ -198,9 +192,9 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
     tmp_file = os.path.join(out_path, "valid.csv")
     if os.path.exists(tmp_file):
         os.remove(tmp_file)
-        
-    mlflow.pytorch.log_model(net, "model")
      
+    mlflow.pytorch.log_model(net, "model")
+        
  
     
 def test(test_file, model_weights=None, output_file=None, config={}, nworkers=2, verbose=True):

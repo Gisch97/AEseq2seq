@@ -2,6 +2,7 @@ import pandas as pd
 import math
 from dataclasses import dataclass
 from torch import nn
+from torchinfo import summary
 from torch.nn.functional import mse_loss, cross_entropy
 import torch as tr
 from tqdm import tqdm
@@ -34,37 +35,28 @@ class Seq2Seq(nn.Module):
     def __init__(self,
         train_len=0,
         embedding_dim=4,
-        device="cpu",
-        negative_weight=0.1,
-        lr=1e-4,
+        device="cpu", 
+        lr=1e-2,
         scheduler="none",
+        output_th=0.7,
         verbose=True,
-        interaction_prior=False,
-        output_th=0.5,
         **kwargs):
         """Base instantiation of model"""
         super().__init__()
 
 
         self.device = device
-        self.class_weight = tr.tensor([negative_weight, 1.0]).float().to(device)
         self.verbose = verbose
         self.config = kwargs
         self.output_th = output_th
-        mid_ch = 1
-        self.interaction_prior = interaction_prior
-        if interaction_prior != "none":
-            mid_ch = 2
 
         
         self.hyperparameters = {
             "hyp_embedding_dim": embedding_dim,
-            "hyp_device": device,
-            "hyp_negative_weight": negative_weight,
+            "hyp_device": device, 
             "hyp_lr": lr,
             "hyp_scheduler": scheduler,
-            "hyp_verbose": verbose,
-            "hyp_interaction_prior": interaction_prior,
+            "hyp_verbose": verbose, 
             "hyp_output_th": output_th,
             }        
         # Define architecture
@@ -94,7 +86,7 @@ class Seq2Seq(nn.Module):
         num_layers=2,
         dilation_resnet1d=3,
         resnet_bottleneck_factor=0.5,
-        latent_dim=64,
+        latent_dim=32,
         rank=64,
         **kwargs
     ): 
@@ -197,9 +189,7 @@ class Seq2Seq(nn.Module):
             "ce_loss": 0,
             "F1": 0,
             "Accuracy": 0,
-            "Accuracy_seq": 0,
-            "Precision": 0,
-            "Recall": 0
+            "Accuracy_seq": 0
             }
         if self.verbose: loader = tqdm(loader)
 
@@ -238,9 +228,7 @@ class Seq2Seq(nn.Module):
             "ce_loss": 0,
             "F1": 0,
             "Accuracy": 0,
-            "Accuracy_seq": 0,
-            "Precision": 0,
-            "Recall": 0
+            "Accuracy_seq": 0
             }
 
         if self.verbose:
@@ -303,7 +291,10 @@ class Seq2Seq(nn.Module):
         """Logs the model architecture and hyperparameters to MLflow.""" 
         mlflow.log_params(self.hyperparameters)
         mlflow.log_params(self.architecture)
-        
+
+        # with open("model_summary.txt", "w") as f:
+        #     f.write(str(summary(self)))
+        # mlflow.log_artifact("model_summary.txt")
 
 class ResidualLayer1D(nn.Module):
     def __init__(

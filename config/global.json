@@ -1,6 +1,6 @@
 {
-    "exp": "seq2seq_plain",
-    "run": "latent64-valid02",
+    "exp": "seq2seq_plain_latent32",
+    "run": "latent-32-lr1e-2-ot0.7",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,
@@ -8,7 +8,7 @@
     "quiet": false,
     "nworkers": 4,
     "max_epochs": 50,
-    "valid_split": 0.2,
+    "valid_split": 0.1,
     "verbose": true
 }
 
