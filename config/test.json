@@ -1,5 +1,5 @@
 {
-    "test_file": null,
-    "model_weights": null,
-    "out_path": null
-}
+    "test_file": "data/ArchiveII-KFold/fam-similarity/test_0.csv",
+    "model_weights": "results/plain_latent32/lr1e-3-ot0.5/weights.pmt",
+    "out_path": "results/ArchiveII-KFold/fam-similarity/fold_0/testlog_0.csv"
+} 

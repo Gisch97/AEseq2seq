@@ -1,6 +1,6 @@
 {
-    "exp": "seq2seq_plain_latent32",
-    "run": "latent-32-lr1e-2-ot0.7",
+    "exp": "plain_kfold",
+    "run": "fam_sim_fold_0",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,

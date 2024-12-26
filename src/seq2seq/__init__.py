@@ -81,12 +81,14 @@ def main():
             mlflow.log_param("train_file",args.train_file)
             mlflow.log_param("valid_file",args.valid_file)
             mlflow.log_param("out_path",args.out_path) 
+            train(args.train_file, final_config, args.out_path,  args.valid_file, args.j)
             
-        train(args.train_file, final_config, args.out_path,  args.valid_file, args.j)
 
         if args.command == "test":
             read_test_file(args)
-            test(args.test_file, args.model_weights, args.out_path, final_config, args.j)
+            test(args.test_file, args.model_weights, args.out_path, final_config, args.j)    
+            mlflow.log_param("test_file",args.test_file) 
+            mlflow.log_param("out_path",args.out_path) 
 
         if args.command == "pred":
             read_pred_file(args)

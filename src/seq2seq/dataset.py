@@ -25,21 +25,10 @@ class SeqDataset(Dataset):
         data = pd.read_csv(dataset_path)
         self.training = training
 
-        if for_prediction:
-            assert (
-                "sequence" in data.columns
-                and "id" in data.columns
-            ), "Dataset should contain 'id' and 'sequence' columns"
-
-        else:
-            assert (
-                ("base_pairs" in data.columns or "dotbracket" in data.columns)
-                and "sequence" in data.columns
-                and "id" in data.columns
-            ), "Dataset should contain 'id', 'sequence' and 'base_pairs' or 'dotbracket' columns"
-
-            if "base_pairs" not in data.columns and "dotbracket" in data.columns:
-                data["base_pairs"] = data.dotbracket.apply(lambda x: str(dot2bp(x)))      
+        assert (
+            "sequence" in data.columns
+            and "id" in data.columns
+        ), "Dataset should contain 'id' and 'sequence' columns"
 
         data["len"] = data.sequence.str.len()
 
