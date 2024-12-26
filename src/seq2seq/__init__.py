@@ -164,6 +164,7 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
             tr.save(net.state_dict(), os.path.join(out_path, "weights.pmt"))
             patience_counter = 0
         else:
+            mlflow.log_metric(key=f"valid_{k}", value=v, step=epoch)
             patience_counter += 1
             if patience_counter > patience:
                 break
@@ -193,6 +194,7 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
     if os.path.exists(tmp_file):
         os.remove(tmp_file)
      
+    mlflow.log_artifact('weights', os.path.join(out_path, "weights.pmt"))
     mlflow.pytorch.log_model(net, "model")
         
  
@@ -222,6 +224,9 @@ def test(test_file, model_weights=None, output_file=None, config={}, nworkers=2,
     if verbose:
         print(f"Start test of {test_file}")        
     test_metrics = net.test(test_loader)
+
+    for k, v in test_metrics.items():  
+        mlflow.log_metric(key=f"test_{k}", value=v)
     summary = ",".join([k for k in sorted(test_metrics.keys())]) + "\n" + ",".join([f"{test_metrics[k]:.3f}" for k in sorted(test_metrics.keys())])+ "\n" 
     if output_file is not None:
         with open(output_file, "w") as f:

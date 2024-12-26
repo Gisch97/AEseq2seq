@@ -36,9 +36,9 @@ class Seq2Seq(nn.Module):
         train_len=0,
         embedding_dim=4,
         device="cpu", 
-        lr=1e-2,
+        lr=1e-3,
         scheduler="none",
-        output_th=0.7,
+        output_th=0.5,
         verbose=True,
         **kwargs):
         """Base instantiation of model"""
