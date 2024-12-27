@@ -3,8 +3,7 @@ set -e
 
 # Directorios principales
 DATA_DIR="data/ArchiveII-KFold/fam-similarity"
-OUT_DIR="results/plain_kfold_similarity"
-LOG_FILE="$OUT_DIR/kfold_log.txt"
+OUT_DIR="results/ArchiveII-KFold/fam-similarity" 
 
 mkdir -p "$OUT_DIR"
 
@@ -29,7 +28,7 @@ EOF
     cat > "$config_dir/test.json" << EOF
 {
     "test_file": "data/ArchiveII-KFold/fam-similarity/test_${fold}.csv",
-    "model_weights": "results/plain_latent32/lr1e-3-ot0.5/weights.pmt",
+    "model_weights": "results/ArchiveII-KFold/fam-similarity/fold_${fold}/weights.pmt",
     "out_path": "results/ArchiveII-KFold/fam-similarity/fold_${fold}/testlog_${fold}.csv"
 }
 EOF
@@ -39,16 +38,23 @@ run_fold() {
     local fold=$1
     TRAIN_FILE="$DATA_DIR/train_${fold}.csv"
     VAL_FILE="$DATA_DIR/valid_${fold}.csv"
-    OUTPUT_DIR="$DATA_DIR/fold_${fold}_results"
+    OUTPUT_DIR="$OUT_DIR/fold_${fold}"
 
-    mkdir -p "$OUTPUT_DIR"
-    echo "Ejecutando Fold $fold..." >> "$LOG_FILE"
-
+    echo "Ejecutando Fold $fold..."  
+    echo $TRAIN_FILE
+    echo $VAL_FILE
+    echo $OUTPUT_DIR
     # Actualizar archivos JSON antes de la ejecución
     update_json_files "$fold"
 
     # Ejecutar el entrenamiento
     seq2seq train 
+    echo "K-Fold (train) #$fold completado."
+
+    # Ejecutar el test
+    seq2seq test
+    echo "K-Fold (train) #$fold completado."
+
 }
 
 KFOLDS=5
@@ -58,4 +64,4 @@ for fold in $(seq 0 $(($KFOLDS - 1))); do
     run_fold "$fold"
 done
 
-echo "K-Fold completado. Revisa $LOG_FILE para más detalles."
+echo "K-Fold completado."
