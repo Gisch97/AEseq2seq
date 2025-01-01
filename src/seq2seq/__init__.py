@@ -1,4 +1,4 @@
-import json
+import json 
 import os
 import random
 import numpy as np
@@ -8,59 +8,93 @@ import pandas as pd
 import shutil
 import pickle
 from functools import partial
+import mlflow
+import mlflow.pytorch
 
 from torch.utils.data import DataLoader
 from .dataset import SeqDataset, pad_batch
-from .model import seq2seq
+from .model import seq2seq 
 from .embeddings import NT_DICT
 from .utils import write_ct, validate_file, ct2dot
-from .parser import parser
-from .utils import dot2png, ct2svg
+from .parser import parser, get_parser_defaults
+from .utils import dot2png, ct2svg, read_train_file, read_test_file, read_pred_file 
 
 def main():
     
-    args = parser()
+    parser_defaults = get_parser_defaults()
+    args = parser().parse_args()
+
     
     if not args.no_cache and args.command == "train":
         cache_path = "cache/"
     else:
         cache_path = None
 
-    config= {"device": args.d,
+    global_config= {"device": args.d,
              "batch_size": args.batch,
              "valid_split": 0.1,
              "max_len": 128,
              "verbose": not args.quiet,
              "cache_path": cache_path
              }
+
+    if args.global_config is not None:
+        global_config.update(json.load(open(args.global_config)))
+    else:
+        try:
+            global_config.update(json.load(open("config/global.json")))
+        except FileNotFoundError:
+            pass 
     
-    if "max_epochs" in args:
-        config["max_epochs"] = args.max_epochs
+    # if "max_epochs" in args:
+    #     global_config["max_epochs"] = args.max_epochs
+    
+    final_config = parser_defaults.copy()
+    final_config.update(global_config)
+    for key, value in vars(args).items():
+        if value is not None:  
+            final_config[key] = value
 
-    if args.config is not None:
-        config.update(json.load(open(args.config)))
+    if final_config["cache_path"] is not None:
+        shutil.rmtree(final_config["cache_path"], ignore_errors=True)
+        os.makedirs(final_config["cache_path"])
 
-    if config["cache_path"] is not None:
-        shutil.rmtree(config["cache_path"], ignore_errors=True)
-        os.makedirs(config["cache_path"])
-
+     
     # Reproducibility
     tr.manual_seed(42)
     random.seed(42)
     np.random.seed(42)
+     
+    mlflow.set_tracking_uri("sqlite:///mlruns.db")
+    artifact_location = "mlruns/artifacts"
 
-    if args.command == "train": 
-        train(args.train_file, config, args.out_path,  args.valid_file, args.j)
+    try:
+        mlflow.create_experiment(final_config["exp"], artifact_location=artifact_location )
+    except mlflow.exceptions.MlflowException:
+        pass
+    mlflow.set_experiment(final_config["exp"])
+    with mlflow.start_run(run_name=final_config["run"]):
+        if args.command == "train":
+            read_train_file(args)  
+            
+            mlflow.log_params(final_config)                      
+            mlflow.log_param("train_file",args.train_file)
+            mlflow.log_param("valid_file",args.valid_file)
+            mlflow.log_param("out_path",args.out_path) 
+            train(args.train_file, final_config, args.out_path,  args.valid_file, args.j)
+            
 
-    if args.command == "test":
-        test(args.test_file, args.model_weights, args.out_path, config, args.j)
+        if args.command == "test":
+            read_test_file(args)
+            test(args.test_file, args.model_weights, args.out_path, final_config, args.j)    
+            mlflow.log_param("test_file",args.test_file) 
+            mlflow.log_param("out_path",args.out_path) 
 
-    if args.command == "pred":
-        pred(args.pred_file, model_weights=args.model_weights, out_path=args.out_path, logits=args.logits, config=config, nworkers=args.j, draw=args.draw, draw_resolution=args.draw_resolution)    
-        
+        if args.command == "pred":
+            read_pred_file(args)
+            pred(args.pred_file, model_weights=args.model_weights, out_path=args.out_path, logits=args.logits, config=final_config, nworkers=args.j, draw=args.draw, draw_resolution=args.draw_resolution)    
+    
 def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, verbose=True):
-    
-    
     if out_path is None:
         out_path = f"results_{str(datetime.today()).replace(' ', '-')}/"
     else:
@@ -109,29 +143,34 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
         collate_fn=pad_batch_with_fixed_length,
     )
 
-    net = seq2seq(train_len=len(train_loader), **config)
-    
-    best_f1, patience_counter = -1, 0
+    net = seq2seq(train_len=len(train_loader), **config)  
+    best_loss, patience_counter = np.inf, 0 
     patience = config["patience"] if "patience" in config else 30
     if verbose:
         print("Start training...")
     max_epochs = config["max_epochs"] if "max_epochs" in config else 1000
     logfile = os.path.join(out_path, "train_log.csv") 
-        
+    
+
+    
     for epoch in range(max_epochs):
         train_metrics = net.fit(train_loader)
-
+        for k, v in train_metrics.items(): 
+            mlflow.log_metric(key=f"train_{k}", value=v, step=epoch)
         val_metrics = net.test(valid_loader)
+        for k, v in val_metrics.items():  
+            mlflow.log_metric(key=f"valid_{k}", value=v, step=epoch)
 
-        # if val_metrics["f1"] > best_f1:
-        #     best_f1 = val_metrics["f1"]
-        tr.save(net.state_dict(), os.path.join(out_path, "weights.pmt"))
-        #     patience_counter = 0
-        # else:
-        #     patience_counter += 1
-        #     if patience_counter > patience:
-        #         break
-        
+        if val_metrics["loss"] < best_loss:
+            best_loss = val_metrics["loss"]
+            tr.save(net.state_dict(), os.path.join(out_path, "weights.pmt"))
+            patience_counter = 0
+        else:
+            mlflow.log_metric(key=f"valid_{k}", value=v, step=epoch)
+            patience_counter += 1
+            if patience_counter > patience:
+                break
+    
         if not os.path.exists(logfile):
             with open(logfile, "w") as f: 
                 msg = ','.join(['epoch']+[f"train_{k}" for k in sorted(train_metrics.keys())]+[f"valid_{k}" for k in sorted(val_metrics.keys())]) + "\n"
@@ -156,6 +195,10 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
     tmp_file = os.path.join(out_path, "valid.csv")
     if os.path.exists(tmp_file):
         os.remove(tmp_file)
+     
+    mlflow.pytorch.log_model(net, "model")
+        
+ 
     
 def test(test_file, model_weights=None, output_file=None, config={}, nworkers=2, verbose=True):
     test_file = test_file
@@ -182,6 +225,9 @@ def test(test_file, model_weights=None, output_file=None, config={}, nworkers=2,
     if verbose:
         print(f"Start test of {test_file}")        
     test_metrics = net.test(test_loader)
+
+    for k, v in test_metrics.items():  
+        mlflow.log_metric(key=f"test_{k}", value=v)
     summary = ",".join([k for k in sorted(test_metrics.keys())]) + "\n" + ",".join([f"{test_metrics[k]:.3f}" for k in sorted(test_metrics.keys())])+ "\n" 
     if output_file is not None:
         with open(output_file, "w") as f:

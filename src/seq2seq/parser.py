@@ -7,24 +7,26 @@ def parser():
         description="Autoencoder sequence-to-sequence: an end-to-end method for RNA sequence prediction based on deep learning",
         epilog="webserver link | None",
     )
-    parser.add_argument("-c", "--config", type=str, help="Config file (optional, overrides any other options)")
+    parser.add_argument("--global_config", type=str, help="Path to the global configuration file")
     parser.add_argument("-d", type=str, default="cpu", help="Device ('cpu' or 'cuda')")
     parser.add_argument("-batch", type=int, default=4, help="Batch size for handling sequences")
-    #parser.add_argument("--use-restrictions", action="store_true", help="Use external restriction matrix (default: False)")
     parser.add_argument("-j", type=int, default=2, help="Number of parallel workers")
     parser.add_argument("--quiet", action="store_true", help="Quiet mode (default: False)") 
-    parser.add_argument("--max-length", type=int, default=512, help="Maximum sequence length to process (default: 512") 
+    parser.add_argument("--max-length", type=int, help="Maximum sequence length to process (default: None") 
     parser.add_argument('--version', '-v', action='version', version='%(prog)s ' + __version__)
+    parser.add_argument("--exp", type=str, default=None, help="Experiment name")
+    parser.add_argument("--run", type=str, default=None, help="Run name (default: none)")
+    
 
     subparsers = parser.add_subparsers(
         title="Actions", dest="command", description="Running commands", required=False
-    )
+    ) 
 
     parser_train = subparsers.add_parser("train", help="Train a new model")
+    
     parser_train.add_argument(
-        "train_file",
+        "--train_file",
         type=str,
-        
         help="Training dataset (csv file with 'id', 'sequence')",
     )
 
@@ -43,18 +45,21 @@ def parser():
     parser_train.add_argument(
         "-n", "--max-epochs",
         type=int,
-        default=1000,
+        # default=1000,
         help="Maximum number of training epochs",
     )
     parser.add_argument(
         "--no-cache",
         action="store_true", help="Cache of data for training (default: cache is used)",
     )
+    
+    parser_train.add_argument("--train_config", type=str, help="Path to the train config file")
+
 
     # test parser
     parser_test = subparsers.add_parser("test", help="Test a model")
     parser_test.add_argument(
-        "test_file",
+        "--test_file",
         type=str,
         help="Testing dataset (csv file with 'id', 'sequence')",
     )
@@ -66,17 +71,18 @@ def parser():
         type=str, dest="out_path", 
         help="Output test metrics (default: only printed on the console)",
     )
+    parser_test.add_argument("--test_config", type=str, help="Path to the test config file")
 
     # pred parser
     parser_pred = subparsers.add_parser(
-        "pred", help="Predict structures for a list of sequences"
+        "--pred", help="Predict structures for a list of sequences"
     )
     parser_pred.add_argument(
         "--name", type=str, default="console_input", dest="sequence_name", help="Sequence name (default: console_input)"
     )
 
     parser_pred.add_argument(
-        "pred_file",
+        "--pred_file",
         type=str,
         help="Dataset to predict. It can be a csv file with 'id' and 'sequence' columns or a fasta file",
     )
@@ -89,6 +95,14 @@ def parser():
     parser_pred.add_argument(
         "-w", type=str, dest="model_weights", help="Trained model weights"
     )
+    parser_pred.add_argument("--pred_config", type=str, help="Path to the pred config file")
 
-    return parser.parse_args()
+    return parser
+
+
+def get_parser_defaults():
+    """
+    Devuelve los valores por defecto definidos en el parser.
+    """
+    return vars(parser().parse_args([]))
     

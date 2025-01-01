@@ -1,3 +1,7 @@
 *.pk
 *.pyc
-*.csv
+# *.csv
+
+*cache*
+dist/*
+mlruns/*

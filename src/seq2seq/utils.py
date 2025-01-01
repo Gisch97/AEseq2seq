@@ -6,7 +6,7 @@ import warnings
 import numpy as np
 import torch as tr
 import pandas as pd
-
+import json
 from .embeddings import NT_DICT
 from .embeddings import NT_DICT, VOCABULARY
 
@@ -381,3 +381,97 @@ def validate_canonical(sequence, base_pairs):
                     return False, f"Nucleotide {j} is in pair {i, j} and {k, l}"
 
     return True, ""
+
+def read_train_file(args):
+    if args.train_file is None:
+        if args.train_config is not None:
+            with open(args.train_config) as f:
+                train_conf = json.load(f)
+                for key, value in train_conf.items():
+                    if hasattr(args, key):
+                        current_val = getattr(args, key)
+                        if current_val is None or current_val == '':
+                            setattr(args, key, value) 
+        if args.train_config is None:
+            try:
+                with open('config/train.json') as f:
+                    train_conf = json.load(f)
+                    for key, value in train_conf.items():
+                        if hasattr(args, key):
+                            current_val = getattr(args, key)
+                            if current_val is None or current_val == '':
+                                setattr(args, key, value)
+            except FileNotFoundError:
+                raise ValueError("No train_file specified")
+
+            
+def read_test_file(args):
+    if args.test_file is None:
+        if args.test_config is not None:
+            with open(args.test_config) as f:
+                test_conf = json.load(f)
+                for key, value in test_conf.items():
+                    if hasattr(args, key):
+                        current_val = getattr(args, key)
+                        if current_val is None or current_val == '':
+                            setattr(args, key, value) 
+        if args.test_config is None:
+            try:
+                with open('config/test.json') as f:
+                    test_conf = json.load(f)
+                    for key, value in test_conf.items():
+                        if hasattr(args, key):
+                            current_val = getattr(args, key)
+                            if current_val is None or current_val == '':
+                                setattr(args, key, value)
+            except FileNotFoundError:
+                raise ValueError("No test_file specified")
+            
+def read_pred_file(args):
+    if args.pred_file is None:
+        if args.pred_config is not None:
+            with open(args.pred_config) as f:
+                pred_conf = json.load(f)
+                for key, value in pred_conf.items():
+                    if hasattr(args, key):
+                        current_val = getattr(args, key)
+                        if current_val is None or current_val == '':
+                            setattr(args, key, value) 
+        if args.pred_config is None:
+            try:
+                with open('config/pred.json') as f:
+                    pred_conf = json.load(f)
+                    for key, value in pred_conf.items():
+                        if hasattr(args, key):
+                            current_val = getattr(args, key)
+                            if current_val is None or current_val == '':
+                                setattr(args, key, value)
+            except FileNotFoundError:
+                raise ValueError("No pred_file specified")        
+
+def merge_configs(global_config, parsed_args):
+    """
+    Fusiona el archivo de configuración con los argumentos parseados.
+    La prioridad es:
+    1. Argumentos parseados (CI / línea de comandos).
+    2. Archivo de configuración.
+    3. Valores por defecto.
+    """
+    final_config = {}
+    for key, value in parser_defaults.items():
+        final_config[key] = value  # Inicializa con los valores por defecto del parser
+    
+    for key, value in global_config.items():
+        if value is not None:
+            final_config[key] = value  # Actualiza con valores del archivo de configuración
+    
+    for arg_key, arg_value in vars(parsed_args).items():
+        if arg_value is not None:  # Si el argumento fue proporcionado en la CI
+            final_config[arg_key] = arg_value
+    
+    
+    return final_config
+ 
+            
+
+    
