@@ -59,17 +59,17 @@ def main():
         shutil.rmtree(final_config["cache_path"], ignore_errors=True)
         os.makedirs(final_config["cache_path"])
 
-    mlflow.set_tracking_uri("sqlite:///mlruns.db")
      
     # Reproducibility
     tr.manual_seed(42)
     random.seed(42)
     np.random.seed(42)
-    
-    
+     
+    mlflow.set_tracking_uri("sqlite:///mlruns.db")
+    artifact_location = "mlruns/artifacts"
 
     try:
-        mlflow.create_experiment(final_config["exp"])
+        mlflow.create_experiment(final_config["exp"], artifact_location=artifact_location )
     except mlflow.exceptions.MlflowException:
         pass
     mlflow.set_experiment(final_config["exp"])
@@ -179,12 +179,12 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
                 if verbose:
                     print(msg)
 
-            with open(logfile, "a") as f: 
-                msg = ','.join([str(epoch)]+[f'{train_metrics[k]:.4f}' for k in sorted(train_metrics.keys())]+[f'{val_metrics[k]:.4f}' for k in sorted(val_metrics.keys())]) + "\n"
-                f.write(msg)
-                f.flush()    
-                if verbose:
-                    print(msg)
+        with open(logfile, "a") as f: 
+            msg = ','.join([str(epoch)]+[f'{train_metrics[k]:.4f}' for k in sorted(train_metrics.keys())]+[f'{val_metrics[k]:.4f}' for k in sorted(val_metrics.keys())]) + "\n"
+            f.write(msg)
+            f.flush()    
+            if verbose:
+                print(msg)
             
     # remove temporal files           
     shutil.rmtree(config["cache_path"], ignore_errors=True)
@@ -196,7 +196,6 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
     if os.path.exists(tmp_file):
         os.remove(tmp_file)
      
-    mlflow.log_artifact('weights', os.path.join(out_path, "weights.pmt"))
     mlflow.pytorch.log_model(net, "model")
         
  

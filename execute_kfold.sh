@@ -2,8 +2,8 @@
 set -e
 
 # Directorios principales
-DATA_DIR="data/ArchiveII-KFold/fam-similarity"
-OUT_DIR="results/ArchiveII-KFold/fam-similarity" 
+DATA_DIR="data/ArchiveII-KFold/common"
+OUT_DIR="results/ArchiveII-KFold/common" 
 
 mkdir -p "$OUT_DIR"
 
@@ -13,23 +13,24 @@ update_json_files() {
     local config_dir="config"  # Directorio donde están los archivos JSON
 
     # Actualizar global.json usando sed
-    sed -i "s/\"run\": \"fam_sim_fold_[0-9]\+\"/\"run\": \"fam_sim_fold_${fold}\"/" "$config_dir/global.json"
+    sed -i "s/\"run\": \"fold_[0-9]\+\"/\"run\": \"fold_${fold}\"/" "$config_dir/global.json"
 
     # Actualizar train.json
     cat > "$config_dir/train.json" << EOF
 {
-    "train_file": "data/ArchiveII-KFold/fam-similarity/train_${fold}.csv",
-    "valid_file": "data/ArchiveII-KFold/fam-similarity/valid_${fold}.csv",
-    "out_path": "results/ArchiveII-KFold/fam-similarity/fold_${fold}"
+
+    "train_file": "data/ArchiveII-KFold/common/fold_${fold}_train.csv",
+    "valid_file": "data/ArchiveII-KFold/common/fold_${fold}_val.csv",
+    "out_path": "results/ArchiveII-KFold/common/fold_${fold}"
 }
 EOF
 
     # Actualizar test.json
     cat > "$config_dir/test.json" << EOF
 {
-    "test_file": "data/ArchiveII-KFold/fam-similarity/test_${fold}.csv",
-    "model_weights": "results/ArchiveII-KFold/fam-similarity/fold_${fold}/weights.pmt",
-    "out_path": "results/ArchiveII-KFold/fam-similarity/fold_${fold}/testlog_${fold}.csv"
+    "test_file": "data/ArchiveII-KFold/common/fold_${fold}_test.csv",
+    "model_weights": "results/ArchiveII-KFold/common/fold_${fold}/weights.pmt",
+    "out_path": "results/ArchiveII-KFold/common/fold_${fold}/testlog_${fold}.csv"
 }
 EOF
 }

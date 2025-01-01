@@ -1,5 +1,6 @@
 {
-    "train_file": "data/ArchiveII-KFold/fam-similarity/train_0.csv",
-    "valid_file": "data/ArchiveII-KFold/fam-similarity/valid_0.csv",
-    "out_path": "results/ArchiveII-KFold/fam-similarity/fold_0"
+
+    "train_file": "data/ArchiveII-KFold/common/fold_4_train.csv",
+    "valid_file": "data/ArchiveII-KFold/common/fold_4_val.csv",
+    "out_path": "results/ArchiveII-KFold/common/fold_4"
 }
