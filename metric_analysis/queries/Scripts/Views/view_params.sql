@@ -1,5 +1,6 @@
 -- view_params source
 
+
 CREATE VIEW view_params AS
 SELECT
     r.run_uuid,
@@ -28,7 +29,8 @@ SELECT
     MAX(CASE WHEN p.key = 'hyp_negative_weight' THEN p.value END) AS hyp_negative_weight,
     MAX(CASE WHEN p.key = 'hyp_output_th' THEN p.value END) AS hyp_output_th,
     MAX(CASE WHEN p.key = 'hyp_scheduler' THEN p.value END) AS hyp_scheduler,
-    MAX(CASE WHEN p.key = 'hyp_verbose' THEN p.value END) AS hyp_verbose,
+    MAX(CASE WHEN p.key = 'hyp_lambda_l1' THEN p.value END) AS hyp_lambda_l1,
+    MAX(CASE WHEN p.key = 'hyp_lambda_l2' THEN p.value END) AS hyp_lambda_l2,
     MAX(CASE WHEN p.key = 'j' THEN p.value END) AS j,
     MAX(CASE WHEN p.key = 'max_epochs' THEN p.value END) AS max_epochs,
     MAX(CASE WHEN p.key = 'max_len' THEN p.value END) AS max_len,
