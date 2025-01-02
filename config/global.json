@@ -1,6 +1,6 @@
 {
-    "exp": "plain_kfold_100e",
-    "run": "fold_4",
+    "exp": "plain_loss_fn",
+    "run": "loss_l2_1e-1",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,
