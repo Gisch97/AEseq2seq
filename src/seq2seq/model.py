@@ -59,7 +59,7 @@ lambda_l2=5e-2,
             "hyp_scheduler": scheduler,
             "hyp_verbose": verbose, 
             "hyp_output_th": output_th,
-            "hyp_lambda_l2": lambda_l2
+            # "hyp_lambda_l2": lambda_l2
             }        
         # Define architecture
         self.build_graph(embedding_dim, **kwargs) 
@@ -167,6 +167,13 @@ lambda_l2=5e-2,
         x_rec = self.decode(x_rec)
         return x_rec, z
 
+    def loss_func(self, x_rec, x):
+        """yhat and y are [N, L]"""
+        x = x.view(x.shape[0], -1)
+        x_rec = x_rec.view(x_rec.shape[0], -1)
+        recon_loss = mse_loss(x_rec, x) 
+        return recon_loss  
+    
     def loss_func_l1(self, x_rec, x):
         """yhat and y are [N, L]"""
         x = x.view(x.shape[0], -1)
@@ -209,7 +216,7 @@ lambda_l2=5e-2,
             # batch.pop("embedding")
             self.optimizer.zero_grad()  # Cleaning cache optimizer
             x_rec, z = self(batch)
-            loss = self.loss_func_l2(x_rec, x) 
+            loss = self.loss_func(x_rec, x) 
             ce_loss = self.ce_loss_func(x_rec, x)
             metrics["loss"] += loss.item()
             metrics["ce_loss"] += ce_loss.item()
@@ -252,7 +259,7 @@ lambda_l2=5e-2,
                 lengths = batch["length"]
                 
                 x_rec, z = self(batch)
-                loss = self.loss_func_l2(x_rec, x)
+                loss = self.loss_func(x_rec, x)
                 ce_loss = self.ce_loss_func(x_rec, x)
                 metrics["loss"] += loss.item()
                 metrics["ce_loss"] += ce_loss.item()
