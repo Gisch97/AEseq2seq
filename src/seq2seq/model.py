@@ -40,6 +40,7 @@ class Seq2Seq(nn.Module):
         scheduler="none",
         output_th=0.5,
         verbose=True,
+lambda_l2=5e-2,
         **kwargs):
         """Base instantiation of model"""
         super().__init__()
@@ -49,7 +50,7 @@ class Seq2Seq(nn.Module):
         self.verbose = verbose
         self.config = kwargs
         self.output_th = output_th
-
+        self.lambda_l2 = lambda_l2
         
         self.hyperparameters = {
             "hyp_embedding_dim": embedding_dim,
@@ -58,6 +59,7 @@ class Seq2Seq(nn.Module):
             "hyp_scheduler": scheduler,
             "hyp_verbose": verbose, 
             "hyp_output_th": output_th,
+            # "hyp_lambda_l2": lambda_l2
             }        
         # Define architecture
         self.build_graph(embedding_dim, **kwargs) 
@@ -169,8 +171,24 @@ class Seq2Seq(nn.Module):
         """yhat and y are [N, L]"""
         x = x.view(x.shape[0], -1)
         x_rec = x_rec.view(x_rec.shape[0], -1)
-        loss = mse_loss(x_rec, x)
-        return loss
+        recon_loss = mse_loss(x_rec, x) 
+        return recon_loss  
+    
+    def loss_func_l1(self, x_rec, x):
+        """yhat and y are [N, L]"""
+        x = x.view(x.shape[0], -1)
+        x_rec = x_rec.view(x_rec.shape[0], -1)
+        recon_loss = mse_loss(x_rec, x)
+        l1_loss = sum(tr.sum(tr.abs(param)) for param in self.parameters())
+        return recon_loss + self.lambda_l1 * l1_loss
+
+    def loss_func_l2(self, x_rec, x):
+        """yhat and y are [N, L]"""
+        x = x.view(x.shape[0], -1)
+        x_rec = x_rec.view(x_rec.shape[0], -1)
+        recon_loss = mse_loss(x_rec, x)
+        l2_loss =  sum(tr.sum(param ** 2) for param in self.parameters()) 
+        return recon_loss + self.lambda_l2 * l2_loss
 
     
     def ce_loss_func(self, x_rec, x):
