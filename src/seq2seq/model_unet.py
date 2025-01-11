@@ -103,92 +103,54 @@ class Seq2Seq(nn.Module):
             "arc_rank": rank,
         }
         pad = (kernel - 1) // 2
+
         # Encoder
-        self.encode = [nn.Conv1d(embedding_dim, filters, kernel, padding="same")]
-        for k in range(num_layers):
-            self.encode.append(
-                ResidualLayer1D(
+        self.encode1 = nn.Conv1d(embedding_dim, filters, kernel_size=kernel, padding=pad)
+        self.encode2 = nn.Sequential(*[ResidualLayer1D(
                     dilation_resnet1d,
                     resnet_bottleneck_factor,
                     filters,
-                    kernel,
+                    kernel
                 )
-            )
-        self.encode.append(
-            nn.Conv1d(
-                in_channels=filters,
-                out_channels=rank,
-                kernel_size=kernel,
-                padding=pad,
-                stride=1,
-                )
-            )
-        self.encode = nn.Sequential(*self.encode)
+                for _ in range(num_layers)],
+            nn.Conv1d(filters, rank, kernel_size=kernel, padding=pad, stride=1)
+        )
         
-        self.to_latent = nn.Sequential(nn.Flatten(1),
-                                        nn.Linear(128 * 64, latent_dim),
-                                        nn.ReLU())
+        # Bottleneck
+        self.bottleneck = nn.Sequential(
+            nn.Conv1d(rank, rank, kernel_size=kernel, padding=pad),
+            nn.BatchNorm1d(rank),
+            nn.ReLU()
+        )
         
-        
-        # Decoder 
-        self.from_latent = nn.Sequential(nn.Linear(latent_dim, 128 * 64),
-                                          nn.ReLU())
-
-        self.decode = [nn.ConvTranspose1d(
-            in_channels=rank,
-            out_channels=filters,
-            kernel_size=kernel,
-            padding=pad,
-            stride=1
-            )]
-        for k in range(num_layers):
-            self.decode.append(
-                ResidualLayer1D(
-                    dilation_resnet1d,
+        # Decoder
+        self.decode1 = nn.ConvTranspose1d(rank, filters, kernel_size=kernel, padding=pad, stride=1),
+        self.decode2 = nn.Sequential(*[ResidualLayer1D(dilation_resnet1d,
                     resnet_bottleneck_factor,
                     filters,
-                    kernel,
-                )
-            )
-        self.decode.append(nn.Conv1d(filters, embedding_dim, kernel, padding="same"))
-        self.decode = nn.Sequential(*self.decode)
+                    kernel
+                    )
+                for _ in range(num_layers)],
+            nn.Conv1d(filters, embedding_dim, kernel_size=kernel, padding="same")
+        )
 
-
-    def forward(self, batch):
-        x = batch["embedding"].to(self.device)
-        batch_size = x.shape[0]
-        L = x.shape[2]
-        
-        z = self.encode(x) 
-        z = self.to_latent(z)
-        x_rec = self.from_latent(z)
-
-        x_rec = x_rec.view(x_rec.shape[0], -1, L)
-        x_rec = self.decode(x_rec)
+    def forward(self, x): 
+        x1 = self.encode1(x)
+        x2 = self.encode2(x1)
+        z = self.bottleneck(x2)
+        x3 = self.decode1(z + x2)
+        x_rec = self.decode2(x3 + x1)
         return x_rec, z
+ 
+
+
 
     def loss_func(self, x_rec, x):
         """yhat and y are [N, L]"""
         x = x.view(x.shape[0], -1)
         x_rec = x_rec.view(x_rec.shape[0], -1)
         recon_loss = mse_loss(x_rec, x) 
-        return recon_loss  
-    
-    def loss_func_l1(self, x_rec, x):
-        """yhat and y are [N, L]"""
-        x = x.view(x.shape[0], -1)
-        x_rec = x_rec.view(x_rec.shape[0], -1)
-        recon_loss = mse_loss(x_rec, x)
-        l1_loss = sum(tr.sum(tr.abs(param)) for param in self.parameters())
-        return recon_loss + self.lambda_l1 * l1_loss
-
-    def loss_func_l2(self, x_rec, x):
-        """yhat and y are [N, L]"""
-        x = x.view(x.shape[0], -1)
-        x_rec = x_rec.view(x_rec.shape[0], -1)
-        recon_loss = mse_loss(x_rec, x)
-        l2_loss =  sum(tr.sum(param ** 2) for param in self.parameters()) 
-        return recon_loss + self.lambda_l2 * l2_loss
+        return recon_loss   
 
     
     def ce_loss_func(self, x_rec, x):
