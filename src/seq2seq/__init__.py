@@ -13,7 +13,7 @@ import mlflow.pytorch
 
 from torch.utils.data import DataLoader
 from .dataset import SeqDataset, pad_batch
-from .model import seq2seq 
+from .model_unet import seq2seq 
 from .embeddings import NT_DICT
 from .utils import write_ct, validate_file, ct2dot
 from .parser import parser, get_parser_defaults
@@ -75,8 +75,8 @@ def main():
     mlflow.set_experiment(final_config["exp"])
     with mlflow.start_run(run_name=final_config["run"]):
         if args.command == "train":
+            mlflow.set_tag("command", "train")
             read_train_file(args)  
-            
             mlflow.log_params(final_config)                      
             mlflow.log_param("train_file",args.train_file)
             mlflow.log_param("valid_file",args.valid_file)
@@ -85,6 +85,7 @@ def main():
             
 
         if args.command == "test":
+            mlflow.set_tag("command", "test")
             read_test_file(args)
             test(args.test_file, args.model_weights, args.out_path, final_config, args.j)    
             mlflow.log_param("test_file",args.test_file) 
@@ -165,8 +166,9 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
             best_loss = val_metrics["loss"]
             tr.save(net.state_dict(), os.path.join(out_path, "weights.pmt"))
             patience_counter = 0
+            mlflow.log_metric(key=f"best_epoch", value=epoch)
+            
         else:
-            mlflow.log_metric(key=f"valid_{k}", value=v, step=epoch)
             patience_counter += 1
             if patience_counter > patience:
                 break

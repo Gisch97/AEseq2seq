@@ -28,6 +28,7 @@ def seq2seq(weights=None, **kwargs):
     else:
         print("No weights provided, using random initialization")
     model.log_model()
+    mlflow.set_tag("model", 'Unet')
     return model
     
     
@@ -40,7 +41,6 @@ class Seq2Seq(nn.Module):
         scheduler="none",
         output_th=0.5,
         verbose=True,
-        # lambda_l2=5e-2,
         **kwargs):
         """Base instantiation of model"""
         super().__init__()
@@ -50,16 +50,13 @@ class Seq2Seq(nn.Module):
         self.verbose = verbose
         self.config = kwargs
         self.output_th = output_th
-        self.lambda_l2 = lambda_l2
         
         self.hyperparameters = {
-            "hyp_embedding_dim": embedding_dim,
             "hyp_device": device, 
             "hyp_lr": lr,
             "hyp_scheduler": scheduler,
             "hyp_verbose": verbose, 
-            "hyp_output_th": output_th,
-            # "hyp_lambda_l2": lambda_l2
+            "hyp_output_th": output_th
             }        
         # Define architecture
         self.build_graph(embedding_dim, **kwargs) 
@@ -88,24 +85,26 @@ class Seq2Seq(nn.Module):
         num_layers=2,
         dilation_resnet1d=3,
         resnet_bottleneck_factor=0.5,
-        latent_dim=32,
         rank=64,
+        stride_1=1,
+        stride_2=1,
         **kwargs
     ): 
         self.architecture = {
             "arc_embedding_dim": embedding_dim,
             "arc_filters": filters,
             "arc_kernel": kernel,
+            "arc_rank": rank,
             "arc_num_layers": num_layers,
             "arc_dilation_resnet1d": dilation_resnet1d,
             "arc_resnet_bottleneck_factor": resnet_bottleneck_factor,
-            "arc_latent_dim": latent_dim,
-            "arc_rank": rank,
+            "arc_stride_1": stride_1,
+            "arc_stride_2": stride_2
         }
         pad = (kernel - 1) // 2
 
         # Encoder
-        self.encode1 = nn.Conv1d(embedding_dim, filters, kernel_size=kernel, padding=pad)
+        self.encode1 = nn.Conv1d(embedding_dim, filters, kernel_size=kernel, padding=pad, stride=stride_1)
         self.encode2 = nn.Sequential(*[ResidualLayer1D(
                     dilation_resnet1d,
                     resnet_bottleneck_factor,
@@ -113,7 +112,7 @@ class Seq2Seq(nn.Module):
                     kernel
                 )
                 for _ in range(num_layers)],
-            nn.Conv1d(filters, rank, kernel_size=kernel, padding=pad, stride=1)
+            nn.Conv1d(filters, rank, kernel_size=kernel, padding=pad, stride=stride_2)
         )
         
         # Bottleneck
@@ -124,14 +123,14 @@ class Seq2Seq(nn.Module):
         )
         
         # Decoder
-        self.decode1 = nn.ConvTranspose1d(rank, filters, kernel_size=kernel, padding=pad, stride=1),
+        self.decode1 = nn.ConvTranspose1d(rank, filters, kernel_size=kernel, padding=pad, stride=stride_2, output_padding=stride_2 - 1)
         self.decode2 = nn.Sequential(*[ResidualLayer1D(dilation_resnet1d,
                     resnet_bottleneck_factor,
                     filters,
                     kernel
                     )
                 for _ in range(num_layers)],
-            nn.Conv1d(filters, embedding_dim, kernel_size=kernel, padding="same")
+            nn.Conv1d(filters, embedding_dim, kernel_size=kernel, padding="same", stride=stride_1, output_padding=stride_1 - 1)
         )
 
     def forward(self, x): 
