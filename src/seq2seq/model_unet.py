@@ -86,8 +86,8 @@ class Seq2Seq(nn.Module):
         dilation_resnet1d=3,
         resnet_bottleneck_factor=0.5,
         rank=64,
-        stride_1=1,
-        stride_2=1,
+       stride_1=2,
+       stride_2=1,
         **kwargs
     ): 
         self.architecture = {
@@ -130,10 +130,12 @@ class Seq2Seq(nn.Module):
                     kernel
                     )
                 for _ in range(num_layers)],
-            nn.Conv1d(filters, embedding_dim, kernel_size=kernel, padding="same", stride=stride_1, output_padding=stride_1 - 1)
+            nn.ConvTranspose1d(filters, embedding_dim, kernel_size=kernel, padding=pad, stride=stride_1, output_padding=stride_1 - 1)
         )
 
-    def forward(self, x): 
+    def forward(self, batch): 
+        
+        x = batch["embedding"].to(self.device)
         x1 = self.encode1(x)
         x2 = self.encode2(x1)
         z = self.bottleneck(x2)
