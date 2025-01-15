@@ -80,14 +80,14 @@ class Seq2Seq(nn.Module):
     def build_graph(
         self,
         embedding_dim,
-        filters=32,
+        filters=4,
         kernel=3,
         num_layers=2,
         dilation_resnet1d=3,
         resnet_bottleneck_factor=0.5,
-        rank=64,
-       stride_1=2,
-       stride_2=1,
+        rank=8,
+        stride_1=2, 
+        stride_2=1,
         **kwargs
     ): 
         self.architecture = {
@@ -139,8 +139,8 @@ class Seq2Seq(nn.Module):
         x1 = self.encode1(x)
         x2 = self.encode2(x1)
         z = self.bottleneck(x2)
-        x3 = self.decode1(z + x2)
-        x_rec = self.decode2(x3 + x1)
+        x3 = self.decode1(z+x2)
+        x_rec = self.decode2(x3+x1)
         return x_rec, z
  
 

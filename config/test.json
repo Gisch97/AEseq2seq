@@ -1,5 +1,5 @@
 {
     "test_file": "data/ArchiveII-KFold/fam-similarity/test_0.csv",
-    "model_weights": "results/UNet-kernel3-stride-21/weights.pmt",
-    "out_path": "results/UNet-kernel3-stride-21/test.csv"
+    "model_weights": "results/UNet-k3-filters-4-8-200e-stride-21/weights.pmt",
+    "out_path": "results/UNet-k3-filters-4-8-200e-stride-21/test.csv"
 }
