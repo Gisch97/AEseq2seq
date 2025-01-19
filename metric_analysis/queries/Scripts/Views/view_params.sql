@@ -1,6 +1,5 @@
 -- view_params source
 
-
 CREATE VIEW view_params AS
 SELECT
     r.run_uuid,
@@ -10,6 +9,8 @@ SELECT
     MAX(CASE WHEN p.key = 'arc_embedding_dim' THEN p.value END) AS arc_embedding_dim,
     MAX(CASE WHEN p.key = 'arc_filters' THEN p.value END) AS arc_filters,
     MAX(CASE WHEN p.key = 'arc_kernel' THEN p.value END) AS arc_kernel,
+    MAX(CASE WHEN p.key = 'arc_stride_1' THEN p.value END) AS arc_stride_1,
+    MAX(CASE WHEN p.key = 'arc_stride_2' THEN p.value END) AS arc_stride_2,
     MAX(CASE WHEN p.key = 'arc_latent_dim' THEN p.value END) AS arc_latent_dim,
     MAX(CASE WHEN p.key = 'arc_num_layers' THEN p.value END) AS arc_num_layers,
     MAX(CASE WHEN p.key = 'arc_rank' THEN p.value END) AS arc_rank,
