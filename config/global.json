@@ -1,13 +1,13 @@
 {
     "exp": "Unet",
-    "run": "UNet-k3-filters-4-8-200e-stride-21",
+    "run": "UNet-no-skips-k7-filters-4-8-stride-21",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,
     "max_len": 128, 
     "quiet": false,
     "nworkers": 4,
-    "max_epochs": 200,
+    "max_epochs": 20,
     "valid_split": 0.1,
     "verbose": true
 }
