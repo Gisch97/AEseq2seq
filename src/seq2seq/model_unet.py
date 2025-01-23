@@ -81,12 +81,14 @@ class Seq2Seq(nn.Module):
         self,
         embedding_dim,
         filters=4,
-        kernel=7,
+        kernel=3,
         num_layers=2,
         dilation_resnet1d=3,
         resnet_bottleneck_factor=0.5,
         rank=8,
-        stride_1=2, 
+        num_conv1=1,
+        stride_1=1, 
+        num_conv2=1,
         stride_2=1,
         **kwargs
     ): 
@@ -99,12 +101,15 @@ class Seq2Seq(nn.Module):
             "arc_dilation_resnet1d": dilation_resnet1d,
             "arc_resnet_bottleneck_factor": resnet_bottleneck_factor,
             "arc_stride_1": stride_1,
-            "arc_stride_2": stride_2
+            "arc_stride_2": stride_2,
+            "arc_num_conv1": num_conv1,
+            "arc_num_conv2": num_conv2
         }
         pad = (kernel - 1) // 2
 
         # Encoder
-        self.encode1 = nn.Conv1d(embedding_dim, filters, kernel_size=kernel, padding=pad, stride=stride_1)
+        self.encode1 = nn.Sequential(*[nn.Conv1d(embedding_dim, filters, kernel_size=kernel, padding=pad, stride=stride_1) for _ in range(num_conv1)])
+         
         self.encode2 = nn.Sequential(*[ResidualLayer1D(
                     dilation_resnet1d,
                     resnet_bottleneck_factor,
@@ -112,8 +117,14 @@ class Seq2Seq(nn.Module):
                     kernel
                 )
                 for _ in range(num_layers)],
-            nn.Conv1d(filters, rank, kernel_size=kernel, padding=pad, stride=stride_2)
-        )
+                *[nn.Conv1d(
+                    filters,
+                    rank,
+                    kernel_size=kernel,
+                    padding=pad,
+                    stride=stride_2
+                ) for _ in range(num_conv2)]
+            )
         
         # Bottleneck
         self.bottleneck = nn.Sequential(
@@ -123,14 +134,14 @@ class Seq2Seq(nn.Module):
         )
         
         # Decoder
-        self.decode1 = nn.ConvTranspose1d(rank, filters, kernel_size=kernel, padding=pad, stride=stride_2, output_padding=stride_2 - 1)
+        self.decode1 = nn.Sequential(*[nn.ConvTranspose1d(rank, filters, kernel_size=kernel, padding=pad, stride=stride_2, output_padding=stride_2 - 1) for _ in range(num_conv2)])  
         self.decode2 = nn.Sequential(*[ResidualLayer1D(dilation_resnet1d,
                     resnet_bottleneck_factor,
                     filters,
                     kernel
                     )
                 for _ in range(num_layers)],
-            nn.ConvTranspose1d(filters, embedding_dim, kernel_size=kernel, padding=pad, stride=stride_1, output_padding=stride_1 - 1)
+                *[nn.ConvTranspose1d(filters, embedding_dim, kernel_size=kernel, padding=pad, stride=stride_1, output_padding=stride_1 - 1) for _ in range(num_conv1)]
         )
 
     def forward(self, batch): 

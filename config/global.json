@@ -1,6 +1,6 @@
 {
-    "exp": "Unet",
-    "run": "UNet-no-skips-k7-filters-4-8-stride-21",
+    "exp": "test_Unet",
+    "run": "A-convs-11-stride-11",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,
