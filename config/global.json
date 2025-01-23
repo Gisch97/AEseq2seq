@@ -1,6 +1,6 @@
 {
-    "exp": "test_Unet",
-    "run": "A-convs-11-stride-11",
+    "exp": "UNet-convolution_layers",
+    "run": "Unet-test",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,

@@ -2,5 +2,5 @@
 
     "train_file": "data/ArchiveII-KFold/fam-similarity/train_0.csv",
     "valid_file": "data/ArchiveII-KFold/fam-similarity/valid_0.csv",
-    "out_path": "results/test_Unet/A-convs-11-stride-11"
+    "out_path": "results/Unet/add_convolution_layers/test_0"
 }

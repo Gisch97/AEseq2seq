@@ -13,7 +13,7 @@ NUM_CONV2=(1 2 3)
 STRIDE2=(1 2)
 
 # Base output path
-BASE_OUTPUT_PATH="results/Unet/add_convolution_layers"
+BASE_OUTPUT_PATH="results/UNet/add_convolution_layers"
 
 # Main script
 for c1 in "${NUM_CONV1[@]}"; do
@@ -21,7 +21,7 @@ for c1 in "${NUM_CONV1[@]}"; do
         for s1 in "${STRIDE1[@]}"; do 
             for s2 in "${STRIDE2[@]}"; do
                 # Construct save path and name
-                save_name="Unet-num_convs-$c1$c2-stride-$s1$s2"
+                save_name="UNet_num_convs_$c1-$c2_stride-$s1-$s2"
                 save_path="$BASE_OUTPUT_PATH/$save_name"
 
                 echo "Executing: num_conv1=$c1, stride1=$s1; num_conv2=$c2, stride2=$s2"
@@ -30,8 +30,8 @@ for c1 in "${NUM_CONV1[@]}"; do
                 sed -i \
                     -e "89s/stride_1=[0-9e.-]*/stride_1=$s1/" \
                     -e "90s/stride_2=[0-9e.-]*/stride_2=$s2/" \
-                    -e "91s/stride_1=[0-9e.-]*/num_conv1=$c1/" \
-                    -e "92s/stride_2=[0-9e.-]*/num_conv2=$c2/" \
+                    -e "91s/num_conv1=[0-9e.-]*/num_conv1=$c1/" \
+                    -e "92s/num_conv2=[0-9e.-]*/num_conv2=$c2/" \
                     "$MODEL_FILE"
 
                 # Update global configuration

@@ -87,9 +87,9 @@ class Seq2Seq(nn.Module):
         resnet_bottleneck_factor=0.5,
         rank=8,
         stride_1=1, 
-        stride_2=1,
-        num_conv1=1,
-        num_conv2=1,
+        stride_2=2,
+        num_conv1=3,
+        num_conv2=2,
         **kwargs
     ): 
         self.architecture = {
@@ -107,24 +107,58 @@ class Seq2Seq(nn.Module):
         }
         pad = (kernel - 1) // 2
 
-        # Encoder
-        self.encode1 = nn.Sequential(*[nn.Conv1d(embedding_dim, filters, kernel_size=kernel, padding=pad, stride=stride_1) for _ in range(num_conv1)])
-         
-        self.encode2 = nn.Sequential(*[ResidualLayer1D(
-                    dilation_resnet1d,
-                    resnet_bottleneck_factor,
-                    filters,
-                    kernel
-                )
-                for _ in range(num_layers)],
-                *[nn.Conv1d(
-                    filters,
-                    rank,
-                    kernel_size=kernel,
-                    padding=pad,
-                    stride=stride_2
-                ) for _ in range(num_conv2)]
+
+        self.encode1 = conv_sequence(
+            input_channels=embedding_dim, 
+            output_channels=filters, 
+            num_conv=num_conv1, 
+            kernel_size=kernel, 
+            padding=pad, 
+            stride=stride_1
+        )
+
+        self.encode2 = nn.Sequential(
+            *[ResidualLayer1D(
+                dilation_resnet1d,
+                resnet_bottleneck_factor,
+                filters,
+                kernel
+            ) for _ in range(num_layers)],
+            conv_sequence(
+                input_channels=filters, 
+                output_channels=rank, 
+                num_conv=num_conv2, 
+                kernel_size=kernel, 
+                padding=pad, 
+                stride=stride_2
             )
+        )
+
+        self.decode1 = transpose_conv_sequence(
+            input_channels=rank, 
+            output_channels=filters, 
+            num_conv=num_conv2, 
+            kernel_size=kernel, 
+            padding=pad, 
+            stride=stride_2
+        )
+
+        self.decode2 = nn.Sequential(
+            *[ResidualLayer1D(
+                dilation_resnet1d,
+                resnet_bottleneck_factor,
+                filters,
+                kernel
+            ) for _ in range(num_layers)],
+            transpose_conv_sequence(
+                input_channels=filters, 
+                output_channels=embedding_dim, 
+                num_conv=num_conv1, 
+                kernel_size=kernel, 
+                padding=pad, 
+                stride=stride_1
+            )
+        )
         
         # Bottleneck
         self.bottleneck = nn.Sequential(
@@ -132,26 +166,14 @@ class Seq2Seq(nn.Module):
             nn.BatchNorm1d(rank),
             nn.ReLU()
         )
-        
-        # Decoder
-        self.decode1 = nn.Sequential(*[nn.ConvTranspose1d(rank, filters, kernel_size=kernel, padding=pad, stride=stride_2, output_padding=stride_2 - 1) for _ in range(num_conv2)])  
-        self.decode2 = nn.Sequential(*[ResidualLayer1D(dilation_resnet1d,
-                    resnet_bottleneck_factor,
-                    filters,
-                    kernel
-                    )
-                for _ in range(num_layers)],
-                *[nn.ConvTranspose1d(filters, embedding_dim, kernel_size=kernel, padding=pad, stride=stride_1, output_padding=stride_1 - 1) for _ in range(num_conv1)]
-        )
-
     def forward(self, batch): 
         
         x = batch["embedding"].to(self.device)
         x1 = self.encode1(x)
         x2 = self.encode2(x1)
         z = self.bottleneck(x2)
-        x3 = self.decode1(z)
-        x_rec = self.decode2(x3)
+        x3 = self.decode1(z+x2)
+        x_rec = self.decode2(x3+x1)
         return x_rec, z
  
 
@@ -318,3 +340,20 @@ class ResidualLayer1D(nn.Module):
     def forward(self, x):
         return x + self.layer(x)
     
+
+def conv_sequence(input_channels, output_channels, num_conv, kernel_size, padding, stride):
+    layers = []
+    layers.append(nn.Conv1d(input_channels, output_channels, kernel_size=kernel_size, padding=padding, stride=stride))
+    
+    for _ in range(num_conv - 1):
+        layers.append(nn.Conv1d(output_channels, output_channels, kernel_size=kernel_size, padding=padding, stride=stride))
+    
+    return nn.Sequential(*layers)
+
+def transpose_conv_sequence(input_channels, output_channels, num_conv, kernel_size, padding, stride):
+    layers = []
+    for _ in range(num_conv - 1):
+        layers.append(nn.ConvTranspose1d(input_channels, input_channels, kernel_size=kernel_size, padding=padding, stride=stride, output_padding=stride - 1))
+    layers.append(nn.ConvTranspose1d(input_channels, output_channels, kernel_size=kernel_size, padding=padding, stride=stride, output_padding=stride - 1))
+    
+    return nn.Sequential(*layers)
