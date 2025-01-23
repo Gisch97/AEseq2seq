@@ -1,47 +1,59 @@
 #!/bin/bash
 
-# Directorios y archivos de configuración
-model_file="src/seq2seq/model_unet.py"
-global_config="config/global.json"
-train_config="config/train.json"
-test_config="config/test.json"
+# File paths
+MODEL_FILE="src/seq2seq/model_unet.py"
+GLOBAL_CONFIG="config/global.json"
+TRAIN_CONFIG="config/train.json"
+TEST_CONFIG="config/test.json"
 
-kernel=(5 7)
-stride1=(4 2)
-stride2=(4 2 1) 
-# Configuración de hiperparámetros
-for k in "${kernel[@]}"; do
-    run="UNet-no-skips-k$k-filters-4-8"
+# Hyperparameters
+NUM_CONV1=(1 2 3)
+STRIDE1=(1 2)
+NUM_CONV2=(1 2 3)
+STRIDE2=(1 2)
 
-    # Bucle para cada combinación de hiperparámetros
-    for s1 in "${stride1[@]}"; do 
-        for s2 in "${stride2[@]}"; do
-            echo "... Ejecutando con stride1 =$s1 y stride2=$s2"
-            echo "... Guardando en $run-stride-$s1$s2"
-            # Modificar el archivo model.py 
-            sed -i "84s/kernel=[0-9]*/kernel=$k/" "$model_file"
-            sed -i "89s/stride_1=[0-9e.-]*/stride_1=$s1/" "$model_file"
-            sed -i "90s/stride_2=[0-9e.-]*/stride_2=$s2/" "$model_file"
+# Base output path
+BASE_OUTPUT_PATH="results/Unet/add_convolution_layers"
 
-            # Modificar el archivo global.json
-            sed -i "s/\"run\": \"[^\"]*\"/\"run\": \"$run-stride-$s1$s2\"/" "$global_config"
+# Main script
+for c1 in "${NUM_CONV1[@]}"; do
+    for c2 in "${NUM_CONV2[@]}"; do
+        for s1 in "${STRIDE1[@]}"; do 
+            for s2 in "${STRIDE2[@]}"; do
+                # Construct save path and name
+                save_name="Unet-num_convs-$c1$c2-stride-$s1$s2"
+                save_path="$BASE_OUTPUT_PATH/$save_name"
 
-            # Modificar el archivo train.json
-            sed -i "s|\"out_path\": \"[^\"]*\"|\"out_path\": \"results/$run-stride-$s1$s2\"|" "$train_config"
+                echo "Executing: num_conv1=$c1, stride1=$s1; num_conv2=$c2, stride2=$s2"
 
+                # Modify model configuration
+                sed -i \
+                    -e "89s/stride_1=[0-9e.-]*/stride_1=$s1/" \
+                    -e "90s/stride_2=[0-9e.-]*/stride_2=$s2/" \
+                    -e "91s/stride_1=[0-9e.-]*/num_conv1=$c1/" \
+                    -e "92s/stride_2=[0-9e.-]*/num_conv2=$c2/" \
+                    "$MODEL_FILE"
 
-            # Ejecutar el entrenamiento
-            seq2seq train
-            echo "... Entrenamiento Finalizado con stride1 =$s1 y stride2=$s2"
+                # Update global configuration
+                sed -i "s/\"run\": \"[^\"]*\"/\"run\": \"$save_name\"/" "$GLOBAL_CONFIG"
 
-            # Modificar el archivo test.json
-            sed -i "s|\"model_weights\": \"[^\"]*\"|\"model_weights\": \"results/$run-stride-$s1$s2/weights.pmt\"|" "$test_config"
-            sed -i "s|\"out_path\": \"[^\"]*\"|\"out_path\": \"results/$run-stride-$s1$s2/test.csv\"|" "$test_config"
-            
+                # Update train configuration
+                sed -i "s|\"out_path\": \"[^\"]*\"|\"out_path\": \"$save_path\"|" "$TRAIN_CONFIG"
 
-            # Ejecutar el entrenamiento
-            seq2seq test
-            echo "Prueba Finalizada (Unet kernel = 7) con s1=$s1, s2=$s2"
+                # Train model
+                seq2seq train
+                echo "Training completed for configuration: $save_name"
+
+                # Update test configuration
+                sed -i \
+                    -e "s|\"model_weights\": \"[^\"]*\"|\"model_weights\": \"$save_path/weights.pmt\"|" \
+                    -e "s|\"out_path\": \"[^\"]*\"|\"out_path\": \"$save_path/test.csv\"|" \
+                    "$TEST_CONFIG"
+
+                # Test model
+                seq2seq test
+                echo "Testing completed for configuration: $save_name"
+            done
         done
     done
 done
