@@ -89,7 +89,7 @@ class Seq2Seq(nn.Module):
         stride_1=2, 
         stride_2=2,
         num_conv1=3,
-        num_conv2=3,
+        num_conv2=2,
         **kwargs
     ): 
         self.architecture = {

@@ -1,6 +1,6 @@
 {
     "exp": "UNet-convolution_layers",
-    "run": "UNet-num_convs-3-3-stride-2-2",
+    "run": "UNet-no-skips-num_convs-3-2-stride-2-2",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,
