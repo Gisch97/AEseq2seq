@@ -21,7 +21,7 @@ for c1 in "${NUM_CONV1[@]}"; do
         for s1 in "${STRIDE1[@]}"; do 
             for s2 in "${STRIDE2[@]}"; do
                 # Construct save path and name
-                save_name="UNet_num_convs_$c1-$c2_stride-$s1-$s2"
+                save_name="UNet-num_convs-$c1-$c2-stride-$s1-$s2"
                 save_path="$BASE_OUTPUT_PATH/$save_name"
 
                 echo "Executing: num_conv1=$c1, stride1=$s1; num_conv2=$c2, stride2=$s2"

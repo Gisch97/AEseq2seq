@@ -86,10 +86,10 @@ class Seq2Seq(nn.Module):
         dilation_resnet1d=3,
         resnet_bottleneck_factor=0.5,
         rank=8,
-        stride_1=1, 
+        stride_1=2, 
         stride_2=2,
         num_conv1=3,
-        num_conv2=2,
+        num_conv2=3,
         **kwargs
     ): 
         self.architecture = {
