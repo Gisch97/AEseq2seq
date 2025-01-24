@@ -6,6 +6,7 @@ SELECT  p.run_uuid,
 		p.arc_rank,
 		p.arc_kernel,
 		p.arc_stride_1,
+		p.arc_stride_2,
 		p.arc_num_conv1,
 		p.arc_num_conv2,
 		CASE

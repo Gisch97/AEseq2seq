@@ -172,8 +172,8 @@ class Seq2Seq(nn.Module):
         x1 = self.encode1(x)
         x2 = self.encode2(x1)
         z = self.bottleneck(x2)
-        x3 = self.decode1(z+x2)
-        x_rec = self.decode2(x3+x1)
+        x3 = self.decode1(z)
+        x_rec = self.decode2(x3)
         return x_rec, z
  
 
