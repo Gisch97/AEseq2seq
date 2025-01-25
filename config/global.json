@@ -1,13 +1,13 @@
 {
-    "exp": "UNet-convolution_layers",
-    "run": "UNet-no-skips-num_convs-3-2-stride-2-2",
+    "exp": "test_Unet",
+    "run": "UNet_v2",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,
     "max_len": 128, 
     "quiet": false,
     "nworkers": 4,
-    "max_epochs": 20,
+    "max_epochs": 1,
     "valid_split": 0.1,
     "verbose": true
 }
