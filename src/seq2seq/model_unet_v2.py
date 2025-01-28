@@ -91,15 +91,25 @@ class Seq2Seq(nn.Module):
         num_conv1=3,
         num_conv2=2,
         **kwargs
-    ): 
+    ):         
         
-        rank = (2**num_conv1) * filters
-        bottleneck = (2**num_conv2) * rank
+        # Bloque 1 (encode1): 
+        self.encode1_in = embedding_dim
+        self.encode1_out = (2 ** num_conv1) * self.encode1_in 
+
+        # Bloque 2 (encode2):  
+        self.encode2_in = self.encode1_out
+        self.encode2_out = (2 ** num_conv2) * self.encode2_in  
+
+        # decode1 (invertir el bloque 2)
+        self.decode1_in = self.encode2_out  
+        self.decode2_in = self.encode1_out  
+
         self.architecture = {
             "arc_embedding_dim": embedding_dim,
-            "arc_filters": filters,
-            "arc_rank": rank,
-            "arc_latent_dim": bottleneck,
+            "arc_filters": self.encode1_in,
+            "arc_rank": self.encode1_out,
+            "arc_latent_dim": self.encode2_out,
             "arc_kernel": kernel,
             "arc_num_layers": num_layers,
             "arc_dilation_resnet1d": dilation_resnet1d,
@@ -112,7 +122,7 @@ class Seq2Seq(nn.Module):
         pad = (kernel - 1) // 2
 
         self.encode1 = conv_sequence(
-            input_channels=embedding_dim, 
+            input_channels=self.encode1_in, 
             num_conv=num_conv1, 
             kernel_size=kernel, 
             padding=pad, 
@@ -123,11 +133,11 @@ class Seq2Seq(nn.Module):
             *[ResidualLayer1D(
                 dilation_resnet1d,
                 resnet_bottleneck_factor,
-                rank,
+                self.encode1_out,
                 kernel
             ) for _ in range(num_layers)],
             conv_sequence(
-                input_channels=rank,  
+                input_channels=self.encode1_out,  
                 num_conv=num_conv2, 
                 kernel_size=kernel, 
                 padding=pad, 
@@ -136,7 +146,7 @@ class Seq2Seq(nn.Module):
         )
 
         self.decode1 = transpose_conv_sequence(
-            input_channels=rank,  
+            input_channels=self.decode1_in,  
             num_conv=num_conv2, 
             kernel_size=kernel, 
             padding=pad, 
@@ -147,11 +157,11 @@ class Seq2Seq(nn.Module):
             *[ResidualLayer1D(
                 dilation_resnet1d,
                 resnet_bottleneck_factor,
-                filters,
+                self.decode2_in,
                 kernel
             ) for _ in range(num_layers)],
             transpose_conv_sequence(
-                input_channels=filters,  
+                input_channels=self.decode2_in,  
                 num_conv=num_conv1, 
                 kernel_size=kernel, 
                 padding=pad, 
@@ -161,8 +171,8 @@ class Seq2Seq(nn.Module):
         
         # Bottleneck
         self.bottleneck = nn.Sequential(
-            nn.Conv1d(bottleneck, bottleneck, kernel_size=kernel, padding=pad),
-            nn.BatchNorm1d(bottleneck),
+            nn.Conv1d(self.encode2_out, self.encode2_out, kernel_size=kernel, padding=pad),
+            nn.BatchNorm1d(self.encode2_out),
             nn.ReLU()
         )
     def forward(self, batch): 
@@ -171,8 +181,8 @@ class Seq2Seq(nn.Module):
         x1 = self.encode1(x)
         x2 = self.encode2(x1)
         z = self.bottleneck(x2)
-        x3 = self.decode1(z)
-        x_rec = self.decode2(x3)
+        x3 = self.decode1(z + x2)
+        x_rec = self.decode2(x3 + x1)
         return x_rec, z
  
     def loss_func(self, x_rec, x):
@@ -338,6 +348,9 @@ class ResidualLayer1D(nn.Module):
     
 
 def conv_sequence(input_channels, growth_factor=2, num_conv=1, kernel_size=3, padding=1, stride=1):
+    # Every conv: out_channels = input_channels * growth_factor
+    # It accumulates for the next layer.
+    
     layers = []
     current_channels = input_channels
     
