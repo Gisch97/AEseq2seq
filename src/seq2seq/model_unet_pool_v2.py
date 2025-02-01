@@ -90,7 +90,7 @@ class Seq2Seq(nn.Module):
         stride_1=1,
         stride_2=1,
         num_conv1=3,
-        num_conv2=2,
+        num_conv2=3,
         pool_stride_1=2,
         pool_stride_2=2,
         pool_kernel_1=2,
@@ -187,11 +187,17 @@ class Seq2Seq(nn.Module):
     def forward(self, batch): 
         
         x = batch["embedding"].to(self.device) # (B, 4, 128)
-        x1 = self.encode1(x)            # (B, 16, 32)
-        x2 = self.encode2(x1)           # (B, 64, 8)
-        z = self.bottleneck(x2)         # (B, 64, 8)
-        x3 = self.decode1(z + x2)       # (B, 16, 32)
-        x_rec = self.decode2(x3 + x1)    # (B, 4, 128)
+        # print('x', x.shape)
+        x1 = self.encode1(x)
+        # print('x1', x1.shape) # (B, 16, 32)
+        x2 = self.encode2(x1) 
+        # print('x2', x2.shape) # (B, 64, 8)
+        z = self.bottleneck(x2)
+        # print('z', z.shape) # (B, 64, 8)
+        x3 = self.decode1(z )       # (B, 16, 32)
+        # print('x3', x3.shape)
+        x_rec = self.decode2(x3)    # (B, 4, 128)
+        # print('x_rec', x_rec.shape)
         return x_rec, z
  
     def loss_func(self, x_rec, x):
@@ -321,10 +327,6 @@ class Seq2Seq(nn.Module):
         mlflow.log_params(self.hyperparameters)
         mlflow.log_params(self.architecture)
 
-        # with open("model_summary.txt", "w") as f:
-        #     f.write(str(summary(self)))
-        # mlflow.log_artifact("model_summary.txt")
-
 class ResidualLayer1D(nn.Module):
     def __init__(
         self,
@@ -367,9 +369,8 @@ def conv_sequence_avg_pooled(input_channels, num_conv=1,  padding=1, pool_stride
         next_channels = int(current_channels * pool_stride)
         layers.append(nn.Conv1d(current_channels, next_channels, kernel_size=3, padding=padding, stride=1))
         layers.append(nn.ReLU(inplace=True))
-        layers.append(nn.AvgPool1d(kernel_size=pool_kernel, stride=pool_stride, padding=1))
+        layers.append(nn.AvgPool1d(kernel_size=pool_kernel, stride=pool_stride, padding=0))
         current_channels = next_channels
-    
     return nn.Sequential(*layers)
 
 def transpose_conv_sequence(input_channels, growth_factor=2, num_conv=1, up_kernel=2, padding=1, up_stride=2):
@@ -382,9 +383,5 @@ def transpose_conv_sequence(input_channels, growth_factor=2, num_conv=1, up_kern
         layers.append(nn.ReLU(inplace=True))
         
         current_channels = next_channels
-        layers.append(nn.Conv1d(current_channels, current_channels, kernel_size=3, padding=padding, stride=1))
-        
-        
-    
-    
+        layers.append(nn.Conv1d(current_channels, current_channels, kernel_size=3, padding=padding, stride=1))    
     return nn.Sequential(*layers)
