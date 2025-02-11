@@ -1,4 +1,4 @@
-# Starting experiment at jue 30 ene 2025 14:42:25 -03
+# Starting experiment at lun 10 feb 2025 23:50:11 -03
 # Saving hyperparameters: NUM_CONV1 = 1 2 3 NUM_CONV2 = 1 2 3 
 # Model file content:
 import pandas as pd
@@ -32,7 +32,7 @@ def seq2seq(weights=None, **kwargs):
         print("No weights provided, using random initialization")
     model.log_model()
     mlflow.set_tag("model", 'Unet-avg-pooled')
-    mlflow.set_tag("version", '2')
+    mlflow.set_tag("version", '3')
     return model
     
     
@@ -112,6 +112,9 @@ class Seq2Seq(nn.Module):
         # decode1 (invertir el bloque 2)
         self.decode1_in = self.encode2_out  
         self.decode2_in = self.encode1_out  
+        
+        self.L_min = 128 // ((pool_stride_2 ** num_conv2) * (pool_stride_1 **num_conv1))
+        self.latent_dim = 64
 
         self.architecture = {
             "arc_embedding_dim": embedding_dim,
@@ -180,13 +183,17 @@ class Seq2Seq(nn.Module):
                 up_stride=pool_stride_1
             )
         )
+                     
         
-        # Bottleneck
-        self.bottleneck = nn.Sequential(
-            nn.Conv1d(self.encode2_out, self.encode2_out, kernel_size=kernel, padding=pad),
-            nn.BatchNorm1d(self.encode2_out),
-            nn.ReLU()
-        )
+        self.to_latent = nn.Sequential(nn.Flatten(1),
+                                        nn.Linear(self.encode2_out * self.L_min, self.latent_dim),
+                                        nn.ReLU())
+        
+        
+        # Decoder 
+        self.from_latent = nn.Sequential(nn.Linear(self.latent_dim, self.encode2_out * self.L_min),
+                                          nn.ReLU(),
+                                          nn.Unflatten(1, (self.encode2_out, self.L_min)))
     def forward(self, batch): 
         
         x = batch["embedding"].to(self.device) # (B, 4, 128)
@@ -195,11 +202,13 @@ class Seq2Seq(nn.Module):
         # print('x1', x1.shape) # (B, 16, 32)
         x2 = self.encode2(x1) 
         # print('x2', x2.shape) # (B, 64, 8)
-        z = self.bottleneck(x2)
+        z = self.to_latent(x2)
         # print('z', z.shape) # (B, 64, 8)
-        x3 = self.decode1(z )       # (B, 16, 32)
-        # print('x3', x3.shape)
-        x_rec = self.decode2(x3)    # (B, 4, 128)
+        x3 = self.from_latent(z)
+        # print('x3 from latent', x3.shape)
+        x4 = self.decode1(x3)       # (B, 16, 32)
+        # print('x4', x4.shape)
+        x_rec = self.decode2(x4)    # (B, 4, 128)
         # print('x_rec', x_rec.shape)
         return x_rec, z
  
@@ -330,6 +339,10 @@ class Seq2Seq(nn.Module):
         mlflow.log_params(self.hyperparameters)
         mlflow.log_params(self.architecture)
 
+        # with open("model_summary.txt", "w") as f:
+        #     f.write(str(summary(self)))
+        # mlflow.log_artifact("model_summary.txt")
+
 class ResidualLayer1D(nn.Module):
     def __init__(
         self,
@@ -374,6 +387,7 @@ def conv_sequence_avg_pooled(input_channels, num_conv=1,  padding=1, pool_stride
         layers.append(nn.ReLU(inplace=True))
         layers.append(nn.AvgPool1d(kernel_size=pool_kernel, stride=pool_stride, padding=0))
         current_channels = next_channels
+    
     return nn.Sequential(*layers)
 
 def transpose_conv_sequence(input_channels, growth_factor=2, num_conv=1, up_kernel=2, padding=1, up_stride=2):
@@ -386,5 +400,9 @@ def transpose_conv_sequence(input_channels, growth_factor=2, num_conv=1, up_kern
         layers.append(nn.ReLU(inplace=True))
         
         current_channels = next_channels
-        layers.append(nn.Conv1d(current_channels, current_channels, kernel_size=3, padding=padding, stride=1))    
+        layers.append(nn.Conv1d(current_channels, current_channels, kernel_size=3, padding=padding, stride=1))
+        
+        
+    
+    
     return nn.Sequential(*layers)

@@ -90,7 +90,7 @@ class Seq2Seq(nn.Module):
         stride_1=1,
         stride_2=1,
         num_conv1=3,
-        num_conv2=2,
+        num_conv2=3,
         pool_stride_1=2,
         pool_stride_2=2,
         pool_kernel_1=2,

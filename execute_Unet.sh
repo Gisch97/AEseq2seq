@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # File paths
-MODEL_FILE="src/seq2seq/model_unet_pool.py"
+MODEL_FILE="src/seq2seq/model_unet_pool_v3.py"
 GLOBAL_CONFIG="config/global.json"
 TRAIN_CONFIG="config/train.json"
 TEST_CONFIG="config/test.json"
@@ -11,7 +11,7 @@ NUM_CONV1=(1 2 3)
 NUM_CONV2=(1 2 3) 
 
 # Base output path
-BASE_OUTPUT_PATH="results/UNet/pooling_layers"
+BASE_OUTPUT_PATH="results/UNet_v3/pooling_layers"
 
 cp execute_Unet.sh "$BASE_OUTPUT_PATH"
 
@@ -19,15 +19,14 @@ echo "# Starting experiment at $(date)" > "$BASE_OUTPUT_PATH/models.log"
 echo "Saving hyperparameters:  NUM_CONV1 = ${NUM_CONV1[@]} NUM_CONV2 = ${NUM_CONV2[@]} "
 echo "# Saving hyperparameters: NUM_CONV1 = ${NUM_CONV1[@]} NUM_CONV2 = ${NUM_CONV2[@]} " | tee -a "$BASE_OUTPUT_PATH/models.log"
 echo "# Saving Model file content $MODEL_FILE >> $BASE_OUTPUT_PATH/models.log"
-echo "# Model file content: ($MODEL_FILE)" >> "$BASE_OUTPUT_PATH/models.log"
-echo "##############################################################" >> "$BASE_OUTPUT_PATH/models.log"
+echo "# Model file content:" >> "$BASE_OUTPUT_PATH/models.log"
 cat "$MODEL_FILE" >> "$BASE_OUTPUT_PATH/models.log"
 
 # Main script
 for c1 in "${NUM_CONV1[@]}"; do
     for c2 in "${NUM_CONV2[@]}"; do
         # Construct save path and name
-        save_name="UNet-v1-avg-pooling-no-skips-num_convs-$c1-$c2"
+        save_name="UNet-v3-avg-pooling-no-skips-num_convs-$c1-$c2"
         save_path="$BASE_OUTPUT_PATH/$save_name"
 
         echo "Executing: num_conv1=$c1; num_conv2=$c2"

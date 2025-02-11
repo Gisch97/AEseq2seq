@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # File paths
-MODEL_FILE="src/seq2seq/model_unet_pool_v2.py"
+MODEL_FILE="src/seq2seq/model_unet_pool_v3.py"
 GLOBAL_CONFIG="config/global.json"
 TRAIN_CONFIG="config/train.json"
 TEST_CONFIG="config/test.json"

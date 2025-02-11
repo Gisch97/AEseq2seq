@@ -1,9 +1,12 @@
 -- view_params source
+
 CREATE VIEW view_params AS
 SELECT
+    e.name AS experiment_name,
     r.run_uuid,
     r.name,
-    e.name AS experiment_name,
+    r.lifecycle_stage,
+    r.status,
     MAX(CASE WHEN p.key = 'arc_dilation_resnet1d' THEN p.value END) AS arc_dilation_resnet1d,
     MAX(CASE WHEN p.key = 'arc_embedding_dim' THEN p.value END) AS arc_embedding_dim,
     MAX(CASE WHEN p.key = 'arc_filters' THEN p.value END) AS arc_filters,
@@ -13,6 +16,10 @@ SELECT
     MAX(CASE WHEN p.key = 'arc_num_conv1' THEN p.value END) AS arc_num_conv1,
     MAX(CASE WHEN p.key = 'arc_num_conv2' THEN p.value END) AS arc_num_conv2,
     MAX(CASE WHEN p.key = 'arc_latent_dim' THEN p.value END) AS arc_latent_dim,
+    MAX(CASE WHEN p.key = 'arc_pool_stride_1' THEN p.value END) AS arc_pool_stride_1,
+    MAX(CASE WHEN p.key = 'arc_pool_stride_2' THEN p.value END) AS arc_pool_stride_2,
+    MAX(CASE WHEN p.key = 'arc_pool_kernel_1' THEN p.value END) AS arc_pool_kernel_1,
+    MAX(CASE WHEN p.key = 'arc_pool_kernel_2' THEN p.value END) AS arc_pool_kernel_2,
     MAX(CASE WHEN p.key = 'arc_num_layers' THEN p.value END) AS arc_num_layers,
     MAX(CASE WHEN p.key = 'arc_rank' THEN p.value END) AS arc_rank,
     MAX(CASE WHEN p.key = 'arc_resnet_bottleneck_factor' THEN p.value END) AS arc_resnet_bottleneck_factor,

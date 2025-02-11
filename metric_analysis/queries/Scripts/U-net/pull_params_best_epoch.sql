@@ -18,7 +18,9 @@ SELECT  p.run_uuid,
 		p.hyp_scheduler
 FROM view_params p
 JOIN view_metrics_best_epoch be ON p.run_uuid = be.run_uuid 
-WHERE experiment_name == 'UNet-convolution_layers'
+WHERE experiment_name = 'UNet_v2-avg-pooling'
+AND p.lifecycle_stage <> 'deleted'
+AND p.status = 'FINISHED'
 )
 SELECT	p.*,
 		m.step AS best_epoch,
