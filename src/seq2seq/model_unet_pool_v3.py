@@ -89,7 +89,7 @@ class Seq2Seq(nn.Module):
         rank=8,
         stride_1=1,
         stride_2=1,
-        num_conv1=3,
+        num_conv1=2,
         num_conv2=3,
         pool_stride_1=2,
         pool_stride_2=2,
@@ -111,13 +111,13 @@ class Seq2Seq(nn.Module):
         self.decode2_in = self.encode1_out  
         
         self.L_min = 128 // ((pool_stride_2 ** num_conv2) * (pool_stride_1 **num_conv1))
-        self.latent_dim = 64
+        self.latent_dim=64
 
         self.architecture = {
             "arc_embedding_dim": embedding_dim,
-            "arc_filters": self.encode1_in,
-            "arc_rank": self.encode2_in,
-            "arc_latent_dim": self.encode2_out,
+            "arc_filters": self.encode1_out,
+            "arc_rank": self.encode2_out,
+            "arc_latent_dim": self.latent_dim,
             "arc_kernel": kernel,
             "arc_num_layers": num_layers,
             "arc_dilation_resnet1d": dilation_resnet1d,

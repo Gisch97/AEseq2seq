@@ -4,13 +4,13 @@ WHERE experiment_id == 11
 AND lifecycle_stage <> 'deleted'
 AND status = 'FINISHED'
 
-SELECT * FROM runs
+SELECT * FROM experiments
 
 WITH run_set AS (
     SELECT  
         run_uuid
     FROM runs 
-    WHERE experiment_id == 11
+    WHERE experiment_id == 19
       AND lifecycle_stage <> 'deleted'
       AND status = 'FINISHED'
 )
@@ -23,7 +23,7 @@ WITH run_set AS (
     SELECT  
         run_uuid
     FROM runs 
-    WHERE experiment_id == 11
+    WHERE experiment_id == 19
       AND lifecycle_stage <> 'deleted'
       AND status = 'FINISHED'
 )

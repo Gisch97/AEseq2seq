@@ -9,6 +9,7 @@ SELECT  p.run_uuid,
 		p.arc_stride_2,
 		p.arc_num_conv1,
 		p.arc_num_conv2,
+		p.arc_latent_dim,
 		CASE
 			WHEN p.name LIKE '%no-skips%' THEN 0
 			ELSE 1 
@@ -18,7 +19,13 @@ SELECT  p.run_uuid,
 		p.hyp_scheduler
 FROM view_params p
 JOIN view_metrics_best_epoch be ON p.run_uuid = be.run_uuid 
-WHERE experiment_name = 'UNet_v2-avg-pooling'
+WHERE experiment_name = 'UNet_v3_avg_pooling'
+-- UNet-convolution_layers
+-- UNet-v1-avg-pooling
+-- UNet_v2
+-- UNet_v2-avg-pooling
+-- UNet_v3
+-- UNet_v3_avg_pooling
 AND p.lifecycle_stage <> 'deleted'
 AND p.status = 'FINISHED'
 )
