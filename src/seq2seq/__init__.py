@@ -13,7 +13,7 @@ import mlflow.pytorch
 
 from torch.utils.data import DataLoader
 from .dataset import SeqDataset, pad_batch
-from .model_unet_v3 import seq2seq 
+from .model_unet_v4 import seq2seq 
 from .embeddings import NT_DICT
 from .utils import write_ct, validate_file, ct2dot
 from .parser import parser, get_parser_defaults

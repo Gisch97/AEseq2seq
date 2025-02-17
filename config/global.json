@@ -1,6 +1,6 @@
 {
-    "exp": "UNet_v3",
-    "run": "UNet-v3-conv-no-skips-num_convs-2-3-ld-64",
+    "exp": "UNet_v4",
+    "run": "UNet_pool_v4_test0",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,
