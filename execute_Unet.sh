@@ -39,7 +39,7 @@ for c1 in "${NUM_CONV1[@]}"; do
             for r in "${RANK[@]}"; do
                 for ld in "${LATENT_DIM[@]}"; do
                     # Construct save path and name
-                    save_name="UNet_v4_conv-num_convs-$c1-$c2-f$f-r$r-ld$ld"
+                    save_name="UNet_v4_conv-no-skips-num_convs-$c1-$c2-f$f-r$r-ld$ld"
                     save_path="$BASE_OUTPUT_PATH/$save_name"
 
                     echo "Executing: num_conv1=$c1; encode1_out=$f; encode2_out=$r; num_conv2=$c2; latent_dim=$ld"
@@ -75,6 +75,8 @@ for c1 in "${NUM_CONV1[@]}"; do
                     # Test model
                     seq2seq test
                     echo "Testing completed for configuration: $save_name"
+                done
+            done 
         done
     done
 done
