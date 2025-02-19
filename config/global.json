@@ -1,6 +1,6 @@
 {
-    "exp": "UNet_v4",
-    "run": "UNet_v4_conv-no-skips-num_convs-3-3-f8-r16-ld64",
+    "exp": "UNet_v4_avg_pooling",
+    "run": "UNet_v4_avg_pooling-no-skips-num_convs-3-3-f8-r16-ld64",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,

@@ -10,7 +10,7 @@ WITH run_set AS (
     SELECT  
         run_uuid
     FROM runs 
-    WHERE experiment_id == 19
+    WHERE experiment_id == 22
       AND lifecycle_stage <> 'deleted'
       AND status = 'FINISHED'
 )

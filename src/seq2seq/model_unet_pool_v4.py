@@ -88,7 +88,7 @@ class Seq2Seq(nn.Module):
         rank=8,
         stride_1=2, 
         stride_2=2,
-        num_conv1=2,
+        num_conv1=3,
         num_conv2=3,
         **kwargs
     ):     
@@ -105,16 +105,16 @@ class Seq2Seq(nn.Module):
         
         self.decode2_in = self.encode1_out
         self.decode2_out = self.encode1_in
-          
         self.L_min = 128 // ((2 ** num_conv2) * (2**num_conv1))
         self.latent_dim=64
+          
         
         self.architecture = {
             "arc_embedding_dim": embedding_dim,
             "arc_filters": self.encode1_out,
             "arc_rank": self.encode2_out,
             "arc_latent_dim": self.latent_dim,
-            "arc_initial_volume": self.embedding_dim * 128,
+            "arc_initial_volume": embedding_dim * 128,
             "arc_latent_volume": self.L_min * self.encode2_out,
             "arc_kernel": kernel,
             "arc_num_layers": num_layers,
@@ -189,8 +189,8 @@ class Seq2Seq(nn.Module):
         x2 = self.encode2(x1)  
         z = self.to_latent(x2)  
         x3 = self.from_latent(z)  
-        x4 = self.decode1(x3 + x2)  
-        x_rec = self.decode2(x4 + x1)  
+        x4 = self.decode1(x3)  
+        x_rec = self.decode2(x4)  
         return x_rec, z
         
     def loss_func(self, x_rec, x):
