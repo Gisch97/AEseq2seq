@@ -1,16 +1,12 @@
--- PULL TRAIN
-SELECT * FROM runs 
-WHERE experiment_id == 11
-AND lifecycle_stage <> 'deleted'
-AND status = 'FINISHED'
-
+-- Check experiments ------------------------------------------------------------------------------------
 SELECT * FROM experiments
 
+-- PULL TRAIN  ------------------------------------------------------------------------------------
 WITH run_set AS (
     SELECT  
         run_uuid
     FROM runs 
-    WHERE experiment_id == 22
+    WHERE experiment_id == 23
       AND lifecycle_stage <> 'deleted'
       AND status = 'FINISHED'
 )
@@ -18,7 +14,7 @@ SELECT tm.*
 FROM view_train_metrics tm
 JOIN run_set r ON tm.run_uuid = r.run_uuid
 
-
+-- PULL TEST ------------------------------------------------------------------------------------
 WITH run_set AS (
     SELECT  
         run_uuid
@@ -31,3 +27,8 @@ SELECT tm.*
 FROM view_test_metrics tm
 JOIN run_set r ON tm.run_uuid = r.run_uuid
 
+-- check run ---------------------------------------------------------------------------------------------------
+SELECT * FROM runs 
+WHERE experiment_id == 11
+AND lifecycle_stage <> 'deleted'
+AND status = 'FINISHED'

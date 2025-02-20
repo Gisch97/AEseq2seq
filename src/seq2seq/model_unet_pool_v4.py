@@ -95,9 +95,9 @@ class Seq2Seq(nn.Module):
             
          # Encoder: 
         self.encode1_in = embedding_dim
-        self.encode1_out = 4
+        self.encode1_out=8
         self.encode2_in = self.encode1_out
-        self.encode2_out =  8
+        self.encode2_out=16
    
         # Decoder
         self.decode1_in = self.encode2_out  
@@ -189,8 +189,8 @@ class Seq2Seq(nn.Module):
         x2 = self.encode2(x1)  
         z = self.to_latent(x2)  
         x3 = self.from_latent(z)  
-        x4 = self.decode1(x3)  
-        x_rec = self.decode2(x4)  
+        x4 = self.decode1(x3 + x2)  
+        x_rec = self.decode2(x4 + x1)  
         return x_rec, z
         
     def loss_func(self, x_rec, x):

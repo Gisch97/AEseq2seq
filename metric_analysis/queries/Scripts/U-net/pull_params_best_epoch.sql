@@ -19,13 +19,7 @@ SELECT  p.run_uuid,
 		p.hyp_scheduler
 FROM view_params p
 JOIN view_metrics_best_epoch be ON p.run_uuid = be.run_uuid 
-WHERE experiment_name = 'UNet_v4'
--- UNet-convolution_layers
--- UNet-v1-avg-pooling
--- UNet_v2
--- UNet_v2-avg-pooling
--- UNet_v3
--- UNet_v3_avg_pooling
+WHERE experiment_name = 'UNet_v4_avg_pooling'
 AND p.lifecycle_stage <> 'deleted'
 AND p.status = 'FINISHED'
 )

@@ -1,5 +1,5 @@
 {
     "train_file": "data/ArchiveII-KFold/fam-similarity/train_0.csv",
     "valid_file": "data/ArchiveII-KFold/fam-similarity/valid_0.csv",
-    "out_path": "results/UNet_v4/pooling_layers/UNet_v4_avg_pooling-no-skips-num_convs-3-3-f8-r16-ld64"
+    "out_path": "results/UNet_v4/pooling_layers/UNet_v4_avg_pooling-num_convs-3-3-f8-r16-ld64"
 }
