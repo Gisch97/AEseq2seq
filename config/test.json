@@ -1,5 +1,5 @@
 {
     "test_file": "data/ArchiveII-KFold/fam-similarity/test_0.csv",
-    "model_weights": "results/UNet_v4/pooling_layers/UNet_v4_avg_pooling-num_convs-3-3-f8-r16-ld64/weights.pmt",
-    "out_path": "results/UNet_v4/pooling_layers/UNet_v4_avg_pooling-num_convs-3-3-f8-r16-ld64/test.csv"
+    "model_weights": "results/UNet_selection/test/A_nc1-resnet0-nc1-2encode-flat1-skip1/weights.pmt",
+    "out_path": "results/UNet_selection/test/A_nc1-resnet0-nc1-2encode-flat1-skip1/test.csv"
 }
