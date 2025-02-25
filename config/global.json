@@ -1,13 +1,13 @@
 {
-    "exp": "test",
-    "run": "A_nc1-resnet0-nc1-2encode-flat1-skip0",
+    "exp": "UNet_selection_v4c",
+    "run": "A_nc2-resnet2-nc3-2encode-flat1-skip0",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,
     "max_len": 128, 
     "quiet": false,
     "nworkers": 4,
-    "max_epochs": 1,
+    "max_epochs": 20,
     "valid_split": 0.1,
     "verbose": true
 }

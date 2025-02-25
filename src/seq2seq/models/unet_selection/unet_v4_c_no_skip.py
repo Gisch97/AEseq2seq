@@ -124,7 +124,9 @@ class Seq2Seq(nn.Module):
             "arc_stride_1": stride_1,
             "arc_stride_2": stride_2,
             "arc_num_conv1": num_conv1,
-            "arc_num_conv2": num_conv2
+            "arc_num_conv2": num_conv2,
+            "arc_skip": 0,
+            "arc_encoder_blocks": 2,
         }
         pad = (kernel - 1) // 2
 
@@ -197,8 +199,8 @@ class Seq2Seq(nn.Module):
         x2 = self.encode2(x1)  
         z = self.to_latent(x2)  
         x3 = self.from_latent(z)  
-        x4 = self.decode1(x3 + x2)  
-        x_rec = self.decode2(x4 + x1)  
+        x4 = self.decode1(x3)  
+        x_rec = self.decode2(x4)  
         return x_rec, z
  
 

@@ -84,7 +84,7 @@ class Seq2Seq(nn.Module):
         embedding_dim,
         filters=8,
         kernel=3,
-        num_layers=0,
+        num_layers=2,
         dilation_resnet1d=3,
         resnet_bottleneck_factor=0.5,
         rank=16,
