@@ -16,9 +16,9 @@
 
 ### EXPERIMENTO Y MODELOS SELECCIONADOS
 # EXPERIMENT_NAME="test"
-EXPERIMENT_NAME="UNet_selection_v4c"
-MODEL_NAME="unet_v4_c_skip"
-MODEL_NAME_NO_SKIP="unet_v4_c_no_skip"
+EXPERIMENT_NAME="UNet_selection_v4p_e1"
+MODEL_NAME="unet_v4_p_skip_e1"
+MODEL_NAME_NO_SKIP="unet_v4_p_no_skip_e1"
 
 # File paths
 MODEL_PATH="src/seq2seq/models/unet_selection"
@@ -33,8 +33,8 @@ mkdir -p "$BASE_OUTPUT_PATH"
 # # Hyperparameters
 MAX_EPOCHS=20
 NUM_CONV1=(1 2) 
-NUM_CONV2=(1 2 3) 
-RESNET_LAYERS=(0 1 2)  
+# NUM_CONV2=(1 2 3) 
+# RESNET_LAYERS=(0 1 2)  
 
 ### LOGGING execution
 cp execute_progressive_selection.sh "$BASE_OUTPUT_PATH"
