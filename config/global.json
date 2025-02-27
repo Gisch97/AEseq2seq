@@ -1,6 +1,6 @@
 {
     "exp": "UNet_selection_v4p_e1",
-    "run": "A_nc1-resnet0-nc1-2encode-flat1-skip1",
+    "run": "A_nc-6-1encode-flat0-skip0",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,

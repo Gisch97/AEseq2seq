@@ -33,8 +33,8 @@ mkdir -p "$BASE_OUTPUT_PATH"
 # # Hyperparameters
 MAX_EPOCHS=20
 NUM_CONV1=(1 2) 
-NUM_CONV2=(1 2 3) 
-RESNET_LAYERS=(0 1 2)  
+# NUM_CONV2=(1 2 3) 
+# RESNET_LAYERS=(0 1 2)  
 
 ### LOGGING execution
 cp execute_progressive_selection.sh "$BASE_OUTPUT_PATH"

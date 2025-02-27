@@ -90,7 +90,7 @@ class Seq2Seq(nn.Module):
         rank=0,
         stride_1=2, 
         stride_2=2,
-        num_conv1=1,
+        num_conv1=6,
         num_conv2=1,
         **kwargs
     ):     
@@ -138,22 +138,22 @@ class Seq2Seq(nn.Module):
         self.decode1 = tconv(
             input_channels=self.decode1_in,
             output_channels=self.decode1_out,
-            num_conv=num_conv2, 
+            num_conv=num_conv1, 
             kernel_size=kernel, 
             padding=pad, 
-            stride=stride_2)
+            stride=stride_1)
  
         
         
         self.to_latent = nn.Sequential(nn.Flatten(1),
-                                        nn.Linear(self.encode2_out * self.L_min, self.latent_dim),
+                                        nn.Linear(self.encode1_out * self.L_min, self.latent_dim),
                                         nn.ReLU())
         
         
         # Decoder 
-        self.from_latent = nn.Sequential(nn.Linear(self.latent_dim, self.encode2_out * self.L_min),
+        self.from_latent = nn.Sequential(nn.Linear(self.latent_dim, self.encode1_out * self.L_min),
                                           nn.ReLU(),
-                                          nn.Unflatten(1, (self.encode2_out, self.L_min)))
+                                          nn.Unflatten(1, (self.encode1_out, self.L_min)))
     def forward(self, batch): 
         
         x = batch["embedding"].to(self.device) 
