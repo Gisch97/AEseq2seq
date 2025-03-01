@@ -126,7 +126,7 @@ class Seq2Seq(nn.Module):
             "arc_stride_2": stride_2,
             "arc_num_conv1": num_conv1,
             "arc_num_conv2": num_conv2,
-            "arc_skip": 1,
+            "arc_skip": 0,
             "arc_encoder_blocks": 2,
         }
         pad = (kernel - 1) // 2

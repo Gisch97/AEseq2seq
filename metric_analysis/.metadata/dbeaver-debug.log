@@ -1,13 +1,12 @@
-2025-02-21 19:12:41.531 - DBeaver 24.2.4.202411031831 is starting
-2025-02-21 19:12:41.531 - OS: Linux 6.8.0-40-generic (amd64)
-2025-02-21 19:12:41.532 - Java version: 17.0.6 by Eclipse Adoptium (64bit)
-2025-02-21 19:12:41.532 - Install path: '/usr/share/dbeaver-ce'
-2025-02-21 19:12:41.533 - Instance path: 'file:/home/guillermo/Documents/SINC/Research/RNA/AEseq2seq/metric_analysis/'
-2025-02-21 19:12:41.536 - Memory available 64Mb/1024Mb
-2025-02-21 19:12:41.537 - Create display
-> Start Eclipse IDE UI [org.eclipse.ui.ide 3.22.300.v20240828-1234]
-2025-02-21 19:12:41.751 - Starting instance server at http://localhost:35543
-2025-02-21 19:12:41.760 - Run workbench
+2025-03-01 13:14:16.170 - DBeaver 24.2.4.202411031831 is starting
+2025-03-01 13:14:16.171 - OS: Linux 6.8.0-40-generic (amd64)
+2025-03-01 13:14:16.172 - Java version: 17.0.6 by Eclipse Adoptium (64bit)
+2025-03-01 13:14:16.172 - Install path: '/usr/share/dbeaver-ce'
+2025-03-01 13:14:16.173 - Instance path: 'file:/home/guillermo/Documents/SINC/Research/RNA/AEseq2seq/metric_analysis/'
+2025-03-01 13:14:16.175 - Memory available 64Mb/1024Mb
+2025-03-01 13:14:16.188 - Create display
+2025-03-01 13:14:16.386 - Starting instance server at http://localhost:44309
+2025-03-01 13:14:16.394 - Run workbench
 > Start Eclipse e4 Workbench SWT [org.eclipse.e4.ui.workbench.swt 0.17.500.v20240807-0911]
 > Start Eclipse Application Services [org.eclipse.e4.core.services 2.4.400.v20240413-1529]
 > Start Eclipse UI Application Services [org.eclipse.e4.ui.services 1.6.300.v20231201-1637]
@@ -22,446 +21,64 @@
 > Start Eclipse CSS SWT Support [org.eclipse.e4.ui.css.swt 0.15.400.v20240321-1245]
 > Start Default Text Editor [org.eclipse.ui.editors 3.18.0.v20240807-0735]
 > Start Text Editor Framework [org.eclipse.ui.workbench.texteditor 3.18.0.v20240819-1419]
+2025-03-01 13:14:18.659 - Configure workbench window
+> Start DBeaver SQL Model [org.jkiss.dbeaver.model.sql 1.0.132.202411031831]
+2025-03-01 13:14:18.943 - Total database drivers: 119 (119)
+> Start Help System Core [org.eclipse.help 3.10.400.v20240415-0528]
+2025-03-01 13:14:19.055 - Create actions
+2025-03-01 13:14:19.062 - Disable Eclipse action set 'org.eclipse.ui.edit.text.actionSet.annotationNavigation'
+2025-03-01 13:14:19.063 - Disable Eclipse action set 'org.eclipse.ui.WorkingSetActionSet'
+2025-03-01 13:14:19.063 - Disable Eclipse action set 'org.eclipse.ui.actionSet.openFiles'
+2025-03-01 13:14:19.063 - Create workbench actions
+2025-03-01 13:14:19.641 - Initialize workbench window
+2025-03-01 13:14:19.648 - Finish initialization
+> Start DBeaver UI Editors - Data [org.jkiss.dbeaver.ui.editors.data 1.0.142.202411031831]
+> Start DBeaver UI Editors - SQL [org.jkiss.dbeaver.ui.editors.sql 1.0.142.202411031831]
+> Start DBeaver SQL Terminal [org.jkiss.dbeaver.ui.editors.sql.terminal 1.0.118.202411031831]
+> Start Core Compare Support [org.eclipse.compare.core 3.8.500.v20240524-2010]
 > Start Internet Connection Management UI [org.eclipse.ui.net 1.5.400.v20240413-1529]
 > Start Internet Connection Management [org.eclipse.core.net 1.5.500.v20240625-1706]
-2025-02-21 19:12:43.817 - Configure workbench window
-> Start DBeaver SQL Model [org.jkiss.dbeaver.model.sql 1.0.132.202411031831]
-2025-02-21 19:12:43.974 - Total database drivers: 119 (119)
-> Start Help System Core [org.eclipse.help 3.10.400.v20240415-0528]
-2025-02-21 19:12:44.087 - Create actions
-2025-02-21 19:12:44.103 - Disable Eclipse action set 'org.eclipse.ui.edit.text.actionSet.annotationNavigation'
-2025-02-21 19:12:44.104 - Disable Eclipse action set 'org.eclipse.ui.WorkingSetActionSet'
-2025-02-21 19:12:44.104 - Disable Eclipse action set 'org.eclipse.ui.actionSet.openFiles'
-2025-02-21 19:12:44.104 - Create workbench actions
-2025-02-21 19:12:45.110 - Initialize workbench window
-2025-02-21 19:12:45.123 - Finish initialization
-> Start DBeaver UI Editors - SQL [org.jkiss.dbeaver.ui.editors.sql 1.0.142.202411031831]
+> Start DBeaver Sample Database [org.jkiss.dbeaver.ext.sample.database 1.0.179.202411031831]
+> Start DBeaver Tip of the day [org.jkiss.dbeaver.ext.ui.tipoftheday 1.0.148.202411031831]
 > Start GEF Classic Draw2d [org.eclipse.draw2d 3.17.0.202409021815]
 > Start GEF Classic GEF (MVC) [org.eclipse.gef 3.19.0.202409021815]
 > Start DBeaver ERD UI [org.jkiss.dbeaver.erd.ui 3.0.102.202411031831]
 > Start DBeaver ERD Model [org.jkiss.dbeaver.erd.model 1.0.102.202411031831]
 > Start DBeaver Dashboard UI [org.jkiss.dbeaver.ui.dashboard 1.0.139.202411031831]
-> Start DBeaver Sample Database [org.jkiss.dbeaver.ext.sample.database 1.0.179.202411031831]
-> Start DBeaver Tip of the day [org.jkiss.dbeaver.ext.ui.tipoftheday 1.0.148.202411031831]
-> Start DBeaver UI Editors - Data [org.jkiss.dbeaver.ui.editors.data 1.0.142.202411031831]
-2025-02-21 19:12:46.616 - Open [https://dbeaver.io/product/version.xml]
 > Start DBeaver UI Editors - Connections [org.jkiss.dbeaver.ui.editors.connection 1.0.133.202411031831]
-2025-02-21 19:12:56.341 - Open [https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/maven-metadata.xml]
-2025-02-21 19:12:57.122 - Open [https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.49.1.0/sqlite-jdbc-3.49.1.0.pom]
-2025-02-21 19:13:00.996 - Open [https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.49.1.0/sqlite-jdbc-3.49.1.0.jar]
-2025-02-21 19:13:07.704 - Open [https://www.apache.org/licenses/LICENSE-2.0.txt]
-2025-02-21 19:13:08.555 - Connect with 'mlruns.db' (sqlite_jdbc-193fadf9400-32aa4d84af8421d7)
+> Start Console [org.eclipse.ui.console 3.14.100.v20240429-1358]
+> Start Debug Core [org.eclipse.debug.core 3.21.500.v20240801-2219]
 > Start DBeaver JDBC Model [org.jkiss.dbeaver.model.jdbc 1.0.35.202411031831]
 > Start DBeaver Generic Plug-in [org.jkiss.dbeaver.ext.generic 2.3.228.202411031831]
 > Start DBeaver SQLite Model [org.jkiss.dbeaver.ext.sqlite 1.0.191.202411031831]
-2025-02-21 19:13:08.632 - Execution context opened (mlruns.db; Main; 0)
-2025-02-21 19:13:08.849 - Connected (sqlite_jdbc-193fadf9400-32aa4d84af8421d7, SQLite JDBC [3.49.1.0])
-> Start DBeaver SQL Terminal [org.jkiss.dbeaver.ui.editors.sql.terminal 1.0.118.202411031831]
-> Start Core Compare Support [org.eclipse.compare.core 3.8.500.v20240524-2010]
-> Start Console [org.eclipse.ui.console 3.14.100.v20240429-1358]
-> Start Debug Core [org.eclipse.debug.core 3.21.500.v20240801-2219]
 > Start DBeaver SQL Language Semantic Model [org.jkiss.dbeaver.model.lsm 1.0.37.202411031831]
+2025-03-01 13:14:23.941 - Connect with 'mlruns.db' (sqlite_jdbc-193fadf9400-32aa4d84af8421d7)
+2025-03-01 13:14:24.089 - Execution context opened (mlruns.db; Main; 0)
+2025-03-01 13:14:24.635 - Connected (sqlite_jdbc-193fadf9400-32aa4d84af8421d7, SQLite JDBC [3.49.1.0])
+> Start DBeaver Tasks View [org.jkiss.dbeaver.tasks.ui.view 1.0.91.202411031831]
+2025-03-01 13:15:09.319 - No active connection. Action is in disabled state.
 > Start DBeaver Data Transfer [org.jkiss.dbeaver.data.transfer 2.0.126.202411031831]
-2025-02-21 19:14:09.061 - SQL Error [1]: [SQLITE_ERROR] SQL error or missing database (no such table: main.params)
-org.jkiss.dbeaver.model.sql.DBSQLException: SQL Error [1]: [SQLITE_ERROR] SQL error or missing database (no such table: main.params)
-	at org.jkiss.dbeaver.model.impl.jdbc.exec.JDBCStatementImpl.executeStatement(JDBCStatementImpl.java:130)
-	at org.jkiss.dbeaver.ui.editors.sql.execute.SQLQueryJob.executeStatement(SQLQueryJob.java:631)
-	at org.jkiss.dbeaver.ui.editors.sql.execute.SQLQueryJob.lambda$2(SQLQueryJob.java:522)
-	at org.jkiss.dbeaver.model.exec.DBExecUtils.tryExecuteRecover(DBExecUtils.java:192)
-	at org.jkiss.dbeaver.ui.editors.sql.execute.SQLQueryJob.executeSingleQuery(SQLQueryJob.java:541)
-	at org.jkiss.dbeaver.ui.editors.sql.execute.SQLQueryJob.extractData(SQLQueryJob.java:1001)
-	at org.jkiss.dbeaver.ui.editors.sql.SQLEditor$QueryResultsContainer.readData(SQLEditor.java:4237)
-	at org.jkiss.dbeaver.ui.controls.resultset.ResultSetJobDataRead.lambda$0(ResultSetJobDataRead.java:128)
-	at org.jkiss.dbeaver.model.exec.DBExecUtils.tryExecuteRecover(DBExecUtils.java:192)
-	at org.jkiss.dbeaver.ui.controls.resultset.ResultSetJobDataRead.run(ResultSetJobDataRead.java:126)
-	at org.jkiss.dbeaver.ui.controls.resultset.ResultSetViewer$ResultSetDataPumpJob.run(ResultSetViewer.java:5166)
-	at org.jkiss.dbeaver.model.runtime.AbstractJob.run(AbstractJob.java:117)
-	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
-Caused by: org.sqlite.SQLiteException: [SQLITE_ERROR] SQL error or missing database (no such table: main.params)
-	at org.sqlite.core.DB.newSQLException(DB.java:1179)
-	at org.sqlite.core.DB.newSQLException(DB.java:1190)
-	at org.sqlite.core.DB.throwex(DB.java:1150)
-	at org.sqlite.core.NativeDB.prepare_utf8(Native Method)
-	at org.sqlite.core.NativeDB.prepare(NativeDB.java:135)
-	at org.sqlite.core.DB.prepare(DB.java:264)
-	at org.sqlite.jdbc3.JDBC3Statement.lambda$execute$0(JDBC3Statement.java:55)
-	at org.sqlite.jdbc3.JDBC3Statement.withConnectionTimeout(JDBC3Statement.java:458)
-	at org.sqlite.jdbc3.JDBC3Statement.execute(JDBC3Statement.java:44)
-	at org.jkiss.dbeaver.model.impl.jdbc.exec.JDBCStatementImpl.execute(JDBCStatementImpl.java:335)
-	at org.jkiss.dbeaver.model.impl.jdbc.exec.JDBCStatementImpl.executeStatement(JDBCStatementImpl.java:128)
-	... 12 more
-2025-02-21 19:14:11.689 - Event loop exception
-java.lang.IllegalArgumentException: Index out of bounds
-	at org.eclipse.swt.SWT.error(SWT.java:4903)
-	at org.eclipse.swt.SWT.error(SWT.java:4837)
-	at org.eclipse.swt.SWT.error(SWT.java:4808)
-	at org.eclipse.swt.custom.StyledText.getTextBounds(StyledText.java:4888)
-	at org.jkiss.dbeaver.ui.editors.sql.util.SQLAnnotationHover$LinkListInformationControl.setVisible(SQLAnnotationHover.java:333)
-	at org.eclipse.jface.text.AbstractInformationControlManager.showInformationControl(AbstractInformationControlManager.java:1240)
-	at org.eclipse.jface.text.TextViewerHoverManager.showInformationControl(TextViewerHoverManager.java:276)
-	at org.eclipse.jface.text.AbstractInformationControlManager.internalShowInformationControl(AbstractInformationControlManager.java:1191)
-	at org.eclipse.jface.text.AbstractInformationControlManager.presentInformation(AbstractInformationControlManager.java:1120)
-	at org.eclipse.jface.text.AbstractHoverInformationControlManager.presentInformation(AbstractHoverInformationControlManager.java:884)
-	at org.eclipse.jface.text.TextViewerHoverManager.doPresentInformation(TextViewerHoverManager.java:237)
-	at org.eclipse.jface.text.TextViewerHoverManager.lambda$3(TextViewerHoverManager.java:227)
-	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
-	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:132)
-	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:5040)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:4520)
-	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1151)
-	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:339)
-	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1042)
-	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:153)
-	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:639)
-	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:339)
-	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:546)
-	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:173)
-	at org.jkiss.dbeaver.ui.app.standalone.DBeaverApplication.start(DBeaverApplication.java:293)
-	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:208)
-	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:143)
-	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:109)
-	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:439)
-	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:271)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
-	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
-	at org.jkiss.dbeaver.launcher.DBeaverLauncher.invokeFramework(DBeaverLauncher.java:650)
-	at org.jkiss.dbeaver.launcher.DBeaverLauncher.basicRun(DBeaverLauncher.java:610)
-	at org.jkiss.dbeaver.launcher.DBeaverLauncher.run(DBeaverLauncher.java:1461)
-	at org.jkiss.dbeaver.launcher.DBeaverLauncher.main(DBeaverLauncher.java:1434)
-2025-02-21 19:14:30.417 - Error reading catalog/schema indexes. Get indexes from tables
-org.jkiss.dbeaver.DBDatabaseException: SQL Error [1]: [SQLITE_ERROR] SQL error or missing database (no such table: main.metrics)
-	at org.jkiss.dbeaver.model.impl.jdbc.cache.JDBCStructCache.loadChildren(JDBCStructCache.java:172)
-	at org.jkiss.dbeaver.model.impl.jdbc.cache.JDBCCompositeCache.loadObjects(JDBCCompositeCache.java:292)
-	at org.jkiss.dbeaver.model.impl.jdbc.cache.JDBCCompositeCache.getObjects(JDBCCompositeCache.java:123)
-	at org.jkiss.dbeaver.ext.generic.model.GenericObjectContainer.cacheIndexes(GenericObjectContainer.java:189)
-	at org.jkiss.dbeaver.ext.generic.model.GenericObjectContainer.getIndexes(GenericObjectContainer.java:170)
-	at org.jkiss.dbeaver.ext.generic.model.GenericDataSource.getIndexes(GenericDataSource.java:417)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
-	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode.extractPropertyValue(DBNDatabaseNode.java:1047)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode$PropertyValueReader.run(DBNDatabaseNode.java:1119)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode$PropertyValueReader.run(DBNDatabaseNode.java:1)
-	at org.jkiss.dbeaver.model.exec.DBExecUtils.tryExecuteRecover(DBExecUtils.java:192)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode.loadTreeItems(DBNDatabaseNode.java:664)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode.loadChildren(DBNDatabaseNode.java:475)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode.getChildren(DBNDatabaseNode.java:229)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode.getChildren(DBNDatabaseNode.java:1)
-	at org.jkiss.dbeaver.model.navigator.DBNUtils.getNodeChildrenFiltered(DBNUtils.java:94)
-	at org.jkiss.dbeaver.ui.navigator.database.load.TreeLoadService.evaluate(TreeLoadService.java:49)
-	at org.jkiss.dbeaver.ui.navigator.database.load.TreeLoadService.evaluate(TreeLoadService.java:1)
-	at org.jkiss.dbeaver.ui.LoadingJob.run(LoadingJob.java:88)
-	at org.jkiss.dbeaver.model.runtime.AbstractJob.run(AbstractJob.java:117)
-	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
-Caused by: org.sqlite.SQLiteException: [SQLITE_ERROR] SQL error or missing database (no such table: main.metrics)
-	at org.sqlite.core.DB.newSQLException(DB.java:1179)
-	at org.sqlite.core.DB.newSQLException(DB.java:1190)
-	at org.sqlite.core.DB.throwex(DB.java:1150)
-	at org.sqlite.core.NativeDB.prepare_utf8(Native Method)
-	at org.sqlite.core.NativeDB.prepare(NativeDB.java:135)
-	at org.sqlite.core.DB.prepare(DB.java:264)
-	at org.sqlite.jdbc3.JDBC3Statement.lambda$executeQuery$1(JDBC3Statement.java:87)
-	at org.sqlite.jdbc3.JDBC3Statement.withConnectionTimeout(JDBC3Statement.java:458)
-	at org.sqlite.jdbc3.JDBC3Statement.executeQuery(JDBC3Statement.java:85)
-	at org.sqlite.jdbc3.JDBC3DatabaseMetaData.getColumns(JDBC3DatabaseMetaData.java:982)
-	at org.jkiss.dbeaver.model.impl.jdbc.exec.JDBCDatabaseMetaDataImpl.getColumns(JDBCDatabaseMetaDataImpl.java:1152)
-	at org.jkiss.dbeaver.ext.generic.model.meta.GenericMetaModel.prepareTableColumnLoadStatement(GenericMetaModel.java:727)
-	at org.jkiss.dbeaver.ext.generic.model.TableCache.prepareChildrenStatement(TableCache.java:77)
-	at org.jkiss.dbeaver.ext.generic.model.TableCache.prepareChildrenStatement(TableCache.java:1)
-	at org.jkiss.dbeaver.model.impl.jdbc.cache.JDBCStructCache.loadChildren(JDBCStructCache.java:95)
-	... 23 more
-2025-02-21 19:21:36.545 - Error reading catalog/schema indexes. Get indexes from tables
-org.jkiss.dbeaver.DBDatabaseException: SQL Error [1]: [SQLITE_ERROR] SQL error or missing database (no such table: main.metrics)
-	at org.jkiss.dbeaver.model.impl.jdbc.cache.JDBCStructCache.loadChildren(JDBCStructCache.java:172)
-	at org.jkiss.dbeaver.model.impl.jdbc.cache.JDBCCompositeCache.loadObjects(JDBCCompositeCache.java:292)
-	at org.jkiss.dbeaver.model.impl.jdbc.cache.JDBCCompositeCache.getObjects(JDBCCompositeCache.java:123)
-	at org.jkiss.dbeaver.ext.generic.model.GenericObjectContainer.cacheIndexes(GenericObjectContainer.java:189)
-	at org.jkiss.dbeaver.ext.generic.model.GenericObjectContainer.getIndexes(GenericObjectContainer.java:170)
-	at org.jkiss.dbeaver.ext.generic.model.GenericDataSource.getIndexes(GenericDataSource.java:417)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
-	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode.extractPropertyValue(DBNDatabaseNode.java:1047)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode$PropertyValueReader.run(DBNDatabaseNode.java:1119)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode$PropertyValueReader.run(DBNDatabaseNode.java:1)
-	at org.jkiss.dbeaver.model.exec.DBExecUtils.tryExecuteRecover(DBExecUtils.java:192)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode.loadTreeItems(DBNDatabaseNode.java:664)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode.loadChildren(DBNDatabaseNode.java:475)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode.reloadChildren(DBNDatabaseNode.java:914)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode.loadChildren(DBNDatabaseNode.java:512)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode.loadChildren(DBNDatabaseNode.java:479)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode.loadChildren(DBNDatabaseNode.java:479)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode.reloadChildren(DBNDatabaseNode.java:914)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode.refreshNodeContent(DBNDatabaseNode.java:398)
-	at org.jkiss.dbeaver.model.navigator.DBNDatabaseNode.refreshNode(DBNDatabaseNode.java:373)
-	at org.jkiss.dbeaver.model.navigator.DBNDataSource.refreshNode(DBNDataSource.java:275)
-	at org.jkiss.dbeaver.ui.navigator.actions.NavigatorHandlerRefresh$1.run(NavigatorHandlerRefresh.java:188)
-	at org.jkiss.dbeaver.model.runtime.AbstractJob.run(AbstractJob.java:117)
-	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
-Caused by: org.sqlite.SQLiteException: [SQLITE_ERROR] SQL error or missing database (no such table: main.metrics)
-	at org.sqlite.core.DB.newSQLException(DB.java:1179)
-	at org.sqlite.core.DB.newSQLException(DB.java:1190)
-	at org.sqlite.core.DB.throwex(DB.java:1150)
-	at org.sqlite.core.NativeDB.prepare_utf8(Native Method)
-	at org.sqlite.core.NativeDB.prepare(NativeDB.java:135)
-	at org.sqlite.core.DB.prepare(DB.java:264)
-	at org.sqlite.jdbc3.JDBC3Statement.lambda$executeQuery$1(JDBC3Statement.java:87)
-	at org.sqlite.jdbc3.JDBC3Statement.withConnectionTimeout(JDBC3Statement.java:458)
-	at org.sqlite.jdbc3.JDBC3Statement.executeQuery(JDBC3Statement.java:85)
-	at org.sqlite.jdbc3.JDBC3DatabaseMetaData.getColumns(JDBC3DatabaseMetaData.java:982)
-	at org.jkiss.dbeaver.model.impl.jdbc.exec.JDBCDatabaseMetaDataImpl.getColumns(JDBCDatabaseMetaDataImpl.java:1152)
-	at org.jkiss.dbeaver.ext.generic.model.meta.GenericMetaModel.prepareTableColumnLoadStatement(GenericMetaModel.java:727)
-	at org.jkiss.dbeaver.ext.generic.model.TableCache.prepareChildrenStatement(TableCache.java:77)
-	at org.jkiss.dbeaver.ext.generic.model.TableCache.prepareChildrenStatement(TableCache.java:1)
-	at org.jkiss.dbeaver.model.impl.jdbc.cache.JDBCStructCache.loadChildren(JDBCStructCache.java:95)
-	... 26 more
-2025-02-21 19:21:45.761 - SQL Error [1]: [SQLITE_ERROR] SQL error or missing database (no such table: main.params)
-org.jkiss.dbeaver.model.sql.DBSQLException: SQL Error [1]: [SQLITE_ERROR] SQL error or missing database (no such table: main.params)
-	at org.jkiss.dbeaver.model.impl.jdbc.exec.JDBCStatementImpl.executeStatement(JDBCStatementImpl.java:130)
-	at org.jkiss.dbeaver.ui.editors.sql.execute.SQLQueryJob.executeStatement(SQLQueryJob.java:631)
-	at org.jkiss.dbeaver.ui.editors.sql.execute.SQLQueryJob.lambda$2(SQLQueryJob.java:522)
-	at org.jkiss.dbeaver.model.exec.DBExecUtils.tryExecuteRecover(DBExecUtils.java:192)
-	at org.jkiss.dbeaver.ui.editors.sql.execute.SQLQueryJob.executeSingleQuery(SQLQueryJob.java:541)
-	at org.jkiss.dbeaver.ui.editors.sql.execute.SQLQueryJob.extractData(SQLQueryJob.java:1001)
-	at org.jkiss.dbeaver.ui.editors.sql.SQLEditor$QueryResultsContainer.readData(SQLEditor.java:4237)
-	at org.jkiss.dbeaver.ui.controls.resultset.ResultSetJobDataRead.lambda$0(ResultSetJobDataRead.java:128)
-	at org.jkiss.dbeaver.model.exec.DBExecUtils.tryExecuteRecover(DBExecUtils.java:192)
-	at org.jkiss.dbeaver.ui.controls.resultset.ResultSetJobDataRead.run(ResultSetJobDataRead.java:126)
-	at org.jkiss.dbeaver.ui.controls.resultset.ResultSetViewer$ResultSetDataPumpJob.run(ResultSetViewer.java:5166)
-	at org.jkiss.dbeaver.model.runtime.AbstractJob.run(AbstractJob.java:117)
-	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
-Caused by: org.sqlite.SQLiteException: [SQLITE_ERROR] SQL error or missing database (no such table: main.params)
-	at org.sqlite.core.DB.newSQLException(DB.java:1179)
-	at org.sqlite.core.DB.newSQLException(DB.java:1190)
-	at org.sqlite.core.DB.throwex(DB.java:1150)
-	at org.sqlite.core.NativeDB.prepare_utf8(Native Method)
-	at org.sqlite.core.NativeDB.prepare(NativeDB.java:135)
-	at org.sqlite.core.DB.prepare(DB.java:264)
-	at org.sqlite.jdbc3.JDBC3Statement.lambda$execute$0(JDBC3Statement.java:55)
-	at org.sqlite.jdbc3.JDBC3Statement.withConnectionTimeout(JDBC3Statement.java:458)
-	at org.sqlite.jdbc3.JDBC3Statement.execute(JDBC3Statement.java:44)
-	at org.jkiss.dbeaver.model.impl.jdbc.exec.JDBCStatementImpl.execute(JDBCStatementImpl.java:335)
-	at org.jkiss.dbeaver.model.impl.jdbc.exec.JDBCStatementImpl.executeStatement(JDBCStatementImpl.java:128)
-	... 12 more
-> Start Data Transfer UI [org.jkiss.dbeaver.data.transfer.ui 1.0.126.202411031831]
-> Start DBeaver Generic UI Plug-in [org.jkiss.dbeaver.ext.generic.ui 1.0.118.202411031831]
-2025-02-21 19:21:58.285 - Service 'org.jkiss.dbeaver.runtime.ui.UIServiceSecurity' not found
-2025-02-21 19:22:29.503 - Execution context closed (mlruns.db, 0)
-2025-02-21 19:22:29.504 - Disconnected (sqlite_jdbc-193fadf9400-32aa4d84af8421d7)
-2025-02-21 19:22:30.123 - Connect with 'mlruns.db' (sqlite_jdbc-193fadf9400-32aa4d84af8421d7)
-2025-02-21 19:22:30.124 - Execution context opened (mlruns.db; Main; 1)
-2025-02-21 19:22:30.127 - Connected (sqlite_jdbc-193fadf9400-32aa4d84af8421d7, SQLite JDBC [3.49.1.0])
-> Start DBeaver SQLite UI [org.jkiss.dbeaver.ext.sqlite.ui 1.0.112.202411031831]
-2025-02-21 19:23:12.051 - Some data source listeners are still registered: org.jkiss.dbeaver.model.navigator.DBNProjectDatabases:node://queries/datasources,org.jkiss.dbeaver.ui.controls.resultset.ResultSetViewer:org.jkiss.dbeaver.ui.controls.resultset.ResultSetViewer@128e7fc4,org.jkiss.dbeaver.ui.editors.sql.SQLEditor:org.jkiss.dbeaver.ui.editors.sql.SQLEditor@47c06b1a
-2025-02-21 19:23:12.062 - Execution context closed (mlruns.db, 1)
-2025-02-21 19:23:12.063 - Disconnected (sqlite_jdbc-193fadf9400-32aa4d84af8421d7)
-2025-02-21 19:23:12.264 - Connect with 'mlruns.db' (sqlite_jdbc-193fadf9400-32aa4d84af8421d7)
-2025-02-21 19:23:12.266 - Execution context opened (mlruns.db; Main; 2)
-2025-02-21 19:23:12.269 - Connected (sqlite_jdbc-193fadf9400-32aa4d84af8421d7, SQLite JDBC [3.49.1.0])
 > Start DBeaver Tasks - General UI [org.jkiss.dbeaver.tasks.ui 1.0.120.202411031831]
-2025-02-21 19:25:01.151 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/v4/pooling_layers/train_metrics.csv"
-2025-02-21 19:25:01.694 - 	Close output stream
+> Start Data Transfer UI [org.jkiss.dbeaver.data.transfer.ui 1.0.126.202411031831]
+2025-03-01 13:18:00.208 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4p_e1/params_best_epoch.csv"
+2025-03-01 13:18:00.241 - 	Close output stream
 > Start DBeaver Tasks - Native Tools [org.jkiss.dbeaver.tasks.native 1.0.120.202411031831]
-2025-02-21 19:25:53.689 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/v4/pooling_layers/params_best_epoch.csv"
-2025-02-21 19:25:53.717 - 	Close output stream
-2025-02-21 21:12:02.991 - Event loop exception
-java.lang.NullPointerException: Cannot invoke "org.eclipse.swt.custom.StyledText.setFont(org.eclipse.swt.graphics.Font)" because the return value of "org.jkiss.dbeaver.ui.editors.sql.SQLEditorOutputConsoleViewer.getTextWidget()" is null
-	at org.jkiss.dbeaver.ui.editors.sql.SQLEditorOutputConsoleViewer.refreshStyles(SQLEditorOutputConsoleViewer.java:125)
-	at org.jkiss.dbeaver.ui.editors.sql.SQLEditorOutputViewer.refreshStyles(SQLEditorOutputViewer.java:122)
-	at org.jkiss.dbeaver.ui.editors.sql.SQLEditor.reloadSyntaxRules(SQLEditor.java:3463)
-	at org.jkiss.dbeaver.ui.editors.sql.SQLEditorBase$1.lambda$0(SQLEditorBase.java:174)
-	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
-	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:132)
-	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:5040)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:4520)
-	at org.eclipse.swt.widgets.Display.release(Display.java:4588)
-	at org.eclipse.swt.graphics.Device.dispose(Device.java:276)
-	at org.eclipse.swt.widgets.Display$SessionManagerListener.stop(Display.java:220)
-	at org.eclipse.swt.internal.SessionManagerDBus.handleStop(SessionManagerDBus.java:304)
-	at org.eclipse.swt.internal.SessionManagerDBus.handleEndSession(SessionManagerDBus.java:294)
-	at org.eclipse.swt.internal.SessionManagerDBus.g_signal_handler(SessionManagerDBus.java:325)
-	at org.eclipse.swt.internal.gtk3.GTK3.gtk_main_iteration_do(Native Method)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:4514)
-	at org.eclipse.jface.window.Window.runEventLoop(Window.java:823)
-	at org.eclipse.jface.window.Window.open(Window.java:799)
-	at org.eclipse.jface.dialogs.MessageDialog.open(MessageDialog.java:608)
-	at org.jkiss.dbeaver.ui.dialogs.ConfirmationDialog.open(ConfirmationDialog.java:138)
-	at org.jkiss.dbeaver.ui.registry.ConfirmationRegistry.confirmAction(ConfirmationRegistry.java:72)
-	at org.jkiss.dbeaver.ui.dialogs.ConfirmationDialog.confirmAction(ConfirmationDialog.java:184)
-	at org.jkiss.dbeaver.ui.app.standalone.ApplicationWorkbenchAdvisor.closeOpenEditors(ApplicationWorkbenchAdvisor.java:422)
-	at org.jkiss.dbeaver.ui.app.standalone.ApplicationWorkbenchAdvisor.saveAndCleanup(ApplicationWorkbenchAdvisor.java:406)
-	at org.jkiss.dbeaver.ui.app.standalone.ApplicationWorkbenchAdvisor.preShutdown(ApplicationWorkbenchAdvisor.java:372)
-	at org.eclipse.ui.internal.Workbench.busyClose(Workbench.java:1056)
-	at org.eclipse.ui.internal.Workbench.lambda$4(Workbench.java:1414)
-	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
-	at org.eclipse.ui.internal.Workbench.close(Workbench.java:1414)
-	at org.eclipse.ui.internal.Workbench.close(Workbench.java:1385)
-	at org.eclipse.ui.internal.Workbench.lambda$16(Workbench.java:2810)
-	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:91)
-	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:5855)
-	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:5847)
-	at org.eclipse.swt.widgets.Display$SessionManagerListener.isReadyToExit(Display.java:214)
-	at org.eclipse.swt.internal.SessionManagerDBus.queryReadyToExit(SessionManagerDBus.java:273)
-	at org.eclipse.swt.internal.SessionManagerDBus.handleQueryEndSession(SessionManagerDBus.java:284)
-	at org.eclipse.swt.internal.SessionManagerDBus.g_signal_handler(SessionManagerDBus.java:322)
-	at org.eclipse.swt.internal.gtk3.GTK3.gtk_main_iteration_do(Native Method)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:4514)
-	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1151)
-	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:339)
-	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1042)
-	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:153)
-	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:639)
-	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:339)
-	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:546)
-	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:173)
-	at org.jkiss.dbeaver.ui.app.standalone.DBeaverApplication.start(DBeaverApplication.java:293)
-	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:208)
-	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:143)
-	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:109)
-	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:439)
-	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:271)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
-	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
-	at org.jkiss.dbeaver.launcher.DBeaverLauncher.invokeFramework(DBeaverLauncher.java:650)
-	at org.jkiss.dbeaver.launcher.DBeaverLauncher.basicRun(DBeaverLauncher.java:610)
-	at org.jkiss.dbeaver.launcher.DBeaverLauncher.run(DBeaverLauncher.java:1461)
-	at org.jkiss.dbeaver.launcher.DBeaverLauncher.main(DBeaverLauncher.java:1434)
-2025-02-21 21:12:03.001 - Event loop exception
-java.lang.NullPointerException: Cannot invoke "org.eclipse.swt.custom.StyledText.setFont(org.eclipse.swt.graphics.Font)" because the return value of "org.jkiss.dbeaver.ui.editors.sql.SQLEditorOutputConsoleViewer.getTextWidget()" is null
-	at org.jkiss.dbeaver.ui.editors.sql.SQLEditorOutputConsoleViewer.refreshStyles(SQLEditorOutputConsoleViewer.java:125)
-	at org.jkiss.dbeaver.ui.editors.sql.SQLEditorOutputViewer.refreshStyles(SQLEditorOutputViewer.java:122)
-	at org.jkiss.dbeaver.ui.editors.sql.SQLEditor.reloadSyntaxRules(SQLEditor.java:3463)
-	at org.jkiss.dbeaver.ui.editors.sql.SQLEditorBase$1.lambda$0(SQLEditorBase.java:174)
-	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:40)
-	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:132)
-	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:5040)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:4520)
-	at org.eclipse.swt.widgets.Display.release(Display.java:4588)
-	at org.eclipse.swt.graphics.Device.dispose(Device.java:276)
-	at org.eclipse.swt.widgets.Display$SessionManagerListener.stop(Display.java:220)
-	at org.eclipse.swt.internal.SessionManagerDBus.handleStop(SessionManagerDBus.java:304)
-	at org.eclipse.swt.internal.SessionManagerDBus.handleEndSession(SessionManagerDBus.java:294)
-	at org.eclipse.swt.internal.SessionManagerDBus.g_signal_handler(SessionManagerDBus.java:325)
-	at org.eclipse.swt.internal.gtk3.GTK3.gtk_main_iteration_do(Native Method)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:4514)
-	at org.eclipse.jface.window.Window.runEventLoop(Window.java:823)
-	at org.eclipse.jface.window.Window.open(Window.java:799)
-	at org.eclipse.jface.dialogs.MessageDialog.open(MessageDialog.java:608)
-	at org.jkiss.dbeaver.ui.dialogs.ConfirmationDialog.open(ConfirmationDialog.java:138)
-	at org.jkiss.dbeaver.ui.registry.ConfirmationRegistry.confirmAction(ConfirmationRegistry.java:72)
-	at org.jkiss.dbeaver.ui.dialogs.ConfirmationDialog.confirmAction(ConfirmationDialog.java:184)
-	at org.jkiss.dbeaver.ui.app.standalone.ApplicationWorkbenchAdvisor.closeOpenEditors(ApplicationWorkbenchAdvisor.java:422)
-	at org.jkiss.dbeaver.ui.app.standalone.ApplicationWorkbenchAdvisor.saveAndCleanup(ApplicationWorkbenchAdvisor.java:406)
-	at org.jkiss.dbeaver.ui.app.standalone.ApplicationWorkbenchAdvisor.preShutdown(ApplicationWorkbenchAdvisor.java:372)
-	at org.eclipse.ui.internal.Workbench.busyClose(Workbench.java:1056)
-	at org.eclipse.ui.internal.Workbench.lambda$4(Workbench.java:1414)
-	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
-	at org.eclipse.ui.internal.Workbench.close(Workbench.java:1414)
-	at org.eclipse.ui.internal.Workbench.close(Workbench.java:1385)
-	at org.eclipse.ui.internal.Workbench.lambda$16(Workbench.java:2810)
-	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:91)
-	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:5855)
-	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:5847)
-	at org.eclipse.swt.widgets.Display$SessionManagerListener.isReadyToExit(Display.java:214)
-	at org.eclipse.swt.internal.SessionManagerDBus.queryReadyToExit(SessionManagerDBus.java:273)
-	at org.eclipse.swt.internal.SessionManagerDBus.handleQueryEndSession(SessionManagerDBus.java:284)
-	at org.eclipse.swt.internal.SessionManagerDBus.g_signal_handler(SessionManagerDBus.java:322)
-	at org.eclipse.swt.internal.gtk3.GTK3.gtk_main_iteration_do(Native Method)
-	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:4514)
-	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1151)
-	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:339)
-	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1042)
-	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:153)
-	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:639)
-	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:339)
-	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:546)
-	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:173)
-	at org.jkiss.dbeaver.ui.app.standalone.DBeaverApplication.start(DBeaverApplication.java:293)
-	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:208)
-	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:143)
-	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:109)
-	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:439)
-	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:271)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
-	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
-	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
-	at org.jkiss.dbeaver.launcher.DBeaverLauncher.invokeFramework(DBeaverLauncher.java:650)
-	at org.jkiss.dbeaver.launcher.DBeaverLauncher.basicRun(DBeaverLauncher.java:610)
-	at org.jkiss.dbeaver.launcher.DBeaverLauncher.run(DBeaverLauncher.java:1461)
-	at org.jkiss.dbeaver.launcher.DBeaverLauncher.main(DBeaverLauncher.java:1434)
-SWT SessionManagerDBus: Failed to UnregisterClient: GDBus.Error:org.freedesktop.DBus.Error.NoReply: Message recipient disconnected from message bus without replying
-2025-02-21 21:12:03.243 - org.eclipse.swt.SWTException: Device is disposed
-org.eclipse.swt.SWTException: Device is disposed
-	at org.eclipse.swt.SWT.error(SWT.java:4922)
-	at org.eclipse.swt.SWT.error(SWT.java:4837)
-	at org.eclipse.swt.SWT.error(SWT.java:4808)
-	at org.eclipse.swt.widgets.Display.error(Display.java:1551)
-	at org.eclipse.swt.widgets.Display.syncExec(Display.java:5948)
-	at org.jkiss.dbeaver.ui.UIUtils.syncExec(UIUtils.java:1963)
-	at org.jkiss.dbeaver.ui.editors.sql.terminal.SQLTerminalEditorAddIn.getServerOutputConsumer(SQLTerminalEditorAddIn.java:99)
-	at java.base/java.util.stream.ReferencePipeline$3$1.accept(Unknown Source)
-	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(Unknown Source)
-	at java.base/java.util.stream.AbstractPipeline.copyInto(Unknown Source)
-	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(Unknown Source)
-	at java.base/java.util.stream.AbstractPipeline.evaluate(Unknown Source)
-	at java.base/java.util.stream.AbstractPipeline.evaluateToArrayNode(Unknown Source)
-	at java.base/java.util.stream.ReferencePipeline.toArray(Unknown Source)
-	at java.base/java.util.stream.ReferencePipeline.toArray(Unknown Source)
-	at java.base/java.util.stream.ReferencePipeline.toList(Unknown Source)
-	at org.jkiss.dbeaver.ui.editors.sql.SQLEditor$ServerOutputReader.dumpOutput(SQLEditor.java:5423)
-	at org.jkiss.dbeaver.ui.editors.sql.SQLEditor$ServerOutputReader.run(SQLEditor.java:5398)
-	at org.jkiss.dbeaver.model.runtime.AbstractJob.run(AbstractJob.java:117)
-	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
-2025-02-21 21:12:03.253 - org.eclipse.swt.SWTException: Device is disposed
-org.eclipse.swt.SWTException: Device is disposed
-	at org.eclipse.swt.SWT.error(SWT.java:4922)
-	at org.eclipse.swt.SWT.error(SWT.java:4837)
-	at org.eclipse.swt.SWT.error(SWT.java:4808)
-	at org.eclipse.swt.widgets.Display.error(Display.java:1551)
-	at org.eclipse.swt.widgets.Display.syncExec(Display.java:5948)
-	at org.jkiss.dbeaver.ui.UIUtils.syncExec(UIUtils.java:1963)
-	at org.jkiss.dbeaver.ui.editors.sql.terminal.SQLTerminalEditorAddIn.getServerOutputConsumer(SQLTerminalEditorAddIn.java:99)
-	at java.base/java.util.stream.ReferencePipeline$3$1.accept(Unknown Source)
-	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(Unknown Source)
-	at java.base/java.util.stream.AbstractPipeline.copyInto(Unknown Source)
-	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(Unknown Source)
-	at java.base/java.util.stream.AbstractPipeline.evaluate(Unknown Source)
-	at java.base/java.util.stream.AbstractPipeline.evaluateToArrayNode(Unknown Source)
-	at java.base/java.util.stream.ReferencePipeline.toArray(Unknown Source)
-	at java.base/java.util.stream.ReferencePipeline.toArray(Unknown Source)
-	at java.base/java.util.stream.ReferencePipeline.toList(Unknown Source)
-	at org.jkiss.dbeaver.ui.editors.sql.SQLEditor$ServerOutputReader.dumpOutput(SQLEditor.java:5423)
-	at org.jkiss.dbeaver.ui.editors.sql.SQLEditor$ServerOutputReader.run(SQLEditor.java:5398)
-	at org.jkiss.dbeaver.model.runtime.AbstractJob.run(AbstractJob.java:117)
-	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
-2025-02-21 21:12:03.256 - org.eclipse.swt.SWTException: Device is disposed
-org.eclipse.swt.SWTException: Device is disposed
-	at org.eclipse.swt.SWT.error(SWT.java:4922)
-	at org.eclipse.swt.SWT.error(SWT.java:4837)
-	at org.eclipse.swt.SWT.error(SWT.java:4808)
-	at org.eclipse.swt.widgets.Display.error(Display.java:1551)
-	at org.eclipse.swt.widgets.Display.syncExec(Display.java:5948)
-	at org.jkiss.dbeaver.ui.UIUtils.syncExec(UIUtils.java:1954)
-	at org.jkiss.dbeaver.ui.controls.resultset.ResultSetViewer$4.run(ResultSetViewer.java:433)
-	at org.jkiss.dbeaver.model.runtime.AbstractJob.run(AbstractJob.java:117)
-	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
-2025-02-21 21:12:03.261 - org.eclipse.swt.SWTException: Device is disposed
-org.eclipse.swt.SWTException: Device is disposed
-	at org.eclipse.swt.SWT.error(SWT.java:4922)
-	at org.eclipse.swt.SWT.error(SWT.java:4837)
-	at org.eclipse.swt.SWT.error(SWT.java:4808)
-	at org.eclipse.swt.widgets.Display.error(Display.java:1551)
-	at org.eclipse.swt.widgets.Display.syncExec(Display.java:5948)
-	at org.jkiss.dbeaver.ui.UIUtils.syncExec(UIUtils.java:1954)
-	at org.jkiss.dbeaver.ui.controls.resultset.ResultSetViewer$4.run(ResultSetViewer.java:433)
-	at org.jkiss.dbeaver.model.runtime.AbstractJob.run(AbstractJob.java:117)
-	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
-2025-02-21 21:12:03.446 - DBeaver is stopping
-2025-02-21 21:12:03.450 - Stop instance server
+2025-03-01 13:18:29.772 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4p_f0/params_best_epoch.csv"
+2025-03-01 13:18:29.836 - 	Close output stream
+2025-03-01 13:19:13.273 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4p/params_best_epoch.csv"
+2025-03-01 13:19:13.314 - 	Close output stream
+2025-03-01 13:19:49.092 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4c/params_best_epoch.csv"
+2025-03-01 13:19:49.129 - 	Close output stream
+2025-03-01 13:21:19.408 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4c/params_best_epoch.csv"
+2025-03-01 13:21:19.445 - 	Close output stream
+2025-03-01 13:21:42.659 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4p/params_best_epoch.csv"
+2025-03-01 13:21:42.689 - 	Close output stream
+2025-03-01 13:22:11.225 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4p_e1/params_best_epoch.csv"
+2025-03-01 13:22:11.250 - 	Close output stream
+2025-03-01 13:22:35.652 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4p_f0/params_best_epoch.csv"
+2025-03-01 13:22:35.680 - 	Close output stream
+2025-03-01 13:22:48.132 - Dispose navigator model
+2025-03-01 13:22:48.352 - DBeaver is stopping
+2025-03-01 13:22:48.355 - Stop instance server
+2025-03-01 13:22:49.357 - Instance server has been stopped
+2025-03-01 13:22:49.358 - DBeaver shutdown completed

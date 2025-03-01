@@ -26,3 +26,5 @@ FROM tags t
 JOIN runs r ON t.run_uuid = r.run_uuid
 WHERE t.key LIKE '%command%';
 
+
+SELECT * FROM view_params

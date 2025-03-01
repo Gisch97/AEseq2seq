@@ -1,4 +1,4 @@
-# Starting experiment -- UNet_selection_v4p_f0 -- at mar 25 feb 2025 09:08:17 -03
+# Starting experiment -- UNet_selection_v4p_f0 -- at sáb 01 mar 2025 17:44:22 -03
 #Saving hyperparameters:  NUM_CONV1 = 1 2 NUM_CONV2 = 1 2 3 RESNET_LAYERS = 0 1 2 |2 ENCODERS BLOCKS SKIP CONNS (0 1)
 # Model file content:
 import pandas as pd
@@ -87,14 +87,14 @@ class Seq2Seq(nn.Module):
         embedding_dim,
         filters=8,
         kernel=3,
-        num_layers=2,
+        num_layers=0,
         dilation_resnet1d=3,
         resnet_bottleneck_factor=0.5,
         rank=16,
         stride_1=2, 
         stride_2=2,
-        num_conv1=2,
-        num_conv2=3,
+        num_conv1=1,
+        num_conv2=1,
         **kwargs
     ):     
             
@@ -129,7 +129,7 @@ class Seq2Seq(nn.Module):
             "arc_stride_2": stride_2,
             "arc_num_conv1": num_conv1,
             "arc_num_conv2": num_conv2,
-            "arc_skip": 1,
+            "arc_skip": 0,
             "arc_encoder_blocks": 2,
         }
         pad = (kernel - 1) // 2
@@ -186,7 +186,7 @@ class Seq2Seq(nn.Module):
         x1 = self.encode1(x)  
         x2 = self.encode2(x1)   
         x4 = self.decode1(x2)  
-        x_rec = self.decode2(x4 + x1)  
+        x_rec = self.decode2(x4)  
         return x_rec, x2
         
     def loss_func(self, x_rec, x):

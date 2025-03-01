@@ -39,7 +39,7 @@
 			<item key="lobEncoding" value="BINARY"/>
 			<item key="dataFileConflictBehavior" value="PATCHNAME"/>
 			<item key="blobFileConflictBehavior" value="PATCHNAME"/>
-			<item key="outputFolder" value="/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/v4/pooling_layers"/>
+			<item key="outputFolder" value="/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4p_f0"/>
 			<item key="outputFilePattern" value="params_best_epoch"/>
 			<item key="outputEncoding" value="UTF-8"/>
 			<item key="outputTimestampPattern" value="yyyyMMddHHmm"/>

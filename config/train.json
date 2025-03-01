@@ -1,5 +1,5 @@
 {
     "train_file": "data/ArchiveII-KFold/fam-similarity/train_0.csv",
     "valid_file": "data/ArchiveII-KFold/fam-similarity/valid_0.csv",
-    "out_path": "results/UNet_selection/UNet_selection_v4p_e1/A_nc-6-1encode-flat0-skip0"
+    "out_path": "results/UNet_selection/UNet_selection_v4p_f0/A_nc2-resnet2-nc3-2encode-flat1-skip0"
 }

@@ -17,16 +17,14 @@
 ### EXPERIMENTO Y MODELOS SELECCIONADOS
 # EXPERIMENT_NAME="test"
 EXPERIMENT_NAME="UNet_selection_v4p_f0"
-MODEL_NAME="unet_v4_p_skip_f0"
-MODEL_NAME_NO_SKIP="unet_v4_p_no_skip_f0"
+MODEL_NAME="unet_v4_p_no_skip_f0" 
 
 # File paths
 MODEL_PATH="src/seq2seq/models/unet_selection"
 
 INIT="src/seq2seq/__init__.py"
 GLOBAL_CONFIG="config/global.json" 
-MODEL_FILE="$MODEL_PATH/$MODEL_NAME.py"
-MODEL_FILE_NO_SKIP="$MODEL_PATH/$MODEL_NAME_NO_SKIP.py"
+MODEL_FILE="$MODEL_PATH/$MODEL_NAME.py" 
 
 BASE_OUTPUT_PATH="results/UNet_selection/$EXPERIMENT_NAME"
 mkdir -p "$BASE_OUTPUT_PATH"
@@ -57,13 +55,13 @@ for c1 in "${NUM_CONV1[@]}"; do
         for resnet in "${RESNET_LAYERS[@]}"; do 
             base_name="A_nc$c1-resnet$resnet-nc$c2"
             ###############################################################################
-            ### SKIP CONNECTIONS 
+            ### NO SKIP CONNECTIONS
             ###############################################################################
             echo "----------------  SKIP CONNECTIONS----------------"
             echo "MODIFY INIT $INIT , ADD MODEL $MODEL_FILE"
             sed -i "16s/.models.unet_selection.*/.models.unet_selection.$MODEL_NAME import seq2seq/" "$INIT"
        
-            echo "Executing: num_conv1=$c1; num_conv2=$c2; resnet=$resnet skip=1"
+            echo "Executing: num_conv1=$c1; num_conv2=$c2; resnet=$resnet skip=0"
             # Modify model configuration
             sed -i \
                 -e "87s/num_layers=[0-9e.-]*/num_layers=$resnet/" \
@@ -71,27 +69,9 @@ for c1 in "${NUM_CONV1[@]}"; do
                 -e "94s/num_conv2=[0-9e.-]*/num_conv2=$c2/" \
                 "$MODEL_FILE"
 
-            save_name="$base_name-2encode-flat1-skip1"
+            save_name="$base_name-2encode-flat1-skip0"
             echo "save_name: $save_name"
-            bash train_test.sh "$BASE_OUTPUT_PATH" "$save_name"
-            ###############################################################################
-            ### NO SKIP CONNECTIONS 
-            ###############################################################################
-            echo "----------------NO SKIP CONNECTIONS----------------"
-            echo "MODIFY INIT $INIT ADD MODEL $MODEL_FILE_NO_SKIP"
-            sed -i "16s/.models.unet_selection.*/.models.unet_selection.$MODEL_NAME_NO_SKIP import seq2seq/" "$INIT"
-
-            echo "Executing: num_conv1=$c1; num_conv2=$c2; resnet=$resnet skip=0"
-            # Modify model configuration
-            sed -i \
-                -e "87s/num_layers=[0-9e.-]*/num_layers=$resnet/" \
-                -e "93s/num_conv1=[0-9e.-]*/num_conv1=$c1/" \
-                -e "94s/num_conv2=[0-9e.-]*/num_conv2=$c2/" \
-                "$MODEL_FILE_NO_SKIP"
-
-            save_name="$base_name-2encode-flat1-skip0" 
-            echo "save_name: $save_name"
-            bash train_test.sh "$BASE_OUTPUT_PATH" "$save_name"
+            bash train_test.sh "$BASE_OUTPUT_PATH" "$save_name" 
 
         done
     done 

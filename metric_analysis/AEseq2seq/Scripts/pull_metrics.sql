@@ -6,7 +6,7 @@ WITH run_set AS (
     SELECT  
         run_uuid
     FROM runs 
-    WHERE experiment_id == 23
+    WHERE experiment_id == 27
       AND lifecycle_stage <> 'deleted'
       AND status = 'FINISHED'
 )
