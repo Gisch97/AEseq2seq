@@ -1,0 +1,42 @@
+WITH parameters AS (
+SELECT  p.run_uuid,
+		p.name,
+		p.experiment_name,
+		be.step AS best_epoch
+FROM view_params p
+JOIN view_metrics_best_epoch be ON p.run_uuid = be.run_uuid 
+WHERE experiment_name = 'UNet_selection_v4c'
+AND p.lifecycle_stage <> 'deleted'
+AND p.status = 'FINISHED'
+)
+SELECT	p.*,
+		t.test_loss,
+		t.test_Accuracy,
+		t.test_Accuracy_seq,
+		t.test_F1
+FROM parameters p
+LEFT JOIN view_metrics_best_epoch m ON p.run_uuid = m.run_uuid 
+LEFT JOIN view_test_metrics t ON t.name = p.name AND p.experiment_name = t.experiment_name
+WHERE m.step < 20
+ORDER BY name
+
+with split_train_test AS(
+SELECT 
+	run_uuid,
+	experiment_name,
+	CASE WHEN p.train_file IS NULL THEN 'test' ELSE 'train' END AS TYPE
+FROM view_params p
+)
+SELECT  
+    s.experiment_name,
+    m.run_uuid,
+    m.name,
+    m.test_loss ,
+    m.test_Accuracy ,
+    m.test_Accuracy_seq ,
+    m.test_F1 
+FROM view_metrics m 
+JOIN split_train_test s ON s.run_uuid = m.run_uuid
+WHERE s.TYPE ='test'
+ORDER BY name;
+ 

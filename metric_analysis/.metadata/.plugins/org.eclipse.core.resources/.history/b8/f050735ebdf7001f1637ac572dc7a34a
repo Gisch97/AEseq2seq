@@ -1,0 +1,42 @@
+WITH parameters AS (
+SELECT  p.run_uuid,
+		p.name,
+		be.step AS best_epoch,
+		p.arc_filters,
+		p.arc_rank,
+		p.arc_kernel,
+		p.arc_stride_1,
+		p.arc_stride_2,
+		p.arc_num_conv1,
+		p.arc_num_layers,
+		p.arc_num_conv2,
+		p.arc_latent_dim, 
+		p.arc_latent_volume,
+		p.arc_skip,
+		p.arc_encoder_blocks
+FROM view_params p
+JOIN view_metrics_best_epoch be ON p.run_uuid = be.run_uuid 
+WHERE experiment_name = 'UNet_selection_v4p'
+AND p.lifecycle_stage <> 'deleted'
+AND p.status = 'FINISHED'
+)
+SELECT	p.*,
+		m.step AS best_epoch,
+		m.train_loss,
+		m.train_Accuracy,
+		m.train_Accuracy_seq,
+		m.train_F1,
+		m.valid_loss,
+		m.valid_Accuracy,
+		m.valid_Accuracy_seq,
+		m.valid_F1,
+		t.test_loss,
+		t.test_Accuracy,
+		t.test_Accuracy_seq,
+		t.test_F1
+FROM parameters p
+LEFT JOIN view_metrics_best_epoch m ON p.run_uuid = m.run_uuid 
+LEFT JOIN view_test_metrics t ON t.name = p.name
+WHERE m.step < 20
+ORDER BY name
+

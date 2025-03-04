@@ -1,0 +1,84 @@
+2025-03-01 13:14:16.170 - DBeaver 24.2.4.202411031831 is starting
+2025-03-01 13:14:16.171 - OS: Linux 6.8.0-40-generic (amd64)
+2025-03-01 13:14:16.172 - Java version: 17.0.6 by Eclipse Adoptium (64bit)
+2025-03-01 13:14:16.172 - Install path: '/usr/share/dbeaver-ce'
+2025-03-01 13:14:16.173 - Instance path: 'file:/home/guillermo/Documents/SINC/Research/RNA/AEseq2seq/metric_analysis/'
+2025-03-01 13:14:16.175 - Memory available 64Mb/1024Mb
+2025-03-01 13:14:16.188 - Create display
+2025-03-01 13:14:16.386 - Starting instance server at http://localhost:44309
+2025-03-01 13:14:16.394 - Run workbench
+> Start Eclipse e4 Workbench SWT [org.eclipse.e4.ui.workbench.swt 0.17.500.v20240807-0911]
+> Start Eclipse Application Services [org.eclipse.e4.core.services 2.4.400.v20240413-1529]
+> Start Eclipse UI Application Services [org.eclipse.e4.ui.services 1.6.300.v20231201-1637]
+> Start Eclipse e4 Progress View [org.eclipse.e4.ui.progress 0.4.600.v20240606-1020]
+> Start Eclipse Bindings Support [org.eclipse.e4.ui.bindings 0.14.400.v20240321-1245]
+> Start Eclipse e4 core commands [org.eclipse.e4.core.commands 1.1.400.v20240424-0444]
+> Start EMF XML/XMI Persistence [org.eclipse.emf.ecore.xmi 2.38.0.v20240721-0634]
+> Start Eclipse CSS SWT Theme Support [org.eclipse.e4.ui.css.swt.theme 0.14.400.v20240424-0956]
+> Start Eclipse e4 Workbench Add-ons [org.eclipse.e4.ui.workbench.addons.swt 1.5.500.v20240620-1945]
+> Start Eclipse e4 Workbench SWT Renderer [org.eclipse.e4.ui.workbench.renderers.swt 0.16.500.v20240727-1037]
+> Start Eclipse Dependency Injection Extensions [org.eclipse.e4.core.di.extensions 0.18.300.v20240413-1529]
+> Start Eclipse CSS SWT Support [org.eclipse.e4.ui.css.swt 0.15.400.v20240321-1245]
+> Start Default Text Editor [org.eclipse.ui.editors 3.18.0.v20240807-0735]
+> Start Text Editor Framework [org.eclipse.ui.workbench.texteditor 3.18.0.v20240819-1419]
+2025-03-01 13:14:18.659 - Configure workbench window
+> Start DBeaver SQL Model [org.jkiss.dbeaver.model.sql 1.0.132.202411031831]
+2025-03-01 13:14:18.943 - Total database drivers: 119 (119)
+> Start Help System Core [org.eclipse.help 3.10.400.v20240415-0528]
+2025-03-01 13:14:19.055 - Create actions
+2025-03-01 13:14:19.062 - Disable Eclipse action set 'org.eclipse.ui.edit.text.actionSet.annotationNavigation'
+2025-03-01 13:14:19.063 - Disable Eclipse action set 'org.eclipse.ui.WorkingSetActionSet'
+2025-03-01 13:14:19.063 - Disable Eclipse action set 'org.eclipse.ui.actionSet.openFiles'
+2025-03-01 13:14:19.063 - Create workbench actions
+2025-03-01 13:14:19.641 - Initialize workbench window
+2025-03-01 13:14:19.648 - Finish initialization
+> Start DBeaver UI Editors - Data [org.jkiss.dbeaver.ui.editors.data 1.0.142.202411031831]
+> Start DBeaver UI Editors - SQL [org.jkiss.dbeaver.ui.editors.sql 1.0.142.202411031831]
+> Start DBeaver SQL Terminal [org.jkiss.dbeaver.ui.editors.sql.terminal 1.0.118.202411031831]
+> Start Core Compare Support [org.eclipse.compare.core 3.8.500.v20240524-2010]
+> Start Internet Connection Management UI [org.eclipse.ui.net 1.5.400.v20240413-1529]
+> Start Internet Connection Management [org.eclipse.core.net 1.5.500.v20240625-1706]
+> Start DBeaver Sample Database [org.jkiss.dbeaver.ext.sample.database 1.0.179.202411031831]
+> Start DBeaver Tip of the day [org.jkiss.dbeaver.ext.ui.tipoftheday 1.0.148.202411031831]
+> Start GEF Classic Draw2d [org.eclipse.draw2d 3.17.0.202409021815]
+> Start GEF Classic GEF (MVC) [org.eclipse.gef 3.19.0.202409021815]
+> Start DBeaver ERD UI [org.jkiss.dbeaver.erd.ui 3.0.102.202411031831]
+> Start DBeaver ERD Model [org.jkiss.dbeaver.erd.model 1.0.102.202411031831]
+> Start DBeaver Dashboard UI [org.jkiss.dbeaver.ui.dashboard 1.0.139.202411031831]
+> Start DBeaver UI Editors - Connections [org.jkiss.dbeaver.ui.editors.connection 1.0.133.202411031831]
+> Start Console [org.eclipse.ui.console 3.14.100.v20240429-1358]
+> Start Debug Core [org.eclipse.debug.core 3.21.500.v20240801-2219]
+> Start DBeaver JDBC Model [org.jkiss.dbeaver.model.jdbc 1.0.35.202411031831]
+> Start DBeaver Generic Plug-in [org.jkiss.dbeaver.ext.generic 2.3.228.202411031831]
+> Start DBeaver SQLite Model [org.jkiss.dbeaver.ext.sqlite 1.0.191.202411031831]
+> Start DBeaver SQL Language Semantic Model [org.jkiss.dbeaver.model.lsm 1.0.37.202411031831]
+2025-03-01 13:14:23.941 - Connect with 'mlruns.db' (sqlite_jdbc-193fadf9400-32aa4d84af8421d7)
+2025-03-01 13:14:24.089 - Execution context opened (mlruns.db; Main; 0)
+2025-03-01 13:14:24.635 - Connected (sqlite_jdbc-193fadf9400-32aa4d84af8421d7, SQLite JDBC [3.49.1.0])
+> Start DBeaver Tasks View [org.jkiss.dbeaver.tasks.ui.view 1.0.91.202411031831]
+2025-03-01 13:15:09.319 - No active connection. Action is in disabled state.
+> Start DBeaver Data Transfer [org.jkiss.dbeaver.data.transfer 2.0.126.202411031831]
+> Start DBeaver Tasks - General UI [org.jkiss.dbeaver.tasks.ui 1.0.120.202411031831]
+> Start Data Transfer UI [org.jkiss.dbeaver.data.transfer.ui 1.0.126.202411031831]
+2025-03-01 13:18:00.208 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4p_e1/params_best_epoch.csv"
+2025-03-01 13:18:00.241 - 	Close output stream
+> Start DBeaver Tasks - Native Tools [org.jkiss.dbeaver.tasks.native 1.0.120.202411031831]
+2025-03-01 13:18:29.772 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4p_f0/params_best_epoch.csv"
+2025-03-01 13:18:29.836 - 	Close output stream
+2025-03-01 13:19:13.273 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4p/params_best_epoch.csv"
+2025-03-01 13:19:13.314 - 	Close output stream
+2025-03-01 13:19:49.092 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4c/params_best_epoch.csv"
+2025-03-01 13:19:49.129 - 	Close output stream
+2025-03-01 13:21:19.408 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4c/params_best_epoch.csv"
+2025-03-01 13:21:19.445 - 	Close output stream
+2025-03-01 13:21:42.659 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4p/params_best_epoch.csv"
+2025-03-01 13:21:42.689 - 	Close output stream
+2025-03-01 13:22:11.225 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4p_e1/params_best_epoch.csv"
+2025-03-01 13:22:11.250 - 	Close output stream
+2025-03-01 13:22:35.652 - Export to the new file "/home/guillermo/Documents/SINC/Research/RNA/analysis/AEseq2seq/notebooks/from_db/Unet/selection/v4p_f0/params_best_epoch.csv"
+2025-03-01 13:22:35.680 - 	Close output stream
+2025-03-01 13:22:48.132 - Dispose navigator model
+2025-03-01 13:22:48.352 - DBeaver is stopping
+2025-03-01 13:22:48.355 - Stop instance server
+2025-03-01 13:22:49.357 - Instance server has been stopped
+2025-03-01 13:22:49.358 - DBeaver shutdown completed

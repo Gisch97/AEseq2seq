@@ -1,5 +1,7 @@
 WITH parameters AS (
-SELECT  p.run_uuid,
+SELECT		
+		p.experiment_name,
+	    p.run_uuid,
 		p.name,
 		be.step AS best_epoch,
 		p.arc_filters,
@@ -16,7 +18,7 @@ SELECT  p.run_uuid,
 		p.arc_encoder_blocks
 FROM view_params p
 JOIN view_metrics_best_epoch be ON p.run_uuid = be.run_uuid 
-WHERE experiment_name = 'UNet_selection_v4p_f0'
+WHERE experiment_name = 'UNet_selection_v4c'
 AND p.lifecycle_stage <> 'deleted'
 AND p.status = 'FINISHED'
 )
@@ -36,7 +38,7 @@ SELECT	p.*,
 		t.test_F1
 FROM parameters p
 LEFT JOIN view_metrics_best_epoch m ON p.run_uuid = m.run_uuid 
-LEFT JOIN view_test_metrics t ON t.name = p.name
+LEFT JOIN view_test_metrics t ON t.name = p.name AND p.experiment_name = t.experiment_name
 WHERE m.step < 20
 ORDER BY name
 

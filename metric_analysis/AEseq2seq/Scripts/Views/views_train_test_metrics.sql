@@ -4,10 +4,12 @@ CREATE VIEW view_test_metrics AS
 with split_train_test AS(
 SELECT 
 	run_uuid,
+    experiment_name,
 	CASE WHEN p.train_file IS NULL THEN 'test' ELSE 'train' END AS TYPE
 FROM view_params p
 )
 SELECT  
+    s.experiment_name,
     m.run_uuid,
     m.name,
     m.test_loss ,
@@ -24,10 +26,12 @@ CREATE VIEW view_train_metrics AS
 WITH split_train_test AS(
 SELECT 
 	run_uuid,
+    experiment_name,
 	CASE WHEN p.train_file IS NULL THEN 'test' ELSE 'train' END AS TYPE
 FROM view_params p
 )
 SELECT  
+    s.experiment_name,
     m.run_uuid,
     m.name,
     m.step,
@@ -42,3 +46,4 @@ FROM view_metrics m
 JOIN split_train_test s ON s.run_uuid = m.run_uuid
 WHERE s.TYPE ='train'
 ORDER BY name;
+ 
