@@ -75,7 +75,7 @@ def parser():
 
     # pred parser
     parser_pred = subparsers.add_parser(
-        "--pred", help="Predict structures for a list of sequences"
+        "pred", help="Predict structures for a list of sequences"
     )
     parser_pred.add_argument(
         "--name", type=str, default="console_input", dest="sequence_name", help="Sequence name (default: console_input)"

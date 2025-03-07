@@ -220,24 +220,6 @@ def write_ct(fname, seqid, seq, base_pairs):
             fout.write(f"{k+1} {n} {k} {k+2} {base_pairs_dict.get(k+1, 0)} {k+1}\n")
 
 
-def split_fasta_rec(s, mfe=True):
-    """This assume the format of the fasta record is AACCGGUU((....))(-1.2), where the last 
-    parenthesis part is optional (mfe)"""
-    s = s.strip()
-    mfe_start = s.rfind("(")
-
-    if mfe:
-        mfe = float(s[mfe_start + 1 : -1])
-    s = s[:mfe_start].strip()
-
-    seq = s[: len(s) // 2]
-    struct = s[len(s) // 2 :]
-    
-    assert len(seq) == len(struct), "Sequence and structure have different lengths"
-
-    return seq, struct, mfe
-
-
 def mat2bp(x):
     """Get base-pairs from conection matrix [N, N]. It uses upper
     triangular matrix only, without the diagonal. Positions are 1-based. """
@@ -259,41 +241,7 @@ def mat2bp(x):
  
     return pairs_ind
 
-
-def postprocessing(preds, masks):
-    """Postprocessing function using viable pairing mask.
-    Inputs are batches of size [B, N, N]"""
-    if masks is not None:
-        preds = preds.multiply(masks)
-
-    y_pred_mask_triu = tr.triu(preds)
-    y_pred_mask_max = tr.zeros_like(preds)
-    for k in range(preds.shape[0]):
-        y_pred_mask_max_aux = tr.zeros_like(y_pred_mask_triu[k, :, :])
-
-        val, ind = y_pred_mask_triu[k, :, :].max(dim=0)
-        y_pred_mask_max[k, ind[val > 0], val > 0] = val[val > 0]
-
-        val, ind = y_pred_mask_max[k, :, :].max(dim=1)
-        y_pred_mask_max_aux[val > 0, ind[val > 0]] = val[val > 0]
-
-        ind = tr.where(y_pred_mask_max[k, :, :] != y_pred_mask_max_aux)
-        y_pred_mask_max[k, ind[0], ind[1]] = 0
-
-        y_pred_mask_max[k] = tr.triu(y_pred_mask_max[k]) + tr.triu(
-            y_pred_mask_max[k]
-        ).transpose(0, 1)
-    return y_pred_mask_max
-
-def find_pseudoknots(base_pairs):
-    pseudoknots = []
-    for i, j in base_pairs:
-        for k, l in base_pairs:
-            if i < k < j < l:  # pseudoknot definition
-                if [k, l] not in pseudoknots:
-                    pseudoknots.append([k, l])
-    return pseudoknots
-
+    
 def dot2png(png_file, sequence, dotbracket, resolution=10):
 
     try:
@@ -301,8 +249,7 @@ def dot2png(png_file, sequence, dotbracket, resolution=10):
         sp.run(f'java -cp {VARNA_PATH} fr.orsay.lri.varna.applications.VARNAcmd -sequenceDBN {sequence} -structureDBN "{dotbracket}" -o  {png_file} -resolution {resolution}', shell=True)
     except:
         warnings.warn("Java Runtime Environment failed trying to run VARNA. Check if it is installed.")
-    
-    
+        
 def ct2svg(ct_file, svg_file):
     
     sp.run(f'{DRAW_CALL} {ct_file} {svg_file}', shell=True, capture_output=True)
@@ -382,72 +329,36 @@ def validate_canonical(sequence, base_pairs):
 
     return True, ""
 
+
+def apply_config(args, config_attr, default_path, error_msg):
+    config_val = getattr(args, config_attr)
+    # Se utiliza el valor especificado solo si no es None; de lo contrario se usa la ruta por defecto
+    config_path = config_val if config_val is not None else default_path
+    try:
+        with open(config_path) as f:
+            config = json.load(f)
+        for key, value in config.items():
+            if hasattr(args, key):
+                current_val = getattr(args, key)
+                # Se actualiza solo si el valor es None o cadena vacía
+                if current_val is None or current_val == '':
+                    setattr(args, key, value)
+    except FileNotFoundError:
+        raise ValueError(error_msg)
+
 def read_train_file(args):
     if args.train_file is None:
-        if args.train_config is not None:
-            with open(args.train_config) as f:
-                train_conf = json.load(f)
-                for key, value in train_conf.items():
-                    if hasattr(args, key):
-                        current_val = getattr(args, key)
-                        if current_val is None or current_val == '':
-                            setattr(args, key, value) 
-        if args.train_config is None:
-            try:
-                with open('config/train.json') as f:
-                    train_conf = json.load(f)
-                    for key, value in train_conf.items():
-                        if hasattr(args, key):
-                            current_val = getattr(args, key)
-                            if current_val is None or current_val == '':
-                                setattr(args, key, value)
-            except FileNotFoundError:
-                raise ValueError("No train_file specified")
+        apply_config(args, 'train_config', 'config/train.json', "No train_file specified")
 
-            
 def read_test_file(args):
     if args.test_file is None:
-        if args.test_config is not None:
-            with open(args.test_config) as f:
-                test_conf = json.load(f)
-                for key, value in test_conf.items():
-                    if hasattr(args, key):
-                        current_val = getattr(args, key)
-                        if current_val is None or current_val == '':
-                            setattr(args, key, value) 
-        if args.test_config is None:
-            try:
-                with open('config/test.json') as f:
-                    test_conf = json.load(f)
-                    for key, value in test_conf.items():
-                        if hasattr(args, key):
-                            current_val = getattr(args, key)
-                            if current_val is None or current_val == '':
-                                setattr(args, key, value)
-            except FileNotFoundError:
-                raise ValueError("No test_file specified")
-            
+        apply_config(args, 'test_config', 'config/test.json', "No test_file specified")
+
 def read_pred_file(args):
     if args.pred_file is None:
-        if args.pred_config is not None:
-            with open(args.pred_config) as f:
-                pred_conf = json.load(f)
-                for key, value in pred_conf.items():
-                    if hasattr(args, key):
-                        current_val = getattr(args, key)
-                        if current_val is None or current_val == '':
-                            setattr(args, key, value) 
-        if args.pred_config is None:
-            try:
-                with open('config/pred.json') as f:
-                    pred_conf = json.load(f)
-                    for key, value in pred_conf.items():
-                        if hasattr(args, key):
-                            current_val = getattr(args, key)
-                            if current_val is None or current_val == '':
-                                setattr(args, key, value)
-            except FileNotFoundError:
-                raise ValueError("No pred_file specified")        
+        apply_config(args, 'pred_config', 'config/pred.json', "No pred_file specified")
+
+     
 
 def merge_configs(global_config, parsed_args):
     """

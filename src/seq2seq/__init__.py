@@ -13,51 +13,46 @@ import mlflow.pytorch
 
 from torch.utils.data import DataLoader
 from .dataset import SeqDataset, pad_batch
-from .model import seq2seq 
+from .models.paper_based.unet_original import seq2seq 
 from .embeddings import NT_DICT
-from .utils import write_ct, validate_file, ct2dot
 from .parser import parser, get_parser_defaults
-from .utils import dot2png, ct2svg, read_train_file, read_test_file, read_pred_file 
+from .utils import write_ct,  ct2dot, dot2png, ct2svg
+from .utils import  validate_file, read_train_file, read_test_file, read_pred_file 
 
 def main():
-    
     parser_defaults = get_parser_defaults()
     args = parser().parse_args()
 
-    
-    if not args.no_cache and args.command == "train":
-        cache_path = "cache/"
-    else:
-        cache_path = None
+    # Definir ruta de caché para entrenamiento
+    cache_path = "cache/" if (not args.no_cache and args.command == "train") else None
 
-    global_config= {"device": args.d,
-             "batch_size": args.batch,
-             "valid_split": 0.1,
-             "max_len": 128,
-             "verbose": not args.quiet,
-             "cache_path": cache_path
-             }
+    # Configuración global por defecto
+    global_config = {
+        "device": args.d,
+        "batch_size": args.batch,
+        "valid_split": 0.1,
+        "max_len": 128,
+        "verbose": not args.quiet,
+        "cache_path": cache_path,
+    }
 
-    if args.global_config is not None:
-        global_config.update(json.load(open(args.global_config)))
-    else:
-        try:
-            global_config.update(json.load(open("config/global.json")))
-        except FileNotFoundError:
-            pass 
-    
-    # if "max_epochs" in args:
-    #     global_config["max_epochs"] = args.max_epochs
-    
-    final_config = parser_defaults.copy()
-    final_config.update(global_config)
-    for key, value in vars(args).items():
-        if value is not None:  
-            final_config[key] = value
+    # Actualizar global_config a partir del archivo de configuración
+    config_path = args.global_config or "config/global.json"
+    try:
+        with open(config_path) as f:
+            global_config.update(json.load(f))
+    except FileNotFoundError:
+        if args.global_config:
+            raise ValueError(f"Global configuration file not found: {args.global_config}")
 
-    if final_config["cache_path"] is not None:
+    # Combinar defaults, configuración global y argumentos CLI (prioridad CLI)
+    cli_args = {k: v for k, v in vars(args).items() if v is not None}
+    final_config = {**parser_defaults, **global_config, **cli_args}
+
+    # Preparar directorio de caché si es necesario
+    if final_config.get("cache_path"):
         shutil.rmtree(final_config["cache_path"], ignore_errors=True)
-        os.makedirs(final_config["cache_path"])
+        os.makedirs(final_config["cache_path"], exist_ok=True)
 
      
     # Reproducibility
@@ -151,7 +146,7 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
     max_epochs = config["max_epochs"] if "max_epochs" in config else 1000
     logfile = os.path.join(out_path, "train_log.csv") 
     
-
+    mlflow.log_param("num_params", sum(p.numel() for p in net.parameters()))
     
     for epoch in range(max_epochs):
         train_metrics = net.fit(train_loader)
