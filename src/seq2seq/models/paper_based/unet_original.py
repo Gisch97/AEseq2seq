@@ -77,7 +77,7 @@ class Seq2Seq(nn.Module):
     def build_graph(
         self,
         embedding_dim=4,
-        num_conv=2,
+        num_conv=1,
         pool_mode='avg',
         up_mode='transpose',
         skip=1,
