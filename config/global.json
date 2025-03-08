@@ -1,13 +1,13 @@
 {
-    "exp": "test_unet_refactored",
-    "run": "test_0",
+    "exp": "paper_based_unet-4-8-8-8-8",
+    "run": "unet-4-8-8-8-8-pool-avg-up-transpose-skip1-add-sum",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,
     "max_len": 128, 
     "quiet": false,
     "nworkers": 4,
-    "max_epochs": 1,
+    "max_epochs": 20,
     "valid_split": 0.1,
     "verbose": true
 }

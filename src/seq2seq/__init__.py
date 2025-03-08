@@ -146,7 +146,7 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
     max_epochs = config["max_epochs"] if "max_epochs" in config else 1000
     logfile = os.path.join(out_path, "train_log.csv") 
     
-    mlflow.log_param("num_params", sum(p.numel() for p in net.parameters()))
+    mlflow.log_param("arc_num_params", sum(p.numel() for p in net.parameters()))
     
     for epoch in range(max_epochs):
         train_metrics = net.fit(train_loader)

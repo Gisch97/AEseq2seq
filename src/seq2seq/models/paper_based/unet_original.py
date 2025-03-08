@@ -6,7 +6,7 @@ import torch as tr
 from tqdm import tqdm
 import mlflow
 import mlflow.pytorch
-from ..conv_layers import N_Conv, Up_Block, Max_Down, OutConv 
+from ..conv_layers import N_Conv, UpBlock, DownBlock, OutConv 
 from ...metrics import compute_metrics 
 from ..._version import __version__
 
@@ -33,7 +33,6 @@ def seq2seq(weights=None, **kwargs):
 class Seq2Seq(nn.Module):
     def __init__(self,
         train_len=0,
-        embedding_dim=4,
         device="cpu", 
         lr=1e-3,
         scheduler="none",
@@ -57,7 +56,7 @@ class Seq2Seq(nn.Module):
             "hyp_output_th": output_th
             }        
         # Define architecture
-        self.build_graph(embedding_dim, **kwargs) 
+        self.build_graph(**kwargs) 
         self.optimizer = tr.optim.Adam(self.parameters(), lr=lr)
 
         # lr scheduler
@@ -77,54 +76,56 @@ class Seq2Seq(nn.Module):
     
     def build_graph(
         self,
-        embedding_dim,
-        kernel=3,
+        embedding_dim=4,
         num_conv=2,
-        up_mode = 'traspose',
-        addition='cat',
-        skip=False,
+        pool_mode='avg',
+        up_mode='transpose',
+        skip=1,
+        addition='sum', # cat or sum
+        features=[4, 8, 8, 8, 8],
         **kwargs
-    ):     
-        
-        self.features = [4, 8, 8, 8]
-        self.r_features = self.features[::-1]
-        self.encoder_blocks = len(self.features) - 1
-        self.L_min = 128 // ((2 ** self.encoder_blocks))
-        volume = [(128 / 2 ** i) * f for i, f in enumerate(self.features)]
+    ):      
+        rev_features = features[::-1]
+        encoder_blocks = len(features) - 1
+        self.L_min = 128 // ((2 ** encoder_blocks))
+        volume = [(128 / 2 ** i) * f for i, f in enumerate(features)]
         
         self.architecture = {
             "arc_embedding_dim": embedding_dim,
-            "arc_encoder_blocks": self.encoder_blocks,
+            "arc_encoder_blocks": encoder_blocks,
             "arc_initial_volume": embedding_dim * 128,
             "arc_latent_volume": volume[-1],
-            "arc_features": self.features,
+            "arc_features": features,
             "arc_num_conv": num_conv,
+            "arc_pool_mode": pool_mode,
             "arc_up_mode": up_mode,
             "arc_addition": addition,
             "arc_skip": skip,
         }
-        linear = True
-        self.inc = (N_Conv(embedding_dim, self.features[0], num_conv))
+        self.inc = (N_Conv(embedding_dim, features[0], num_conv))
         
         self.down = nn.ModuleList(
             [
-                Max_Down(self.features[i], self.features[i + 1], num_conv)
-                for i in range(self.encoder_blocks)
+                DownBlock(in_channels = features[i], 
+                          out_channels = features[i + 1],
+                          num_conv = num_conv,
+                          pool_mode = pool_mode)
+                for i in range(encoder_blocks)
             ]
         )
         self.up = nn.ModuleList(
             [
-                Up_Block( in_channels = self.r_features[i], 
-                          out_channels = self.r_features[i+1],
+                UpBlock( in_channels = rev_features[i], 
+                          out_channels = rev_features[i+1],
                           num_conv = num_conv,
                           up_mode = up_mode,
                           addition = addition,
                           skip = skip
                          )
-                for i in range(len(self.r_features) - 1)
+                for i in range(len(rev_features) - 1)
             ]
         ) 
-        self.outc = OutConv(self.features[0], embedding_dim)
+        self.outc = OutConv(features[0], embedding_dim)
         
     def forward(self, batch):
         x = batch["embedding"].to(self.device)
