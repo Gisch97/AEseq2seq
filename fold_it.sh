@@ -50,7 +50,7 @@ for p in "${pool_mode[@]}"; do
     for u in "${up_mode[@]}"; do
 
         # Se configura el valor de skip fijo en 0 para este bloque (se puede anidar otro bucle si se desea variar)
-        base_name="unet-4-8-8-8-8-pool-$p-up-$u"
+        base_name="unet-4-8-8-8-8-nc-1-pool-$p-up-$u"
         echo "Ejecutando: pool=$p, up=$u, skip=0"
         save_name="${base_name}-skip0"
         # Modificar la configuración del modelo para pool, up y skip

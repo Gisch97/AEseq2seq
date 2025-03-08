@@ -67,8 +67,7 @@ class DownBlock(nn.Module):
         pool_mode: str = "max",
         kernel_size: int = 3,
         padding: int = 1,
-        stride: int = 1,
-        avg_pool: bool = False
+        stride: int = 1
     ) -> None:
         super().__init__()
         if pool_mode == "max":
@@ -80,7 +79,7 @@ class DownBlock(nn.Module):
 
         self.down = nn.Sequential(
             pooling_layer,
-            N_Conv(in_channels, out_channels, num_conv, kernel_size, padding, stride, avg_pool),
+            N_Conv(in_channels, out_channels, num_conv, kernel_size, padding, stride),
         )
 
     def forward(self, x):

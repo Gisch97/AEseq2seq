@@ -2,5 +2,5 @@
 
     "train_file": "data/ArchiveII-KFold/fam-similarity/train_0.csv",
     "valid_file": "data/ArchiveII-KFold/fam-similarity/valid_0.csv",
-    "out_path": "results/UNet_selection/paper_based_unet-4-8-8-8-8/unet-4-8-8-8-8-pool-avg-up-transpose-skip1-add-sum"
+    "out_path": "results/UNet_selection/paper_based_unet-4-8-8-8-8/unet-4-8-8-8-8-nc-1-pool-avg-up-transpose-skip1-add-sum"
 }

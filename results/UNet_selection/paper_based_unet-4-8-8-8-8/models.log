@@ -1,4 +1,4 @@
-# Starting experiment -- paper_based_unet-4-8-8-8-8 -- at vie 07 mar 2025 21:33:12 -03
+# Starting experiment -- paper_based_unet-4-8-8-8-8 -- at sáb 08 mar 2025 12:47:16 -03
 Saving hyperparameters: pool mode = max avg, up mode = upsample transpose, addition = cat sum, skip = 0 1
 # Guardando contenido del archivo del modelo: src/seq2seq/models/paper_based/unet_original.py
 # Contenido del modelo:
@@ -81,7 +81,7 @@ class Seq2Seq(nn.Module):
     def build_graph(
         self,
         embedding_dim=4,
-        num_conv=2,
+        num_conv=1,
         pool_mode='avg',
         up_mode='transpose',
         skip=1,
