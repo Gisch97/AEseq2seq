@@ -78,17 +78,29 @@ class Seq2Seq(nn.Module):
         self,
         embedding_dim=4,
         num_conv=1,
-        pool_mode='avg',
-        up_mode='transpose',
+        pool_mode='max',
+        up_mode='upsample',
         skip=1,
-        addition='sum', # cat or sum
+        addition='cat',
         features=[4, 8, 8, 8, 8],
         **kwargs
     ):      
+        
+        features = [4]
+        n_8=4
+        n_16=3
+        for _ in range(n_8):
+            features.append(8)
+        for _ in range(n_16):
+            features.append(16)
+ 
+        
         rev_features = features[::-1]
         encoder_blocks = len(features) - 1
         self.L_min = 128 // ((2 ** encoder_blocks))
         volume = [(128 / 2 ** i) * f for i, f in enumerate(features)]
+        
+        
         
         self.architecture = {
             "arc_embedding_dim": embedding_dim,

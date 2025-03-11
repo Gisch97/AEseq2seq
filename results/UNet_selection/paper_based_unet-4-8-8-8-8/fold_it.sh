@@ -25,9 +25,7 @@ mkdir -p "$BASE_OUTPUT_PATH"
 # Hyperparameters
 MAX_EPOCHS=20
 pool_mode=('max' 'avg') 
-up_mode=('upsample' 'transpose')  
-addition=('cat' 'sum')
-skip=(0 1)
+up_mode=('upsample' 'transpose')   
         
 ### LOGGING de la ejecución
 cp fold_it.sh "$BASE_OUTPUT_PATH"
@@ -50,33 +48,17 @@ for p in "${pool_mode[@]}"; do
     for u in "${up_mode[@]}"; do
 
         # Se configura el valor de skip fijo en 0 para este bloque (se puede anidar otro bucle si se desea variar)
-        base_name="unet-4-8-8-8-8-nc-1-pool-$p-up-$u"
+        base_name="unet-4-8-8-8-8-pool-$p-up-$u"
         echo "Ejecutando: pool=$p, up=$u, skip=0"
-        save_name="${base_name}-skip0"
+            save_name="${base_name}-skip1-add-cat"
         # Modificar la configuración del modelo para pool, up y skip
         sed -i \
             -e "81s/\(pool_mode=\)['\"][^'\"]*['\"]/pool_mode='$p'/" \
             -e "82s/\(up_mode=\)['\"][^'\"]*['\"]/up_mode='$u'/" \
-            -e "83s/\(skip=\)[0-9e.-]*/skip=0/" \
             "$MODEL_FILE"
 
+        echo "save_name: $save_name"
         bash scripts/train_test.sh "$BASE_OUTPUT_PATH" "$save_name" 
-
-
-        for a in "${addition[@]}"; do 
-
-            echo "Ejecutando: pool=$p, up=$u, skip=0"
-            # Actualizar el parámetro addition en el modelo
-            sed -i \
-                -e "83s/\(skip=\)[0-9e.-]*/skip=1/" \
-                -e "82s/\(addition=\)['\"][^'\"]*['\"]/addition='$a'/"\
-                "$MODEL_FILE"
-            # Definir el nombre de guardado usando base_name y el valor de addition
-            save_name="${base_name}-skip1-add-$a"
-            echo "save_name: $save_name"
-
-            bash scripts/train_test.sh "$BASE_OUTPUT_PATH" "$save_name" 
-        done
     done 
 done 
 
