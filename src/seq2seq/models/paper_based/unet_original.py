@@ -8,6 +8,7 @@ import mlflow
 import mlflow.pytorch
 from ..conv_layers import N_Conv, UpBlock, DownBlock, OutConv 
 from ...metrics import compute_metrics 
+from ...utils import add_noise
 from ..._version import __version__
 
 
@@ -38,6 +39,7 @@ class Seq2Seq(nn.Module):
         scheduler="none",
         output_th=0.5,
         verbose=True,
+        test_noise=0.0,
         **kwargs):
         """Base instantiation of model"""
         super().__init__()
@@ -47,13 +49,15 @@ class Seq2Seq(nn.Module):
         self.verbose = verbose
         self.config = kwargs
         self.output_th = output_th
+        self.test_noise = test_noise
         
         self.hyperparameters = {
             "hyp_device": device, 
             "hyp_lr": lr,
             "hyp_scheduler": scheduler,
             "hyp_verbose": verbose, 
-            "hyp_output_th": output_th
+            "hyp_output_th": output_th,
+            "hyp_test_noise": test_noise
             }        
         # Define architecture
         self.build_graph(**kwargs) 
@@ -77,22 +81,22 @@ class Seq2Seq(nn.Module):
     def build_graph(
         self,
         embedding_dim=4,
-        num_conv=1,
+        num_conv=2,
         pool_mode='max',
         up_mode='upsample',
-        skip=1,
+        skip=0,
         addition='cat',
-        features=[4, 8, 8, 8, 8],
+        features=[4, 4, 4, 8, 8],
         **kwargs
     ):      
         
-        features = [4]
-        n_8=4
-        n_16=3
-        for _ in range(n_8):
-            features.append(8)
-        for _ in range(n_16):
-            features.append(16)
+        # features = [4]
+        # n_8=4
+        # n_16=3
+        # for _ in range(n_8):
+        #     features.append(8)
+        # for _ in range(n_16):
+        #     features.append(16)
  
         
         rev_features = features[::-1]
@@ -165,21 +169,11 @@ class Seq2Seq(nn.Module):
         recon_loss = mse_loss(x_rec, x) 
         return recon_loss   
 
-    
-    def ce_loss_func(self, x_rec, x):
-        """yhat and y are [N, L]"""
-        x = x.view(x.shape[0], -1)
-        x_rec = x_rec.view(x_rec.shape[0], -1)
-        loss = cross_entropy(x_rec, x)
-        return loss
-
-
     def fit(self, loader):
         self.train()
 
         metrics = {
             "loss": 0,
-            "ce_loss": 0,
             "F1": 0,
             "Accuracy": 0,
             "Accuracy_seq": 0
@@ -193,8 +187,6 @@ class Seq2Seq(nn.Module):
             loss = self.loss_func(x_rec, x) 
             metrics["loss"] += loss.item()
             
-            ce_loss = self.ce_loss_func(x_rec, x)
-            metrics["ce_loss"] += ce_loss.item()
             
             
             batch_metrics = compute_metrics(x_rec, x, output_th=self.output_th)
@@ -217,32 +209,29 @@ class Seq2Seq(nn.Module):
         
         metrics = {
             "loss": 0,
-            "ce_loss": 0,
             "F1": 0,
             "Accuracy": 0,
             "Accuracy_seq": 0
             }
-
+        
         if self.verbose:
             loader = tqdm(loader)
 
         with tr.no_grad():
             for batch in loader:  
+                
+                batch["embedding"] = add_noise(batch["embedding"], self.test_noise)
                 x = batch["embedding"].to(self.device)
-                # batch.pop("embedding")
+                
                 lengths = batch["length"]
-                
                 x_rec, z = self(batch)
-                loss = self.loss_func(x_rec, x)
-                ce_loss = self.ce_loss_func(x_rec, x)
-                metrics["loss"] += loss.item()
-                metrics["ce_loss"] += ce_loss.item()
-                
-                
+                loss = self.loss_func(x_rec, x) 
+                metrics["loss"] += loss.item() 
                 batch_metrics = compute_metrics(x_rec, x, output_th=self.output_th)
+                                
                 for k, v in batch_metrics.items():
                     metrics[k] += v
-
+                
         for k in metrics: metrics[k] /= len(loader)
 
         return metrics

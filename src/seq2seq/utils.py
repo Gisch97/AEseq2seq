@@ -7,7 +7,6 @@ import numpy as np
 import torch as tr
 import pandas as pd
 import json
-from .embeddings import NT_DICT
 from .embeddings import NT_DICT, VOCABULARY
 
 
@@ -311,6 +310,7 @@ def validate_file(pred_file):
     
     return pred_file 
 
+
 def validate_canonical(sequence, base_pairs):
     if not valid_sequence(sequence):
         return False, "Invalid sequence"
@@ -384,5 +384,12 @@ def merge_configs(global_config, parsed_args):
     return final_config
  
             
-
     
+def add_noise(x, noise_level):
+    if noise_level == 0:
+        return x
+    elif noise_level < 0:
+        raise ValueError("Noise level must be a non-negative number")
+    else:
+        noise = tr.normal(mean=0.0, std=noise_level, size=x.shape, device=x.device)
+        return x + noise

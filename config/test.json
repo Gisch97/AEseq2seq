@@ -1,5 +1,5 @@
 {
-    "test_file": "data/ArchiveII-KFold/fam-similarity/test_0.csv",
-    "model_weights": "results/UNet_selection/paper_based_unet_nc1_features/paper_based_unet_features-n8-4-n16-3-pool-max-up-upsample-skip1-add-cat/weights.pmt",
-    "out_path": "results/UNet_selection/paper_based_unet_nc1_features/paper_based_unet_features-n8-4-n16-3-pool-max-up-upsample-skip1-add-cat/test.csv"
+    "test_file": "data/ArchiveII-KFold/fam-split/test_srp.csv",
+    "model_weights": "results/UNet_selection/paper_based_unet_fam_split/paper_based_f_3X4_2X8_srp_pool-max-up-upsample-skip0-add-cat/weights.pmt",
+    "out_path": "results/UNet_selection/paper_based_unet_fam_split/paper_based_f_3X4_2X8_srp_pool-max-up-upsample-skip0-add-cat/test.csv"
 }
