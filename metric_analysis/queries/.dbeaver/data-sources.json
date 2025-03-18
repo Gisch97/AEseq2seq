@@ -7,8 +7,8 @@
 			"name": "mlruns.db",
 			"save-password": true,
 			"configuration": {
-				"database": "/home/guillermo/Documents/SINC/RNA/AEseq2seq/mlruns.db",
-				"url": "jdbc:sqlite:/home/guillermo/Documents/SINC/RNA/AEseq2seq/mlruns.db",
+				"database": "/home/guillermo/Documents/SINC/Research/RNA/AEseq2seq/mlruns.db",
+				"url": "jdbc:sqlite:/home/guillermo/Documents/SINC/Research/RNA/AEseq2seq/mlruns.db",
 				"configurationType": "MANUAL",
 				"type": "dev",
 				"closeIdleConnection": true,

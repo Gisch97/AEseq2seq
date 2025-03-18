@@ -1,6 +1,6 @@
 {
-    "exp": "paper_based_unet_fam_split",
-    "run": "paper_based_f_3X4_2X8_srp_pool-max-up-upsample-skip0-add-cat",
+    "exp": "paper_based_unet_features_x4_x8",
+    "run": "paper_based_unet_features-nc-2-n4-3-n8-2-skip1",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,

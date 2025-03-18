@@ -160,6 +160,8 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
             best_loss = val_metrics["loss"]
             tr.save(net.state_dict(), os.path.join(out_path, "weights.pmt"))
             patience_counter = 0
+            mlflow.log_metric(key=f"best_epoch", value=epoch)
+            
         else:
             mlflow.log_metric(key=f"valid_{k}", value=v, step=epoch)
             patience_counter += 1

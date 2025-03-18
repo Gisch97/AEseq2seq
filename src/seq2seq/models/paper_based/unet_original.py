@@ -90,13 +90,13 @@ class Seq2Seq(nn.Module):
         **kwargs
     ):      
         
-        # features = [4]
-        # n_8=4
-        # n_16=3
-        # for _ in range(n_8):
-        #     features.append(8)
-        # for _ in range(n_16):
-        #     features.append(16)
+        features = [4]
+        n_4=4
+        n_8=3
+        for _ in range(n_4):
+            features.append(4)
+        for _ in range(n_8):
+            features.append(8)
  
         
         rev_features = features[::-1]
