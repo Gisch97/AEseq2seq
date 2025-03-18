@@ -2,7 +2,7 @@
 
 ### EXPERIMENTO Y MODELOS SELECCIONADOS
 # EXPERIMENT_NAME="test"
-EXPERIMENT_NAME="paper_based_unet_features_x4_x8"
+EXPERIMENT_NAME="paper_based_unet_raw"
 MODEL_NAME="unet_original" 
 
 # File paths

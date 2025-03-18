@@ -86,17 +86,17 @@ class Seq2Seq(nn.Module):
         up_mode='upsample',
         skip=0,
         addition='cat',
-        features=[4, 4, 4, 8, 8],
+        features=[4, 8, 16, 32, 64],
         **kwargs
     ):      
         
-        features = [4]
-        n_4=2
-        n_8=1
-        for _ in range(n_4):
-            features.append(4)
-        for _ in range(n_8):
-            features.append(8)
+        # features = [4]
+        # n_4=2
+        # n_8=1
+        # for _ in range(n_4):
+        #     features.append(4)
+        # for _ in range(n_8):
+        #     features.append(8)
  
         
         rev_features = features[::-1]
