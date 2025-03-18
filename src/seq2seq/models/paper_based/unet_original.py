@@ -91,8 +91,8 @@ class Seq2Seq(nn.Module):
     ):      
         
         features = [4]
-        n_4=4
-        n_8=3
+        n_4=2
+        n_8=1
         for _ in range(n_4):
             features.append(4)
         for _ in range(n_8):

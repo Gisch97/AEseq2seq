@@ -1,6 +1,6 @@
 {
     "exp": "paper_based_unet_features_x4_x8",
-    "run": "paper_based_unet_features-nc-2-n4-3-n8-2-skip1",
+    "run": "paper_based_unet_features-nc-2-n4-2-n8-1-skip1",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,

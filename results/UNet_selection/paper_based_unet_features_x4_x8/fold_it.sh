@@ -26,8 +26,8 @@ addition=('cat')
 skip=(0 1)
 num_conv=(1 2)
 
-n_4=(0 1 2 3)
-n_8=(0 1 2)
+n_4=(0 1 2)
+n_8=(0 1)
         
 ### LOGGING de la ejecución
 cp fold_it.sh "$BASE_OUTPUT_PATH"
@@ -63,8 +63,8 @@ for nc in "${num_conv[@]}"; do
             sed -i \
                 -e "83s/\(skip=\)[0-9e.-]*/skip=0/" \
                 -e "84s/\(num_conv=\)[0-9e.-]*/num_conv=$nc/" \
-                -e "90s/n_4=[0-9e.-]*/n_4=$nc_4/" \
-                -e "91s/n_8=[0-9e.-]*/n_8=$nc_8/" \
+                -e "94s/n_4=[0-9e.-]*/n_4=$nc_4/" \
+                -e "95s/n_8=[0-9e.-]*/n_8=$nc_8/" \
                 "$MODEL_FILE"
 
             bash scripts/train_test.sh "$BASE_OUTPUT_PATH" "$save_name" 
