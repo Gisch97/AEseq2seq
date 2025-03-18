@@ -1,5 +1,5 @@
 import torch as tr
-from sklearn.metrics import f1_score, accuracy_score, precision_score, recall_score
+from sklearn.metrics import f1_score, accuracy_score
 import numpy as np
 
 def compute_metrics(x_rec, x_true, output_th=0.5):
@@ -27,11 +27,7 @@ def compute_metrics(x_rec, x_true, output_th=0.5):
 
     # 3. Accuracy a nivel de secuencia
     seq_match = (x_true == (x_rec > output_th).float()).all(dim=1).all(dim=1)
-    seq_accuracy = seq_match.float().mean().item()
-
-    # # 4. Precision y Recall
-    # precision = precision_score(x_true_flat, x_rec_flat, average="weighted", zero_division=0)
-    # recall = recall_score(x_true_flat, x_rec_flat, average="weighted", zero_division=0)
+    seq_accuracy = seq_match.float().mean().item() 
 
     # Devolver todas las métricas
     return {

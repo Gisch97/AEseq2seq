@@ -1,13 +1,13 @@
 {
-    "exp": "plain_loss_fn",
-    "run": "loss_l2_1e-1",
+    "exp": "paper_based_unet_features_raw",
+    "run": "paper_based_unet_cdhit-skip0",
     "device": "cpu",
     "cache_path": "cache/",
     "batch_size": 4,
     "max_len": 128, 
     "quiet": false,
     "nworkers": 4,
-    "max_epochs": 100,
+    "max_epochs": 20,
     "valid_split": 0.1,
     "verbose": true
 }

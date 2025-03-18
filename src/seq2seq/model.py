@@ -9,7 +9,6 @@ from tqdm import tqdm
 import mlflow
 import mlflow.pytorch
 from .metrics import compute_metrics
-from .utils import mat2bp, postprocessing
 from ._version import __version__
 
 
