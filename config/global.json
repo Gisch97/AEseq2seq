@@ -1,9 +1,9 @@
 {
-    "exp": "paper_based_unet_pc59_test",
-    "run": "paper_based_unet_features-nc-2-n4-3-n8-3-skip1",
+    "exp": "paper_based_unet_pc59_2",
+    "run": "paper_based_unet_batch64_nworkers4",
     "device": "cuda",
     "cache_path": "cache/",
-    "batch_size": 4,
+    "batch_size": 64,
     "max_len": 128, 
     "quiet": false,
     "nworkers": 4,
