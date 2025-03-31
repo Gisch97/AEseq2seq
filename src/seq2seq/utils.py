@@ -1,6 +1,6 @@
 # imports
 import os
-import subprocess as sp 
+import subprocess as sp
 from platform import system
 import warnings
 import numpy as np
@@ -172,7 +172,7 @@ def bp2matrix(L, base_pairs):
 def read_ct(ctfile):
     """Read ct file, return sequence and base_pairs"""
     seq, bp = [], []
-    
+
     k = 1
     for p, line in enumerate(open(ctfile)):
         if p == 0:
@@ -182,8 +182,8 @@ def read_ct(ctfile):
                 # >seq length: N extra info
                 if line.split(":")[0] == ">seq length":
                     seq_len = int(line.split(":")[1].split()[0])
-            
-            continue 
+
+            continue
 
         if line[0] == "#" or len(line.strip()) == 0:
             # comment
@@ -195,8 +195,8 @@ def read_ct(ctfile):
             continue
 
         n1, n2 = int(line[0]), int(line[4])
-        if k != n1: # add missing nucleotides as N
-            seq += ["N"] * (n1-k)
+        if k != n1:  # add missing nucleotides as N
+            seq += ["N"] * (n1 - k)
         seq.append(line[1])
         k = len(seq) + 1
         if n2 > 0 and (n1 < n2):
@@ -221,7 +221,7 @@ def write_ct(fname, seqid, seq, base_pairs):
 
 def mat2bp(x):
     """Get base-pairs from conection matrix [N, N]. It uses upper
-    triangular matrix only, without the diagonal. Positions are 1-based. """
+    triangular matrix only, without the diagonal. Positions are 1-based."""
     ind = tr.triu_indices(x.shape[0], x.shape[1], offset=1)
     pairs_ind = tr.where(x[ind[0], ind[1]] > 0)[0]
 
@@ -229,29 +229,37 @@ def mat2bp(x):
     # remove multiplets pairs
     multiplets = []
     for i, j in pairs_ind:
-        ind = tr.where(pairs_ind[:, 1]==i)[0]
-        if len(ind)>0:
+        ind = tr.where(pairs_ind[:, 1] == i)[0]
+        if len(ind) > 0:
             pairs = [bp.tolist() for bp in pairs_ind[ind]] + [[i.item(), j.item()]]
             best_pair = tr.tensor([x[bp[0], bp[1]] for bp in pairs]).argmax()
-                
-            multiplets += [pairs[k] for k in range(len(pairs)) if k!=best_pair]   
-            
-    pairs_ind = [[bp[0]+1, bp[1]+1] for bp in pairs_ind.tolist() if bp not in multiplets]
- 
+
+            multiplets += [pairs[k] for k in range(len(pairs)) if k != best_pair]
+
+    pairs_ind = [
+        [bp[0] + 1, bp[1] + 1] for bp in pairs_ind.tolist() if bp not in multiplets
+    ]
+
     return pairs_ind
 
-    
+
 def dot2png(png_file, sequence, dotbracket, resolution=10):
 
     try:
         sp.run("java -version", shell=True, check=True, capture_output=True)
-        sp.run(f'java -cp {VARNA_PATH} fr.orsay.lri.varna.applications.VARNAcmd -sequenceDBN {sequence} -structureDBN "{dotbracket}" -o  {png_file} -resolution {resolution}', shell=True)
+        sp.run(
+            f'java -cp {VARNA_PATH} fr.orsay.lri.varna.applications.VARNAcmd -sequenceDBN {sequence} -structureDBN "{dotbracket}" -o  {png_file} -resolution {resolution}',
+            shell=True,
+        )
     except:
-        warnings.warn("Java Runtime Environment failed trying to run VARNA. Check if it is installed.")
-        
+        warnings.warn(
+            "Java Runtime Environment failed trying to run VARNA. Check if it is installed."
+        )
+
+
 def ct2svg(ct_file, svg_file):
-    
-    sp.run(f'{DRAW_CALL} {ct_file} {svg_file}', shell=True, capture_output=True)
+
+    sp.run(f"{DRAW_CALL} {ct_file} {svg_file}", shell=True, capture_output=True)
 
 
 def ct2dot(ct_file):
@@ -260,10 +268,10 @@ def ct2dot(ct_file):
     dotbracket = ""
     if CT2DOT_CALL:
         sp.run(f"{CT2DOT_CALL} {ct_file} 1 tmp.dot", shell=True, capture_output=True)
-        try: 
+        try:
             dotbracket = open("tmp.dot").readlines()[2].strip()
             os.remove("tmp.dot")
-        except FileNotFoundError: 
+        except FileNotFoundError:
             print("Error in ct2dot: check .ct file")
     else:
         print("Dotbracket conversion only available on linux")
@@ -274,12 +282,13 @@ def valid_sequence(seq):
     """Check if sequence is valid"""
     return set(seq.upper()) <= (set(NT_DICT.keys()).union(set(VOCABULARY)))
 
+
 def validate_file(pred_file):
     """Validate input file fasta/csv format and return csv file"""
     if os.path.splitext(pred_file)[1] == ".fasta":
         table = []
         with open(pred_file) as f:
-            row = [] # id, seq, (optionally) struct
+            row = []  # id, seq, (optionally) struct
             for line in f:
                 if line.startswith(">"):
                     if row:
@@ -287,17 +296,21 @@ def validate_file(pred_file):
                         row = []
                     row.append(line[1:].strip())
                 else:
-                    if len(row) == 1: # then is seq
+                    if len(row) == 1:  # then is seq
                         row.append(line.strip())
                         if not valid_sequence(row[-1]):
-                            raise ValueError(f"Sequence {row.upper()} contains invalid characters")
-                    else: # struct
-                        row.append(line.strip()[:len(row[1])]) # some fasta formats have extra information in the structure line
+                            raise ValueError(
+                                f"Sequence {row.upper()} contains invalid characters"
+                            )
+                    else:  # struct
+                        row.append(
+                            line.strip()[: len(row[1])]
+                        )  # some fasta formats have extra information in the structure line
         if row:
             table.append(row)
-        
+
         pred_file = pred_file.replace(".fasta", ".csv")
-        
+
         if len(table[-1]) == 2:
             columns = ["id", "sequence"]
         else:
@@ -306,9 +319,11 @@ def validate_file(pred_file):
         pd.DataFrame(table, columns=columns).to_csv(pred_file, index=False)
 
     elif os.path.splitext(pred_file)[1] != ".csv":
-        raise ValueError("Predicting from a file with format different from .csv or .fasta is not supported")
-    
-    return pred_file 
+        raise ValueError(
+            "Predicting from a file with format different from .csv or .fasta is not supported"
+        )
+
+    return pred_file
 
 
 def validate_canonical(sequence, base_pairs):
@@ -316,8 +331,8 @@ def validate_canonical(sequence, base_pairs):
         return False, "Invalid sequence"
 
     for i, j in base_pairs:
-        nt1, nt2 = sequence[i-1], sequence[j-1]
-        if pair_strength((nt1, nt2))==0:
+        nt1, nt2 = sequence[i - 1], sequence[j - 1]
+        if pair_strength((nt1, nt2)) == 0:
             return False, f"Invalid base pair: {nt1} {nt2}"
 
         for k, l in base_pairs:
@@ -341,24 +356,28 @@ def apply_config(args, config_attr, default_path, error_msg):
             if hasattr(args, key):
                 current_val = getattr(args, key)
                 # Se actualiza solo si el valor es None o cadena vacía
-                if current_val is None or current_val == '':
+                if current_val is None or current_val == "":
                     setattr(args, key, value)
     except FileNotFoundError:
         raise ValueError(error_msg)
 
+
 def read_train_file(args):
     if args.train_file is None:
-        apply_config(args, 'train_config', 'config/train.json', "No train_file specified")
+        apply_config(
+            args, "train_config", "config/train.json", "No train_file specified"
+        )
+
 
 def read_test_file(args):
     if args.test_file is None:
-        apply_config(args, 'test_config', 'config/test.json', "No test_file specified")
+        apply_config(args, "test_config", "config/test.json", "No test_file specified")
+
 
 def read_pred_file(args):
     if args.pred_file is None:
-        apply_config(args, 'pred_config', 'config/pred.json', "No pred_file specified")
+        apply_config(args, "pred_config", "config/pred.json", "No pred_file specified")
 
-     
 
 def merge_configs(global_config, parsed_args):
     """
@@ -371,25 +390,15 @@ def merge_configs(global_config, parsed_args):
     final_config = {}
     for key, value in parser_defaults.items():
         final_config[key] = value  # Inicializa con los valores por defecto del parser
-    
+
     for key, value in global_config.items():
         if value is not None:
-            final_config[key] = value  # Actualiza con valores del archivo de configuración
-    
+            final_config[key] = (
+                value  # Actualiza con valores del archivo de configuración
+            )
+
     for arg_key, arg_value in vars(parsed_args).items():
         if arg_value is not None:  # Si el argumento fue proporcionado en la CI
             final_config[arg_key] = arg_value
-    
-    
+
     return final_config
- 
-            
-    
-def add_noise(x, noise_level):
-    if noise_level == 0:
-        return x
-    elif noise_level < 0:
-        raise ValueError("Noise level must be a non-negative number")
-    else:
-        noise = tr.normal(mean=0.0, std=noise_level, size=x.shape, device=x.device)
-        return x + noise

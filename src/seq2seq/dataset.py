@@ -4,12 +4,23 @@ import torch as tr
 import os
 import json
 import pickle
+import random
 from .embeddings import OneHotEmbedding
+
 
 class SeqDataset(Dataset):
     def __init__(
-        self, dataset_path, min_len=0, max_len=512, verbose=False, cache_path=None, for_prediction=False,  training=False,
- **kargs):
+        self,
+        dataset_path,
+        min_len=0,
+        max_len=512,
+        verbose=False,
+        cache_path=None,
+        for_prediction=False,
+        training=False,
+        n_swaps=0,
+        **kargs,
+    ):
         """
         interaction_prior: none, probmat
         """
@@ -24,8 +35,7 @@ class SeqDataset(Dataset):
         self.training = training
 
         assert (
-            "sequence" in data.columns
-            and "id" in data.columns
+            "sequence" in data.columns and "id" in data.columns
         ), "Dataset should contain 'id' and 'sequence' columns"
 
         data["len"] = data.sequence.str.len()
@@ -47,6 +57,7 @@ class SeqDataset(Dataset):
         self.ids = data.id.tolist()
         self.embedding = OneHotEmbedding()
         self.embedding_size = self.embedding.emb_size
+        self.n_swaps = n_swaps
 
     def __len__(self):
         return len(self.sequences)
@@ -60,14 +71,21 @@ class SeqDataset(Dataset):
             sequence = self.sequences[idx]
             L = len(sequence)
             seq_emb = self.embedding.seq2emb(sequence)
+            embedding_with_noise = add_noise(seq_emb, self.n_swaps)
 
-
-            item = {"id": seqid,   "length": L, "sequence": sequence, "embedding": seq_emb} 
+            item = {
+                "id": seqid,
+                "length": L,
+                "sequence": sequence,
+                "embedding": seq_emb,
+                "embedding_with_noise": embedding_with_noise,
+            }
 
             if self.cache is not None:
                 pickle.dump(item, open(cache, "wb"))
-                
+
         return item
+
 
 def pad_batch(batch, fixed_length=0):
     """batch is a dictionary with different variables lists"""
@@ -75,16 +93,43 @@ def pad_batch(batch, fixed_length=0):
     if fixed_length == 0:
         fixed_length = max(L)
     embedding_pad = tr.zeros((len(batch), batch[0]["embedding"].shape[0], fixed_length))
-    
+    embedding_pad_w_noise = tr.zeros(
+        (len(batch), batch[0]["embedding_with_noise"].shape[0], fixed_length)
+    )
+    mask = tr.zeros((len(batch), fixed_length), dtype=tr.bool)
 
     for k in range(len(batch)):
         embedding_pad[k, :, : L[k]] = batch[k]["embedding"]
+        embedding_pad_w_noise[k, :, : L[k]] = batch[k]["embedding_with_noise"]
+        mask[k, : L[k]] = 1
 
     out_batch = {
-                 "id": [b["id"] for b in batch],
-                 "length": L, 
-                 "sequence": [b["sequence"] for b in batch],
-                "embedding": embedding_pad, 
-                 }
-    
+        "id": [b["id"] for b in batch],
+        "length": L,
+        "sequence": [b["sequence"] for b in batch],
+        "embedding": embedding_pad,
+        "embedding_with_noise": embedding_pad_w_noise,
+        "mask": mask,
+    }
+
     return out_batch
+
+
+def add_noise(x, N=0):
+    assert N < x.shape[-1], "N should be lower than the shape of x (starting on 0)"
+
+    if N == 0:
+        return x
+
+    x_l = [_ for _ in range(x.shape[-1])]
+    random.shuffle(x_l)
+    v = [0, 1, 2, 3]
+
+    for _ in range(N):
+        pos = x_l[-1]
+        x_l.pop()
+        random.shuffle(v)
+        nt = tr.zeros([4], dtype=tr.float)
+        nt[v[0]] = 1.0
+        x[:, pos] = nt
+    return x
