@@ -32,6 +32,7 @@ def main():
         "batch_size": args.batch,
         "valid_split": 0.1,
         "max_len": 128,
+        "n_swaps":0,
         "verbose": not args.quiet,
         "cache_path": cache_path,
     }
@@ -71,7 +72,6 @@ def main():
     with mlflow.start_run(run_name=final_config["run"]):
         if args.command == "train":
             read_train_file(args)  
-            
             mlflow.log_params(final_config)                      
             mlflow.log_param("train_file",args.train_file)
             mlflow.log_param("valid_file",args.valid_file)
@@ -81,14 +81,16 @@ def main():
 
         if args.command == "test":
             read_test_file(args)
-            test(args.test_file, args.model_weights, args.out_path, final_config, args.j)    
+            test(args.test_file, args.model_weights, args.out_path, args.n_swaps ,final_config, args.j)    
+            mlflow.log_params(final_config) 
             mlflow.log_param("test_file",args.test_file) 
             mlflow.log_param("out_path",args.out_path) 
+            mlflow.log_param("n_swaps",args.n_swaps)
 
         if args.command == "pred":
             read_pred_file(args)
             pred(args.pred_file, model_weights=args.model_weights, out_path=args.out_path, logits=args.logits, config=final_config, nworkers=args.j, draw=args.draw, draw_resolution=args.draw_resolution)    
-    
+ 
 def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, verbose=True):
     if out_path is None:
         out_path = f"results_{str(datetime.today()).replace(' ', '-')}/"
@@ -197,12 +199,15 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
         
  
     
-def test(test_file, model_weights=None, output_file=None, config={}, nworkers=2, verbose=True):
+def test(test_file, model_weights=None, output_file=None, n_swaps=0, config={}, nworkers=2, verbose=True):
     test_file = test_file
     test_file = validate_file(test_file)
     if verbose not in config:
         config["verbose"] = verbose
-
+    
+    config["noise"] = False
+    if n_swaps > 0:
+        config["noise"] = True 
     
     # pad_batch_with_fixed_length = partial(pad_batch, fixed_length=args.max_len) 
     pad_batch_with_fixed_length = partial(pad_batch, fixed_length=128)
@@ -210,10 +215,9 @@ def test(test_file, model_weights=None, output_file=None, config={}, nworkers=2,
         SeqDataset(test_file, **config),
         batch_size=config["batch_size"] if "batch_size" in config else 4,
         shuffle=False,
-        num_workers=nworkers,
+        num_workers=nworkers,   
         collate_fn=pad_batch_with_fixed_length,
     )
-
     if model_weights is not None:
         net = seq2seq(weights=model_weights, **config)
     else:

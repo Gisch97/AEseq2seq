@@ -37,8 +37,8 @@ class Seq2Seq(nn.Module):
         lr=1e-3,
         scheduler="none",
         output_th=0.5,
-        verbose=True,
-        test_noise=0.0,
+        verbose=True, 
+        noise=False,
         **kwargs,
     ):
         """Base instantiation of model"""
@@ -48,15 +48,13 @@ class Seq2Seq(nn.Module):
         self.verbose = verbose
         self.config = kwargs
         self.output_th = output_th
-        self.test_noise = test_noise
-
+        self.noise = noise
         self.hyperparameters = {
             "hyp_device": device,
             "hyp_lr": lr,
             "hyp_scheduler": scheduler,
             "hyp_verbose": verbose,
-            "hyp_output_th": output_th,
-            "hyp_test_noise": test_noise,
+            "hyp_output_th": output_th, 
         }
         # Define architecture
         self.build_graph(**kwargs)
@@ -92,13 +90,13 @@ class Seq2Seq(nn.Module):
         **kwargs,
     ):
 
-        features = [4]
-        n_4 = 3
-        n_8 = 3
-        for _ in range(n_4):
-            features.append(4)
-        for _ in range(n_8):
-            features.append(8)
+        # features = [4]
+        # n_4 = 3
+        # n_8 = 3
+        # for _ in range(n_4):
+        #     features.append(4)
+        # for _ in range(n_8):
+        #     features.append(8)
 
         rev_features = features[::-1]
         encoder_blocks = len(features) - 1
@@ -147,6 +145,8 @@ class Seq2Seq(nn.Module):
 
     def forward(self, batch):
         x = batch["embedding"].to(self.device)
+        if self.noise == True:
+            x = batch["embedding_with_noise"].to(self.device)
 
         x = self.inc(x)
         encoder_outputs = [x]
@@ -211,15 +211,15 @@ class Seq2Seq(nn.Module):
         with tr.no_grad():
             for batch in loader:
 
-                batch["embedding"] = add_noise(batch["embedding"], self.test_noise)
-                x = batch["embedding"].to(self.device)
-
-                lengths = batch["length"]
+                x = batch["embedding"].to(self.device) 
+                mask = batch["mask"].to(self.device) 
                 x_rec, z = self(batch)
                 loss = self.loss_func(x_rec, x)
                 metrics["loss"] += loss.item()
-                batch_metrics = compute_metrics(x_rec, x, output_th=self.output_th)
-
+                batch_metrics = compute_metrics(x_rec, x, mask, output_th=self.output_th)
+                
+                
+                
                 for k, v in batch_metrics.items():
                     metrics[k] += v
 
