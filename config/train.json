@@ -2,5 +2,5 @@
 
     "train_file": "data/ArchiveII-KFold/fam-similarity/train_0.csv",
     "valid_file": "data/ArchiveII-KFold/fam-similarity/valid_0.csv",
-    "out_path": "results/UNet_selection/paper_based_unet_pc59_2/paper_based_unet_batch64_nworkers4"
+    "out_path": "results/UNet_selection/tiny_Unet_noise_exp/nc-2-n4-2-n8-1-skip1"
 }

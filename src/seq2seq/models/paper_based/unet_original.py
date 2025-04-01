@@ -90,13 +90,13 @@ class Seq2Seq(nn.Module):
         **kwargs,
     ):
 
-        # features = [4]
-        # n_4 = 3
-        # n_8 = 3
-        # for _ in range(n_4):
-        #     features.append(4)
-        # for _ in range(n_8):
-        #     features.append(8)
+        features = [4]
+        n_4 = 3
+        n_8 = 3
+        for _ in range(n_4):
+            features.append(4)
+        for _ in range(n_8):
+            features.append(8)
 
         rev_features = features[::-1]
         encoder_blocks = len(features) - 1
@@ -180,12 +180,14 @@ class Seq2Seq(nn.Module):
 
         for batch in loader:
             x = batch["embedding"].to(self.device)
+            mask = batch["mask"].to(self.device) 
+            
             self.optimizer.zero_grad()  # Cleaning cache optimizer
             x_rec, _ = self(batch)
             loss = self.loss_func(x_rec, x)
             metrics["loss"] += loss.item()
 
-            batch_metrics = compute_metrics(x_rec, x, output_th=self.output_th)
+            batch_metrics = compute_metrics(x_rec, x, mask, output_th=self.output_th)
             for k, v in batch_metrics.items():
                 metrics[k] += v
 

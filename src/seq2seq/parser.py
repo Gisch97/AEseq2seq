@@ -16,7 +16,7 @@ def parser():
     parser.add_argument('--version', '-v', action='version', version='%(prog)s ' + __version__)
     parser.add_argument("--exp", type=str, default=None, help="Experiment name")
     parser.add_argument("--run", type=str, default=None, help="Run name (default: none)")
-    parser.add_argument("--n_swaps", type=int, default=0, help="number of swaps in embedding (default: 0)")
+    parser.add_argument("--n_swaps", type=int, default=None, help="number of swaps in embedding (default: 0)")
     
 
     subparsers = parser.add_subparsers(

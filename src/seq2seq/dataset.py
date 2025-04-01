@@ -71,7 +71,12 @@ class SeqDataset(Dataset):
             sequence = self.sequences[idx]
             L = len(sequence)
             seq_emb = self.embedding.seq2emb(sequence)
-            embedding_with_noise = add_noise(seq_emb, self.n_swaps)
+            if self.n_swaps == 0:
+                embedding_with_noise = seq_emb
+            elif self.n_swaps != 0:
+                embedding_with_noise = add_noise(seq_emb, self.n_swaps)
+            else:
+                print('ERROR: N_SWAPS < 0')
 
             item = {
                 "id": seqid,
@@ -115,17 +120,17 @@ def pad_batch(batch, fixed_length=0):
     return out_batch
 
 
-def add_noise(x, N=0):
-    assert N < x.shape[-1], "N should be lower than the shape of x (starting on 0)"
+def add_noise(x, n_swaps=0):
+    # assert n_swaps < x.shape[-1], "n_swaps should be lower than the shape of x (starting on 0)"
 
-    if N == 0:
+    if n_swaps == 0:
         return x
 
     x_l = [_ for _ in range(x.shape[-1])]
     random.shuffle(x_l)
     v = [0, 1, 2, 3]
 
-    for _ in range(N):
+    for _ in range(n_swaps):
         pos = x_l[-1]
         x_l.pop()
         random.shuffle(v)

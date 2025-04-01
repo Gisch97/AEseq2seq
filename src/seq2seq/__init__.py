@@ -32,7 +32,7 @@ def main():
         "batch_size": args.batch,
         "valid_split": 0.1,
         "max_len": 128,
-        "n_swaps":0,
+        "n_swaps":args.n_swaps,
         "verbose": not args.quiet,
         "cache_path": cache_path,
     }
@@ -49,6 +49,8 @@ def main():
     # Combinar defaults, configuración global y argumentos CLI (prioridad CLI)
     cli_args = {k: v for k, v in vars(args).items() if v is not None}
     final_config = {**parser_defaults, **global_config, **cli_args}
+    if args.n_swaps is None:
+        args.n_swaps = global_config.get("n_swaps", 0)
 
     # Preparar directorio de caché si es necesario
     if final_config.get("cache_path"):
