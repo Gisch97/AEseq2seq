@@ -84,15 +84,15 @@ class Seq2Seq(nn.Module):
         num_conv=2,
         pool_mode="max",
         up_mode="upsample",
-        skip=0,
+        skip=1,
         addition="cat",
         features=[4, 8, 16, 32, 64],
         **kwargs,
     ):
 
         features = [4]
-        n_4 = 3
-        n_8 = 3
+        n_4=2
+        n_8=2
         for _ in range(n_4):
             features.append(4)
         for _ in range(n_8):

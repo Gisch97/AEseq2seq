@@ -143,6 +143,8 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
     )
 
     net = seq2seq(train_len=len(train_loader), **config)  
+    mlflow.log_param("arc_num_params", sum(p.numel() for p in net.parameters()))
+    
     best_loss, patience_counter = np.inf, 0 
     patience = config["patience"] if "patience" in config else 30
     if verbose:
@@ -150,7 +152,6 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
     max_epochs = config["max_epochs"] if "max_epochs" in config else 1000
     logfile = os.path.join(out_path, "train_log.csv") 
     
-    mlflow.log_param("arc_num_params", sum(p.numel() for p in net.parameters()))
     
     for epoch in range(max_epochs):
         train_metrics = net.fit(train_loader)
@@ -225,6 +226,7 @@ def test(test_file, model_weights=None, output_file=None, n_swaps=0, config={}, 
     else:
         net = seq2seq(pretrained=True, **config)
     
+    mlflow.log_param("arc_num_params", sum(p.numel() for p in net.parameters()))
     if verbose:
         print(f"Start test of {test_file}")        
     test_metrics = net.test(test_loader)
