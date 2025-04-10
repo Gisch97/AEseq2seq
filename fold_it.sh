@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ### EXPERIMENTO Y MODELOS SELECCIONADOS
-EXPERIMENT_NAME="tiny_Unet_noise_exp3"
+EXPERIMENT_NAME="Unet_paper_noise_0_1"
 MODEL_NAME="unet_original" 
 
 # File paths

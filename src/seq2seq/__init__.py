@@ -32,7 +32,7 @@ def main():
         "batch_size": args.batch,
         "valid_split": 0.1,
         "max_len": 128,
-        "n_swaps":args.n_swaps,
+        "swaps":args.swaps,
         "verbose": not args.quiet,
         "cache_path": cache_path,
     }
@@ -49,8 +49,8 @@ def main():
     # Combinar defaults, configuración global y argumentos CLI (prioridad CLI)
     cli_args = {k: v for k, v in vars(args).items() if v is not None}
     final_config = {**parser_defaults, **global_config, **cli_args}
-    if args.n_swaps is None:
-        args.n_swaps = global_config.get("n_swaps", 0)
+    if args.swaps is None:
+        args.swaps = global_config.get("swaps", 0)
 
     # Preparar directorio de caché si es necesario
     if final_config.get("cache_path"):
@@ -83,11 +83,11 @@ def main():
 
         if args.command == "test":
             read_test_file(args)
-            test(args.test_file, args.model_weights, args.out_path, args.n_swaps ,final_config, args.j)    
+            test(args.test_file, args.model_weights, args.out_path, args.swaps ,final_config, args.j)    
             mlflow.log_params(final_config) 
             mlflow.log_param("test_file",args.test_file) 
             mlflow.log_param("out_path",args.out_path) 
-            mlflow.log_param("n_swaps",args.n_swaps)
+            mlflow.log_param("swaps",args.swaps)
 
         if args.command == "pred":
             read_pred_file(args)
@@ -202,14 +202,14 @@ def train(train_file, config={}, out_path=None, valid_file=None, nworkers=2, ver
         
  
     
-def test(test_file, model_weights=None, output_file=None, n_swaps=0, config={}, nworkers=2, verbose=True):
+def test(test_file, model_weights=None, output_file=None, swaps=0, config={}, nworkers=2, verbose=True):
     test_file = test_file
     test_file = validate_file(test_file)
     if verbose not in config:
         config["verbose"] = verbose
     
     config["noise"] = False
-    if n_swaps > 0:
+    if swaps > 0:
         config["noise"] = True 
     
     # pad_batch_with_fixed_length = partial(pad_batch, fixed_length=args.max_len) 

@@ -6,6 +6,8 @@ import json
 import pickle
 import random
 from .embeddings import OneHotEmbedding
+from typing import Union
+
 
 
 class SeqDataset(Dataset):
@@ -18,7 +20,7 @@ class SeqDataset(Dataset):
         cache_path=None,
         for_prediction=False,
         training=False,
-        n_swaps=0,
+        swaps=0,
         **kargs,
     ):
         """
@@ -57,7 +59,7 @@ class SeqDataset(Dataset):
         self.ids = data.id.tolist()
         self.embedding = OneHotEmbedding()
         self.embedding_size = self.embedding.emb_size
-        self.n_swaps = n_swaps
+        self.swaps = swaps
 
     def __len__(self):
         return len(self.sequences)
@@ -71,12 +73,12 @@ class SeqDataset(Dataset):
             sequence = self.sequences[idx]
             L = len(sequence)
             seq_emb = self.embedding.seq2emb(sequence)
-            if self.n_swaps == 0:
+            if self.swaps == 0:
                 embedding_with_noise = seq_emb
-            elif self.n_swaps != 0:
-                embedding_with_noise = add_noise(seq_emb, self.n_swaps)
+            elif self.swaps != 0:
+                embedding_with_noise = add_noise(seq_emb, self.swaps)
             else:
-                print('ERROR: N_SWAPS < 0')
+                print('ERROR: swaps < 0')
 
             item = {
                 "id": seqid,
@@ -120,22 +122,38 @@ def pad_batch(batch, fixed_length=0):
     return out_batch
 
 
-def add_noise(x, n_swaps=0):
-    assert n_swaps < x.shape[-1], "n_swaps should be lower than the shape of x (starting on 0)"
+def add_noise(x: tr.Tensor, swaps: Union[int,float] = 0, mode: str = 'perc') -> tr.Tensor:
+    """
+    Introduces noise into the tensor `x` by modifying some of its columns with random values.
 
-    if n_swaps == 0:
+    Parameters:
+    x (torch.Tensor): Input tensor of size (N, len), where N=4 is the number of One-Hot dimension and len is the number of nucleotides.
+    swaps (int or float, optional): Number of swaps to perform. Can be:
+        - A positive integer, specifying the exact number of swaps.
+        - A value between 0 and 1, interpreted as a percentage of the number of columns.
+        - 0 (default), meaning no changes are made.
+    mode (str, optional): Interpretation mode of `swaps`.
+        - 'perc' (default): If `swaps` is 1, all columns are replaced.
+        - 'int': `swaps` is treated as an absolute number of swaps.
+
+    Returns:
+    torch.Tensor: Modified tensor with added noise.
+    """
+    len = x.shape[-1]
+    if swaps == 0:
         return x
-
-    if n_swaps > x.shape[-1]:
-        n_swaps = x.shape[-1]
-        
-    x_l = [_ for _ in range(x.shape[-1])]
-    random.shuffle(x_l)
-    v = [0, 1, 2, 3]
-
-    for i in range(n_swaps): 
+    elif swaps > 0 and swaps < 1: 
+        swaps = round(len * swaps)
+    elif (mode == 'perc' and swaps == 1) or swaps > len:
+        swaps = len
+    
+    rand_nt = [_ for _ in range(len)]
+    random.shuffle(rand_nt)
+    v = [0, 1, 2, 3] 
+    
+    for i in range(swaps): 
         nt = tr.zeros([4], dtype=tr.float)
         random.shuffle(v)
         nt[v[0]] = 1.0
-        x[:, x_l[i]] = nt
+        x[:, rand_nt[i]] = nt
     return x
