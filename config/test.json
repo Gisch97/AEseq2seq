@@ -1,5 +1,5 @@
 {
     "test_file": "data/ArchiveII-KFold/fam-similarity/test_0.csv",
-    "model_weights": "results/UNet_selection/tiny_Unet_noise_exp3/nc-2-n4-2-n8-2-skip1/weights.pmt",
-    "out_path": "results/UNet_selection/tiny_Unet_noise_exp3/nc-2-n4-2-n8-2-skip1/test_n_swaps0.csv"
+    "model_weights": "results/UNet_selection/Unet_nc4_nc8_noise_0_1/n4-3-n8-1-skip1/weights.pmt",
+    "out_path": "results/UNet_selection/Unet_nc4_nc8_noise_0_1/n4-3-n8-1-skip1/test_swaps1.0.csv"
 }

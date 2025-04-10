@@ -16,7 +16,7 @@ echo "Updating global configuration... "
 echo "run: $save_name-$swaps"
 sed -i \
     -e "s/\"run\": \"[^\"]*\"/\"run\": \"$save_name-$swaps\"/" \
-    -e "s/\"n_swaps\": [0-9e.-]*/\"n_swaps\": $swaps/" \
+    -e "s/\"swaps\": [0-9e.-]*/\"swaps\": $swaps/" \
         "$GLOBAL_CONFIG"
 
 
@@ -25,7 +25,7 @@ echo "Updating test configuration... "
 echo "out_path: $save_name"
 sed -i \
     -e "s|\"model_weights\": \"[^\"]*\"|\"model_weights\": \"$save_path/weights.pmt\"|" \
-    -e "s|\"out_path\": \"[^\"]*\"|\"out_path\": \"$save_path/test_n_swaps$swaps.csv\"|" \
+    -e "s|\"out_path\": \"[^\"]*\"|\"out_path\": \"$save_path/test_swaps$swaps.csv\"|" \
     "$TEST_CONFIG"
 
 # Test model

@@ -21,6 +21,7 @@ class SeqDataset(Dataset):
         for_prediction=False,
         training=False,
         swaps=0,
+        mode='perc',
         **kargs,
     ):
         """
@@ -60,6 +61,8 @@ class SeqDataset(Dataset):
         self.embedding = OneHotEmbedding()
         self.embedding_size = self.embedding.emb_size
         self.swaps = swaps
+        self.mode = mode
+        
 
     def __len__(self):
         return len(self.sequences)
@@ -76,7 +79,7 @@ class SeqDataset(Dataset):
             if self.swaps == 0:
                 embedding_with_noise = seq_emb
             elif self.swaps != 0:
-                embedding_with_noise = add_noise(seq_emb, self.swaps)
+                embedding_with_noise = add_noise(seq_emb.clone(), self.swaps)
             else:
                 print('ERROR: swaps < 0')
 
