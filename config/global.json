@@ -1,5 +1,5 @@
 {
-    "exp": "tiny_Unet_noise_exp2",
+    "exp": "tiny_Unet_noise_exp3",
     "run": "nc-2-n4-2-n8-2-skip1-0",
     "device": "cuda",
     "cache_path": "cache/",

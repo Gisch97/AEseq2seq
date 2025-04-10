@@ -121,20 +121,21 @@ def pad_batch(batch, fixed_length=0):
 
 
 def add_noise(x, n_swaps=0):
-    # assert n_swaps < x.shape[-1], "n_swaps should be lower than the shape of x (starting on 0)"
+    assert n_swaps < x.shape[-1], "n_swaps should be lower than the shape of x (starting on 0)"
 
     if n_swaps == 0:
         return x
 
+    if n_swaps > x.shape[-1]:
+        n_swaps = x.shape[-1]
+        
     x_l = [_ for _ in range(x.shape[-1])]
     random.shuffle(x_l)
     v = [0, 1, 2, 3]
 
-    for _ in range(n_swaps):
-        pos = x_l[-1]
-        x_l.pop()
-        random.shuffle(v)
+    for i in range(n_swaps): 
         nt = tr.zeros([4], dtype=tr.float)
+        random.shuffle(v)
         nt[v[0]] = 1.0
-        x[:, pos] = nt
+        x[:, x_l[i]] = nt
     return x
