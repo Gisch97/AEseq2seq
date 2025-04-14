@@ -51,14 +51,14 @@ for nc_4 in "${n_4[@]}"; do
                     for sk in "${skips[@]}";do
                         # Se configura el valor de skip fijo en 0 para este bloque (se puede anidar otro bucle si se desea variar)
                         base_name="model_"
-                        save_name="${base_name}n4-$nc_4-n8-$nc_8_p$pool_up$up_add$add_skip$sk"
+                        save_name="${base_name}n4-$nc_4-n8-$nc_8-p-$pool-up-$up-add-$add-skip$sk"
                         echo "Ejecutando:$save_name"
                         # # Modificar la configuración del modelo para pool, up y skip
                         sed -i \
-                            -e "82s/pool_mode=[0-9e.-]*/n_4=$pool/" \
-                            -e "83s/up_mode=[0-9e.-]*/up_mode=$up/" \
+                            -e "82s/pool_mode=['\"][^'\"]*['\"]/pool_mode=\"$pool\"/" \
+                            -e "83s/up_mode=['\"][^'\"]*['\"]/up_mode=\"$up\"/" \
                             -e "84s/skip=[0-9e.-]*/skip=$sk/" \
-                            -e "85s/addition=[0-9e.-]*/addition=$add/" \
+                            -e "85s/addition=['\"][^'\"]*['\"]/addition=\"$add\"/" \
                             -e "91s/n_4=[0-9e.-]*/n_4=$nc_4/" \
                             -e "92s/n_8=[0-9e.-]*/n_8=$nc_8/" \
                             "$MODEL_FILE"

@@ -2,5 +2,5 @@
 
     "train_file": "data/ArchiveII-KFold/fam-similarity/train_0.csv",
     "valid_file": "data/ArchiveII-KFold/fam-similarity/valid_0.csv",
-    "out_path": "results/UNet_selection/Unet_paper_noise_0_1/paper_skip1"
+    "out_path": "results/UNet_selection/Unet_fixed_models_ablation/model_n4-3-n8-2-p-max-up-upsample-add-cat-skip1"
 }

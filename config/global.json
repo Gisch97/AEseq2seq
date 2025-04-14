@@ -1,6 +1,6 @@
 {
-    "exp": "Unet_paper_noise_0_1",
-    "run": "paper_skip1-1.0",
+    "exp": "Unet_fixed_models_ablation",
+    "run": "model_n4-3-n8-2-p-max-up-upsample-add-cat-skip1",
     "device": "cuda",
     "cache_path": "cache/",
     "batch_size": 64,
