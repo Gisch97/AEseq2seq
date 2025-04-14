@@ -35,8 +35,7 @@ class Seq2Seq(nn.Module):
         train_len=0,
         device="cpu",
         lr=1e-3,
-        scheduler="none",
-        output_th=0.5,
+        scheduler="none", 
         verbose=True, 
         noise=False,
         **kwargs,
@@ -47,14 +46,12 @@ class Seq2Seq(nn.Module):
         self.device = device
         self.verbose = verbose
         self.config = kwargs
-        self.output_th = output_th
         self.noise = noise
         self.hyperparameters = {
             "hyp_device": device,
             "hyp_lr": lr,
             "hyp_scheduler": scheduler,
             "hyp_verbose": verbose,
-            "hyp_output_th": output_th, 
         }
         # Define architecture
         self.build_graph(**kwargs)
@@ -90,13 +87,13 @@ class Seq2Seq(nn.Module):
         **kwargs,
     ):
 
-        features = [4]
-        n_4=3
-        n_8=1
-        for _ in range(n_4):
-            features.append(4)
-        for _ in range(n_8):
-            features.append(8)
+        # features = [4]
+        # n_4=3
+        # n_8=1
+        # for _ in range(n_4):
+        #     features.append(4)
+        # for _ in range(n_8):
+        #     features.append(8)
 
         rev_features = features[::-1]
         encoder_blocks = len(features) - 1
@@ -187,7 +184,7 @@ class Seq2Seq(nn.Module):
             loss = self.loss_func(x_rec, x)
             metrics["loss"] += loss.item()
 
-            batch_metrics = compute_metrics(x_rec, x, mask, output_th=self.output_th)
+            batch_metrics = compute_metrics(x_rec, x, mask)
             for k, v in batch_metrics.items():
                 metrics[k] += v
 
@@ -218,7 +215,7 @@ class Seq2Seq(nn.Module):
                 x_rec, z = self(batch)
                 loss = self.loss_func(x_rec, x)
                 metrics["loss"] += loss.item()
-                batch_metrics = compute_metrics(x_rec, x, mask, output_th=self.output_th)
+                batch_metrics = compute_metrics(x_rec, x, mask)
                 
                 
                 

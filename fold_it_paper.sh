@@ -51,7 +51,7 @@ base_name="paper_"
 save_name="${base_name}skip0"
 # # Modificar la configuración del modelo para pool, up y skip
 sed -i \
-    -e "87s/\(skip=\)[0-9e.-]*/skip=0/" \
+    -e "84s/\(skip=\)[0-9e.-]*/skip=0/" \
     "$MODEL_FILE"
 
 bash scripts/train.sh "$BASE_OUTPUT_PATH" "$save_name" 
@@ -62,7 +62,7 @@ done
 echo "Ejecutando: paper_skip=1"
 # Actualizar el parámetro addition en el modelo
 sed -i \
-    -e "87s/\(skip=\)[0-9e.-]*/skip=1/" \
+    -e "84s/\(skip=\)[0-9e.-]*/skip=1/" \
     "$MODEL_FILE"
 # Definir el nombre de guardado usando base_name y el valor de addition
 save_name="${base_name}skip1"

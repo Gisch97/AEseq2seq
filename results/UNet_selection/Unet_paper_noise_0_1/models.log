@@ -1,16 +1,16 @@
-# Starting experiment -- Unet_paper_noise_0_1 -- at jue 10 abr 2025 17:53:48 -03
+# Starting experiment -- Unet_paper_noise_0_1 -- at dom 13 abr 2025 22:09:27 -03
 Saving hyperparameters: pool mode = max, up mode = upsample, addition = cat, skip = 0 1
 # Config train #
 {
 
     "train_file": "data/ArchiveII-KFold/fam-similarity/train_0.csv",
     "valid_file": "data/ArchiveII-KFold/fam-similarity/valid_0.csv",
-    "out_path": "results/UNet_selection/Unet_paper_noise_0_1/paper_skip1"
+    "out_path": "results/UNet_selection/Unet_fixed_nc4_nc8_noise_0_1/n4-3-n8-1-skip1"
 }# Config test #
 {
     "test_file": "data/ArchiveII-KFold/fam-similarity/test_0.csv",
-    "model_weights": "results/UNet_selection/Unet_paper_noise_0_1/paper_skip1/weights.pmt",
-    "out_path": "results/UNet_selection/Unet_paper_noise_0_1/paper_skip1/test_swaps1.0.csv"
+    "model_weights": "results/UNet_selection/Unet_fixed_nc4_nc8_noise_0_1/n4-3-n8-1-skip1/weights.pmt",
+    "out_path": "results/UNet_selection/Unet_fixed_nc4_nc8_noise_0_1/n4-3-n8-1-skip1/test_swaps1.0.csv"
 }# Guardando contenido del archivo del modelo: src/seq2seq/models/paper_based/unet_original.py
 # Contenido del modelo:
 import pandas as pd
@@ -50,8 +50,7 @@ class Seq2Seq(nn.Module):
         train_len=0,
         device="cpu",
         lr=1e-3,
-        scheduler="none",
-        output_th=0.5,
+        scheduler="none", 
         verbose=True, 
         noise=False,
         **kwargs,
@@ -62,14 +61,12 @@ class Seq2Seq(nn.Module):
         self.device = device
         self.verbose = verbose
         self.config = kwargs
-        self.output_th = output_th
         self.noise = noise
         self.hyperparameters = {
             "hyp_device": device,
             "hyp_lr": lr,
             "hyp_scheduler": scheduler,
             "hyp_verbose": verbose,
-            "hyp_output_th": output_th, 
         }
         # Define architecture
         self.build_graph(**kwargs)
@@ -106,8 +103,8 @@ class Seq2Seq(nn.Module):
     ):
 
         # features = [4]
-        # n_4=2
-        # n_8=2
+        # n_4=3
+        # n_8=1
         # for _ in range(n_4):
         #     features.append(4)
         # for _ in range(n_8):
@@ -202,7 +199,7 @@ class Seq2Seq(nn.Module):
             loss = self.loss_func(x_rec, x)
             metrics["loss"] += loss.item()
 
-            batch_metrics = compute_metrics(x_rec, x, mask, output_th=self.output_th)
+            batch_metrics = compute_metrics(x_rec, x, mask)
             for k, v in batch_metrics.items():
                 metrics[k] += v
 
@@ -233,7 +230,7 @@ class Seq2Seq(nn.Module):
                 x_rec, z = self(batch)
                 loss = self.loss_func(x_rec, x)
                 metrics["loss"] += loss.item()
-                batch_metrics = compute_metrics(x_rec, x, mask, output_th=self.output_th)
+                batch_metrics = compute_metrics(x_rec, x, mask)
                 
                 
                 

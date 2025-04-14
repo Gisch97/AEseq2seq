@@ -1,41 +1,39 @@
-import torch as tr
-from sklearn.metrics import f1_score, accuracy_score
-import numpy as np
+import torch as tr 
 
-
-def compute_metrics(x_rec, x_true, mask, output_th=0.5):
+def compute_metrics(x_rec, x_true, mask):
     """
     Calculates the F1 score, accuracy (sequence level and threshold),
     precision, recall, and perplexity.
 
     Args:
         x_rec (torch.Tensor): Reconstructed sequence [N, C, L].
-        x_true (torch.Tensor): True sequence [N, C, L].
-        output_th (float): Umbral para binarizar las predicciones (default=0.5).
+        x_true (torch.Tensor): True sequence [N, C, L]. 
         mask (torch.Tensor): Mask to filter valid sequences [N, C, L].
 
     Returns:
         dict: Calculated metrics.
     """
-    # Flatten para procesar
-    x_true_flat = x_true.view(-1).cpu().numpy()  # Real
-    x_rec_flat = (x_rec > output_th).float().view(-1).cpu().numpy()
+    xt_rec = x_rec.permute(0,2,1)
+    xt_true = x_true.permute(0,2,1) 
 
-    # Real sequence length (binarizado)
-    mask_flat = mask.view(-1).cpu().numpy().astype(bool)
+    # Obtener el índice de la clase predicha y verdadera
+    pred_idx = xt_rec.argmax(dim=-1)   # [B, L]
+    true_idx = xt_true.argmax(dim=-1)  # [B, L]
+ 
+    pred_flat = pred_idx[mask]    
+    true_flat = true_idx[mask]
+ 
+    TP = (pred_flat == true_flat).sum().item()    
+    
+    total = mask.sum().item()
+    accuracy = TP / total if total > 0 else 0.0
 
-    x_true_filtered = x_true_flat[mask_flat]
-    x_rec_filtered = x_rec_flat[mask_flat]
-
-    # 1. F1-Score
-    f1 = f1_score(x_true_filtered, x_rec_filtered, average="weighted", zero_division=0)
-
-    # 2. Accuracy (Threshold-based)
-    accuracy_tresh = accuracy_score(x_true_filtered, x_rec_filtered)
-
-    # 3. Accuracy a nivel de secuencia
-    seq_match = (x_true == (x_rec > output_th).float()).all(dim=1).all(dim=1)
-    seq_accuracy = seq_match.float().mean().item()
+    FP = FN = (pred_flat != true_flat).sum().item()
+    precision = TP / (TP + FP) if (TP + FP) > 0 else 0.0
+    recall    = TP / (TP + FN) if (TP + FN) > 0 else 0.0
+    f1        = 2 * precision * recall / (precision + recall) if (precision + recall) > 0 else 0.0
+ 
+    seq_accuracy = (x_rec == x_true).all(dim=1).all(dim=1).float().mean().item()
 
     # Devolver todas las métricas
-    return {"F1": f1, "Accuracy": accuracy_tresh, "Accuracy_seq": seq_accuracy}
+    return {"F1": f1, "Accuracy": accuracy, "Accuracy_seq": seq_accuracy}

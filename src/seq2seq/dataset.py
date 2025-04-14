@@ -106,12 +106,12 @@ def pad_batch(batch, fixed_length=0):
     embedding_pad_w_noise = tr.zeros(
         (len(batch), batch[0]["embedding_with_noise"].shape[0], fixed_length)
     )
-    mask = tr.zeros((len(batch),batch[0]["embedding"].shape[0], fixed_length), dtype=tr.bool)
+    mask = tr.zeros((len(batch), fixed_length), dtype=tr.bool)
 
     for k in range(len(batch)):
         embedding_pad[k, :, : L[k]] = batch[k]["embedding"]
         embedding_pad_w_noise[k, :, : L[k]] = batch[k]["embedding_with_noise"]
-        mask[k, :, : L[k]] = 1
+        mask[k, : L[k]] = 1
 
     out_batch = {
         "id": [b["id"] for b in batch],
